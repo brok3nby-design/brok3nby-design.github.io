@@ -6,76 +6,129 @@
   <title>Brok3n by Design</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
     body {
       background-color: #0a0a0a;
       color: #00ff9f;
       font-family: "VT323", "Courier New", monospace;
       margin: 0;
-      padding: 40px 20px;
-      line-height: 1.5;
+      padding: 0;
+      line-height: 1.6;
     }
-    .terminal {
+
+    nav {
       background-color: #111;
-      border: 3px solid #00ff9f;
-      padding: 40px;
-      max-width: 900px;
-      margin: 0 auto 40px;
-      box-shadow: 0 0 30px rgba(0, 255, 159, 0.4);
+      padding: 20px 40px;
+      border-bottom: 2px solid #00ff9f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    h1, h2 {
+
+    nav .logo {
+      font-size: 2rem;
       text-shadow: 0 0 10px #00ff9f;
     }
-    nav {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+
     nav a {
       color: #00ff9f;
-      margin: 0 20px;
       text-decoration: none;
-      font-size: 1.4rem;
+      margin-left: 30px;
+      font-size: 1.3rem;
     }
-    section {
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px #00ff9f;
+    }
+
+    .tagline {
+      font-size: 1.8rem;
       margin-bottom: 50px;
+      opacity: 0.85;
+    }
+
+    section {
+      margin-bottom: 70px;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      border-bottom: 1px solid #00ff9f;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+    }
+
+    .project {
+      background-color: #111;
+      border: 1px solid #00ff9f;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .socials a {
+      color: #00ff9f;
+      margin-right: 25px;
+      text-decoration: none;
+      font-size: 1.3rem;
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="home.html">Home</a>
-    <a href="#projects">Projects</a>
-    <a href="#about">About & Socials</a>
+    <div class="logo">BROK3N BY DESIGN</div>
+    <div>
+      <a href="home.html">Home</a>
+      <a href="#current">Current</a>
+      <a href="#completed">Completed</a>
+      <a href="#about">About</a>
+    </div>
   </nav>
 
-  <div class="terminal">
+  <div class="container">
+
     <h1>BROK3N BY DESIGN</h1>
-    <p style="font-size: 1.6rem; margin-bottom: 30px;">It's in the algorithm, probably.</p>
+    <p class="tagline">It's in the algorithm, probably.</p>
 
     <!-- CURRENT PROJECTS -->
-    <section id="projects">
+    <section id="current">
       <h2>Current Projects</h2>
-      <p>Project 1 - Description here...</p>
-      <p>Project 2 - Description here...</p>
+      <div class="project">
+        <h3>Project Name Here</h3>
+        <p>Short description of what you're working on right now...</p>
+      </div>
     </section>
 
     <!-- COMPLETED PROJECTS -->
-    <section>
+    <section id="completed">
       <h2>Completed Projects</h2>
-      <p>Project A - Description...</p>
-      <p>Project B - Description...</p>
+      <div class="project">
+        <h3>Game Title</h3>
+        <p>Short description + link to play/download if available.</p>
+      </div>
     </section>
 
-    <!-- ABOUT + SOCIALS -->
+    <!-- ABOUT -->
     <section id="about">
       <h2>About</h2>
-      <p>Some text about you and the project...</p>
+      <p>Write something about yourself and what Brok3n by Design is about.</p>
 
-      <h2>Socials</h2>
-      <p>X: <a href="https://x.com/brok3nbydesign" target="_blank">@brok3nbydesign</a></p>
-      <p>Discord: [link]</p>
-      <p>Itch.io: [link]</p>
+      <h2 style="margin-top: 50px;">Socials</h2>
+      <div class="socials">
+        <a href="https://x.com/brok3nbydesign" target="_blank">X / Twitter</a>
+        <a href="#" target="_blank">Itch.io</a>
+        <!-- Add more if needed -->
+      </div>
     </section>
+
   </div>
 
 </body>
