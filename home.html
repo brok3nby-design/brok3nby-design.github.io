@@ -6,7 +6,6 @@
   <title>Brok3n by Design</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
     body {
       background-color: #0a0a0a;
       color: #00ff9f;
@@ -15,7 +14,6 @@
       padding: 0;
       line-height: 1.6;
     }
-
     nav {
       background-color: #111;
       padding: 16px 40px;
@@ -24,24 +22,20 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .logo {
       font-size: 2.1rem;
       text-shadow: 0 0 12px #00ff9f;
     }
-
     .nav-right {
       display: flex;
       align-items: center;
       gap: 25px;
     }
-
     nav a {
       color: #00ff9f;
       text-decoration: none;
       font-size: 1.25rem;
     }
-
     .music-btn {
       background: transparent;
       border: 1px solid #00ff9f;
@@ -51,44 +45,37 @@
       font-size: 1rem;
       cursor: pointer;
     }
-
     .container {
       max-width: 1100px;
       margin: 0 auto;
       padding: 45px 20px;
     }
-
     .header {
       text-align: center;
       margin-bottom: 55px;
     }
-
     .header h1 {
       font-size: 4rem;
       margin: 0;
       text-shadow: 0 0 20px #00ff9f;
     }
-
     .flicker {
       font-size: 1.85rem;
-      margin: 2px 0 0 0;           /* Much closer to title */
+      margin: 2px 0 0 0;
       opacity: 0.9;
       animation: flicker 1.2s infinite alternate;
       text-shadow: 0 0 8px #00ff9f;
     }
-
     @keyframes flicker {
-      0%   { opacity: 0.75; }
+      0% { opacity: 0.75; }
       100% { opacity: 1; }
     }
-
     h2 {
       font-size: 2.3rem;
       border-bottom: 1px solid #00ff9f;
       padding-bottom: 10px;
       margin-bottom: 28px;
     }
-
     .project-card {
       background-color: #111;
       border: 1px solid #00ff9f;
@@ -96,16 +83,13 @@
       margin-bottom: 24px;
       transition: all 0.3s ease;
     }
-
     .project-card:hover {
       box-shadow: 0 0 15px rgba(0, 255, 159, 0.25);
     }
-
     .project-card h3 {
       margin: 0 0 12px 0;
       font-size: 1.75rem;
     }
-
     .view-btn {
       display: inline-block;
       margin-top: 16px;
@@ -116,7 +100,6 @@
       font-size: 1.15rem;
       transition: all 0.3s ease;
     }
-
     .view-btn:hover {
       background-color: #00ff9f;
       color: #000;
@@ -124,10 +107,9 @@
   </style>
 </head>
 <body>
-
   <nav>
     <div class="logo">BROK3N BY DESIGN</div>
-    
+   
     <div class="nav-right">
       <a href="home.html">Home</a>
       <a href="#current">Current Projects</a>
@@ -137,7 +119,6 @@
   </nav>
 
   <div class="container">
-
     <!-- Header -->
     <div class="header">
       <h1>BROK3N BY DESIGN</h1>
@@ -147,31 +128,26 @@
     <!-- Current Projects -->
     <section id="current">
       <h2>Current Projects</h2>
-
       <div class="project-card">
         <h3>WRFM Radio Station</h3>
         <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
         <a href="wrfm.html" class="view-btn">Enter Station →</a>
       </div>
-
       <div class="project-card">
         <h3>Pocket Wilds</h3>
         <p>A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
         <a href="pocket-wilds.html" class="view-btn">View Project →</a>
       </div>
-
       <div class="project-card">
         <h3>DOQI</h3>
         <p>A large-scale game currently in early development. More details coming soon.</p>
         <a href="doqi.html" class="view-btn">View Project →</a>
       </div>
-
       <div class="project-card">
         <h3>CYOA</h3>
         <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
         <a href="cyoa.html" class="view-btn">Start Adventure →</a>
       </div>
-
       <div class="project-card">
         <h3>Macabre Dolls</h3>
         <p>A dark and stylish card game with a haunting atmosphere.</p>
@@ -182,16 +158,15 @@
     <section id="about">
       <h2>About</h2>
       <p>Brok3n by Design is an independent studio creating strange, atmospheric, and slightly broken experiences.</p>
-
       <h2 style="margin-top: 45px;">Socials</h2>
       <p><a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a></p>
     </section>
-
   </div>
 
   <!-- Background Music -->
   <audio id="bgMusic" loop>
-    <source src="audio/background.mp3" type="audio/mpeg">
+    <source src="sounds/site_music_1.ogg" type="audio/ogg">
+    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -214,6 +189,5 @@
       }
     }
   </script>
-
 </body>
 </html>
