@@ -70,7 +70,15 @@
 
     .header {
       text-align: center;
-      margin-bottom: 55px;
+      margin-bottom: 40px;
+    }
+
+    #visualizer {
+      display: none;
+      width: 100%;
+      max-width: 700px;
+      height: 60px;
+      margin: 0 auto 20px;
     }
 
     .header h1 {
@@ -131,16 +139,6 @@
       background-color: #00ff9f;
       color: #000;
     }
-
-    #visualizer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      z-index: 50;
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -155,10 +153,10 @@
     </div>
   </nav>
 
-  <canvas id="visualizer"></canvas>
-
   <div class="container">
     <div class="header">
+      <!-- Visualizer now sits above the title -->
+      <canvas id="visualizer"></canvas>
       <h1>BROK3N BY DESIGN</h1>
       <p class="flicker">It's in the algorithm, probably.</p>
     </div>
@@ -240,7 +238,7 @@
       let x = 0;
 
       for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2;
+        const barHeight = dataArray[i] / 2.2;
         ctx.fillRect(x, visualizer.height - barHeight, barWidth, barHeight);
         x += barWidth + 1;
       }
@@ -256,8 +254,8 @@
           musicPlaying = true;
           musicBtn.textContent = "MUSIC: ON";
           musicBtn.classList.add('playing');
-          visualizer.width = window.innerWidth;
-          visualizer.height = 80;
+          visualizer.width = 700;
+          visualizer.height = 60;
           drawVisualizer();
         }).catch(() => {
           alert("Please click the music button again to enable audio.");
@@ -272,31 +270,22 @@
       }
     }
 
-    // Try to auto-start music muted when arriving from splash
+    // Auto-start music when coming from splash page
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('playMusic') === 'true') {
         music.muted = true;
         music.play().then(() => {
-          music.muted = false; // Try to unmute after user gesture from splash
+          music.muted = false;
           musicPlaying = true;
           musicBtn.textContent = "MUSIC: ON";
           initAudio();
-          visualizer.width = window.innerWidth;
-          visualizer.height = 80;
+          visualizer.width = 700;
+          visualizer.height = 60;
           drawVisualizer();
-        }).catch(() => {
-          // If it fails, keep it muted and let user click the button
-        });
+        }).catch(() => {});
       }
     };
-
-    // Resize visualizer on window resize
-    window.addEventListener('resize', () => {
-      if (musicPlaying) {
-        visualizer.width = window.innerWidth;
-      }
-    });
   </script>
 </body>
 </html>
