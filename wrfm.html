@@ -40,7 +40,7 @@
       align-items: flex-end;
       flex-wrap: wrap;
       gap: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
     }
 
     .project-header h1 {
@@ -51,12 +51,24 @@
 
     .stats {
       text-align: right;
-      font-size: 1.3rem;
+      font-size: 1.35rem;
     }
 
     .stats span {
       display: block;
       margin-bottom: 6px;
+      color: #00ffcc; /* Different color for stats */
+    }
+
+    .social-links {
+      margin-bottom: 30px;
+    }
+
+    .social-links a {
+      color: #00ffcc;
+      margin-right: 20px;
+      text-decoration: none;
+      font-size: 1.3rem;
     }
 
     h2 {
@@ -66,16 +78,16 @@
       margin-top: 40px;
     }
 
-    .updates, .roadmap {
+    .updates {
       background-color: #111;
       border: 1px solid #00ff9f;
       padding: 25px;
-      margin-top: 20px;
+      margin-bottom: 30px;
     }
 
     .update-item {
       border-bottom: 1px dashed #00aa66;
-      padding: 12px 0;
+      padding: 14px 0;
     }
 
     .image-placeholder {
@@ -85,6 +97,13 @@
       margin: 15px 0;
       color: #00aa66;
       font-size: 1.2rem;
+    }
+
+    .roadmap {
+      background-color: #111;
+      border: 1px solid #00ff9f;
+      padding: 25px;
+      margin-top: 20px;
     }
 
     .roadmap ul {
@@ -107,21 +126,21 @@
       </div>
       <div class="stats">
         <span><strong>Progress:</strong> 35%</span>
-        <span><strong>Expected Release:</strong> Q3 2027</span>
+        <span><strong>Expected Release:</strong> TBA</span>
       </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="social-links">
+      <a href="https://x.com/brok3nbydesign" target="_blank">X / Twitter</a>
+      <!-- Add more project-specific socials here if needed -->
     </div>
 
     <p style="font-size:1.4rem; max-width: 800px;">
       An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.
     </p>
 
-    <!-- Image Placeholders -->
-    <h2>Screenshots & Art</h2>
-    <div class="image-placeholder">Add main screenshot here</div>
-    <div class="image-placeholder">Add UI screenshot here</div>
-    <div class="image-placeholder">Add host portrait here</div>
-
-    <!-- Dev Updates -->
+    <!-- Development Updates -->
     <h2>Development Updates</h2>
     <div class="updates">
       <div class="update-item">
@@ -132,8 +151,14 @@
         <strong>June 28, 2026</strong><br>
         Completed core radio UI and playlist system.
       </div>
-      <!-- Add more updates here -->
+      <!-- Add more updates above this line -->
     </div>
+
+    <!-- Image Placeholders -->
+    <h2>Screenshots & Art</h2>
+    <div class="image-placeholder">Add main screenshot here</div>
+    <div class="image-placeholder">Add UI screenshot here</div>
+    <div class="image-placeholder">Add host portrait here</div>
 
     <!-- Roadmap -->
     <h2>Roadmap</h2>
