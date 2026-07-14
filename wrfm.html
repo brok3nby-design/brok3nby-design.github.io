@@ -37,10 +37,16 @@
     .project-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 40px;
-      margin-bottom: 25px;
+      align-items: flex-end;
       flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
     }
 
     .project-header h1 {
@@ -49,26 +55,22 @@
       text-shadow: 0 0 15px #00ff9f;
     }
 
-    .header-right {
-      text-align: right;
-      min-width: 260px;
+    .twitter-link {
+      font-size: 1.5rem;
+      color: #00ffcc;
+      text-decoration: none;
+      white-space: nowrap;
     }
 
     .stats {
+      text-align: right;
       font-size: 1.35rem;
       color: #00ffcc;
-      margin-bottom: 8px;
     }
 
     .stats span {
       display: block;
       margin-bottom: 4px;
-    }
-
-    .social-link {
-      font-size: 1.3rem;
-      color: #00ffcc;
-      text-decoration: none;
     }
 
     h2 {
@@ -82,7 +84,7 @@
       background-color: #111;
       border: 1px solid #00ff9f;
       padding: 20px;
-      max-height: 320px;           /* Scrollable if many updates */
+      max-height: 320px;
       overflow-y: auto;
       margin-bottom: 30px;
     }
@@ -117,16 +119,14 @@
 
     <!-- Project Header -->
     <div class="project-header">
-      <div>
+      <div class="title-group">
         <h1>Codename: WRFM</h1>
+        <a href="https://x.com/brok3nbydesign" target="_blank" class="twitter-link">X / Twitter</a>
       </div>
 
-      <div class="header-right">
-        <div class="stats">
-          <span><strong>Progress:</strong> 35%</span>
-          <span><strong>Expected Release:</strong> TBA</span>
-        </div>
-        <a href="https://x.com/brok3nbydesign" target="_blank" class="social-link">X / Twitter</a>
+      <div class="stats">
+        <span><strong>Progress:</strong> 35%</span>
+        <span><strong>Expected Release:</strong> TBA</span>
       </div>
     </div>
 
@@ -148,7 +148,7 @@
       <!-- Add new updates above this line -->
     </div>
 
-    <!-- Image Placeholders -->
+    <!-- Screenshots & Art -->
     <h2>Screenshots & Art</h2>
     <div class="image-placeholder">Add main screenshot here</div>
     <div class="image-placeholder">Add UI screenshot here</div>
