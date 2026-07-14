@@ -18,23 +18,34 @@
 
     nav {
       background-color: #111;
-      padding: 20px 40px;
+      padding: 18px 40px;
       border-bottom: 2px solid #00ff9f;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .logo {
-      font-size: 2.2rem;
-      text-shadow: 0 0 12px #00ff9f;
-    }
+    .logo { font-size: 2.1rem; text-shadow: 0 0 12px #00ff9f; }
 
     nav a {
       color: #00ff9f;
       text-decoration: none;
       margin-left: 25px;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
+    }
+
+    .music-btn {
+      position: absolute;
+      top: 22px;
+      right: 40px;
+      background: transparent;
+      border: 1px solid #00ff9f;
+      color: #00ff9f;
+      padding: 6px 14px;
+      font-family: "VT323", monospace;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 100;
     }
 
     .container {
@@ -50,55 +61,51 @@
 
     .header h1 {
       font-size: 4rem;
-      margin: 0 0 10px 0;
+      margin: 0 0 8px 0;
       text-shadow: 0 0 20px #00ff9f;
     }
 
     .flicker {
-      font-size: 1.9rem;
+      font-size: 1.85rem;
       margin: 0;
       opacity: 0.9;
-      animation: flicker 1.5s infinite alternate;
+      animation: flicker 1.6s infinite alternate;
     }
 
     @keyframes flicker {
-      0%   { opacity: 0.85; }
+      0% { opacity: 0.82; }
       100% { opacity: 1; }
     }
 
     h2 {
-      font-size: 2.4rem;
+      font-size: 2.3rem;
       border-bottom: 1px solid #00ff9f;
-      padding-bottom: 12px;
-      margin-bottom: 30px;
+      padding-bottom: 10px;
+      margin-bottom: 28px;
     }
 
     .project-card {
       background-color: #111;
       border: 1px solid #00ff9f;
-      padding: 25px;
-      margin-bottom: 25px;
+      padding: 26px;
+      margin-bottom: 24px;
       transition: all 0.3s ease;
     }
 
     .project-card:hover {
-      border-color: #00ff9f;
-      box-shadow: 0 0 15px rgba(0, 255, 159, 0.3);
+      box-shadow: 0 0 15px rgba(0, 255, 159, 0.25);
     }
 
-    .project-card h3 {
-      margin: 0 0 12px 0;
-      font-size: 1.8rem;
-    }
+    .project-card h3 { margin: 0 0 12px 0; font-size: 1.75rem; }
 
     .view-btn {
       display: inline-block;
-      margin-top: 15px;
-      padding: 10px 25px;
+      margin-top: 16px;
+      padding: 10px 26px;
       border: 1px solid #00ff9f;
       color: #00ff9f;
       text-decoration: none;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       transition: all 0.3s ease;
     }
 
@@ -119,9 +126,11 @@
     </div>
   </nav>
 
+  <!-- Music Toggle Button -->
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
+
   <div class="container">
 
-    <!-- Header -->
     <div class="header">
       <h1>BROK3N BY DESIGN</h1>
       <p class="flicker">It's in the algorithm, probably.</p>
@@ -131,35 +140,30 @@
     <section id="current">
       <h2>Current Projects</h2>
 
-      <!-- WRFM -->
       <div class="project-card">
         <h3>WRFM Radio Station</h3>
         <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
         <a href="wrfm.html" class="view-btn">Enter Station →</a>
       </div>
 
-      <!-- Pocket Wilds -->
       <div class="project-card">
         <h3>Pocket Wilds</h3>
         <p>A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
         <a href="pocket-wilds.html" class="view-btn">View Project →</a>
       </div>
 
-      <!-- DOQI -->
       <div class="project-card">
         <h3>DOQI</h3>
         <p>A large-scale game currently in early development. More details coming soon.</p>
         <a href="doqi.html" class="view-btn">View Project →</a>
       </div>
 
-      <!-- CYOA -->
       <div class="project-card">
         <h3>CYOA</h3>
         <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
         <a href="cyoa.html" class="view-btn">Start Adventure →</a>
       </div>
 
-      <!-- Macabre Dolls -->
       <div class="project-card">
         <h3>Macabre Dolls</h3>
         <p>A dark and stylish card game with a haunting atmosphere.</p>
@@ -167,19 +171,43 @@
       </div>
     </section>
 
-    <!-- About -->
     <section id="about">
       <h2>About</h2>
-      <p>Brok3n by Design is an independent studio focused on creating strange, atmospheric, and slightly broken experiences.</p>
+      <p>Brok3n by Design is an independent studio creating strange, atmospheric, and slightly broken experiences.</p>
 
-      <h2 style="margin-top: 50px;">Socials</h2>
+      <h2 style="margin-top: 45px;">Socials</h2>
       <p>
-        <a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a> &nbsp;&nbsp;
-        <a href="#" target="_blank" style="color:#00ff9f;">Itch.io</a>
+        <a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a>
       </p>
     </section>
 
   </div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="audio/background.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let musicPlaying = false;
+
+    function toggleMusic() {
+      if (!musicPlaying) {
+        music.play().then(() => {
+          musicPlaying = true;
+          musicBtn.textContent = "MUSIC: ON";
+        }).catch(() => {
+          alert("Click anywhere on the page first to enable audio.");
+        });
+      } else {
+        music.pause();
+        musicPlaying = false;
+        musicBtn.textContent = "MUSIC: OFF";
+      }
+    }
+  </script>
 
 </body>
 </html>
