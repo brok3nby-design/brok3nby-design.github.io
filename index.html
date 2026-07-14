@@ -6,78 +6,136 @@
   <title>Brok3n by Design</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
     body {
+      margin: 0;
+      padding: 0;
       background-color: #0a0a0a;
       color: #00ff9f;
       font-family: "VT323", "Courier New", monospace;
-      margin: 0;
-      padding: 0;
+      overflow: hidden;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      flex-direction: column;
+      justify-content: center;
+      background-color: #000;
     }
-    .terminal {
-      background-color: #111;
-      border: 3px solid #00ff9f;
-      padding: 40px;
-      max-width: 800px;
-      width: 90%;
-      box-shadow: 0 0 30px rgba(0, 255, 159, 0.4);
-      text-align: center;
-    }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px #00ff9f;
-    }
+
     video {
-      max-width: 100%;
-      border: 2px solid #00ff9f;
-      margin-bottom: 30px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) saturate(1.1);
     }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .title {
+      font-size: 4.5rem;
+      margin: 0;
+      text-shadow: 0 0 20px #00ff9f;
+      letter-spacing: 6px;
+    }
+
+    .tagline {
+      font-size: 1.8rem;
+      margin-top: 10px;
+      opacity: 0.9;
+    }
+
     .enter-btn {
-      background: none;
+      margin-top: 60px;
+      padding: 18px 60px;
+      font-size: 1.8rem;
+      background: transparent;
       border: 2px solid #00ff9f;
       color: #00ff9f;
       font-family: "VT323", monospace;
-      font-size: 1.8rem;
-      padding: 15px 40px;
       cursor: pointer;
-      text-transform: uppercase;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
     }
+
+    .enter-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .enter-btn:hover {
       background-color: #00ff9f;
       color: #0a0a0a;
     }
+
+    .scanlines {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        transparent,
+        transparent 4px,
+        rgba(0, 255, 159, 0.06) 4px,
+        rgba(0, 255, 159, 0.06) 8px
+      );
+      pointer-events: none;
+      z-index: 3;
+    }
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <h1>BROK3N BY DESIGN</h1>
-    
-    <!-- Replace "splash.mp4" with your actual video file name -->
-    <video id="splashVideo" width="640" autoplay muted playsinline>
+
+  <div class="video-container">
+    <!-- Replace splash.mp4 with your actual video file -->
+    <video id="splashVideo" autoplay muted playsinline>
       <source src="splash.mp4" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
 
-    <br>
-    <button class="enter-btn" onclick="enterSite()">ENTER</button>
+    <div class="overlay">
+      <h1 class="title">BROK3N BY DESIGN</h1>
+      <p class="tagline">It's in the algorithm, probably.</p>
+
+      <button class="enter-btn" id="enterBtn" onclick="enterSite()">
+        ENTER
+      </button>
+    </div>
+
+    <div class="scanlines"></div>
   </div>
 
   <script>
+    const enterBtn = document.getElementById('enterBtn');
+
+    // Show Enter button after 10 seconds
+    setTimeout(() => {
+      enterBtn.classList.add('show');
+    }, 10000);
+
     function enterSite() {
       window.location.href = "home.html";
     }
 
-    // Optional: Auto redirect after video ends
-    const video = document.getElementById('splashVideo');
-    video.onended = function() {
-      // Uncomment the line below if you want it to auto-enter after video finishes
-      // enterSite();
-    };
+    // Optional: Allow pressing Enter key after button appears
+    document.addElementById('splashVideo').addEventListener('ended', () => {
+      enterBtn.classList.add('show');
+    });
   </script>
+
 </body>
 </html>
