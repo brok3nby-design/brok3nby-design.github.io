@@ -18,26 +18,31 @@
 
     nav {
       background-color: #111;
-      padding: 18px 40px;
+      padding: 16px 40px;
       border-bottom: 2px solid #00ff9f;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .logo { font-size: 2.1rem; text-shadow: 0 0 12px #00ff9f; }
+    .logo {
+      font-size: 2.1rem;
+      text-shadow: 0 0 12px #00ff9f;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
 
     nav a {
       color: #00ff9f;
       text-decoration: none;
-      margin-left: 25px;
       font-size: 1.25rem;
     }
 
     .music-btn {
-      position: absolute;
-      top: 22px;
-      right: 40px;
       background: transparent;
       border: 1px solid #00ff9f;
       color: #00ff9f;
@@ -45,35 +50,35 @@
       font-family: "VT323", monospace;
       font-size: 1rem;
       cursor: pointer;
-      z-index: 100;
     }
 
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 50px 20px;
+      padding: 45px 20px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 55px;
     }
 
     .header h1 {
       font-size: 4rem;
-      margin: 0 0 8px 0;
+      margin: 0;
       text-shadow: 0 0 20px #00ff9f;
     }
 
     .flicker {
       font-size: 1.85rem;
-      margin: 0;
+      margin: 2px 0 0 0;           /* Much closer to title */
       opacity: 0.9;
-      animation: flicker 1.6s infinite alternate;
+      animation: flicker 1.2s infinite alternate;
+      text-shadow: 0 0 8px #00ff9f;
     }
 
     @keyframes flicker {
-      0% { opacity: 0.82; }
+      0%   { opacity: 0.75; }
       100% { opacity: 1; }
     }
 
@@ -96,7 +101,10 @@
       box-shadow: 0 0 15px rgba(0, 255, 159, 0.25);
     }
 
-    .project-card h3 { margin: 0 0 12px 0; font-size: 1.75rem; }
+    .project-card h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.75rem;
+    }
 
     .view-btn {
       display: inline-block;
@@ -119,18 +127,18 @@
 
   <nav>
     <div class="logo">BROK3N BY DESIGN</div>
-    <div>
+    
+    <div class="nav-right">
       <a href="home.html">Home</a>
       <a href="#current">Current Projects</a>
       <a href="#about">About</a>
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
     </div>
   </nav>
 
-  <!-- Music Toggle Button -->
-  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
-
   <div class="container">
 
+    <!-- Header -->
     <div class="header">
       <h1>BROK3N BY DESIGN</h1>
       <p class="flicker">It's in the algorithm, probably.</p>
@@ -176,9 +184,7 @@
       <p>Brok3n by Design is an independent studio creating strange, atmospheric, and slightly broken experiences.</p>
 
       <h2 style="margin-top: 45px;">Socials</h2>
-      <p>
-        <a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a>
-      </p>
+      <p><a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a></p>
     </section>
 
   </div>
