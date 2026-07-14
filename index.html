@@ -6,7 +6,6 @@
   <title>Brok3n by Design</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
     body {
       background-color: #0a0a0a;
       color: #00ff9f;
@@ -17,66 +16,68 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      line-height: 1.4;
+      flex-direction: column;
     }
-
     .terminal {
       background-color: #111;
       border: 3px solid #00ff9f;
-      padding: 40px 50px;
-      max-width: 700px;
+      padding: 40px;
+      max-width: 800px;
       width: 90%;
       box-shadow: 0 0 30px rgba(0, 255, 159, 0.4);
-      position: relative;
+      text-align: center;
     }
-
-    .terminal::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        transparent,
-        transparent 3px,
-        rgba(0, 255, 159, 0.07) 3px,
-        rgba(0, 255, 159, 0.07) 6px
-      );
-      pointer-events: none;
-    }
-
     h1 {
-      font-size: 3.2rem;
-      margin: 0 0 10px 0;
+      font-size: 3rem;
+      margin-bottom: 20px;
       text-shadow: 0 0 15px #00ff9f;
-      letter-spacing: 4px;
     }
-
-    .tagline {
-      font-size: 1.6rem;
-      margin-bottom: 40px;
-      opacity: 0.85;
+    video {
+      max-width: 100%;
+      border: 2px solid #00ff9f;
+      margin-bottom: 30px;
     }
-
-    .content {
-      font-size: 1.5rem;
+    .enter-btn {
+      background: none;
+      border: 2px solid #00ff9f;
+      color: #00ff9f;
+      font-family: "VT323", monospace;
+      font-size: 1.8rem;
+      padding: 15px 40px;
+      cursor: pointer;
+      text-transform: uppercase;
     }
-
-    .content p {
-      margin: 12px 0;
+    .enter-btn:hover {
+      background-color: #00ff9f;
+      color: #0a0a0a;
     }
   </style>
 </head>
 <body>
   <div class="terminal">
     <h1>BROK3N BY DESIGN</h1>
-    <p class="tagline">It's in the algorithm, probably.</p>
+    
+    <!-- Replace "splash.mp4" with your actual video file name -->
+    <video id="splashVideo" width="640" autoplay muted playsinline>
+      <source src="splash.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
 
-    <div class="content">
-      <p>Welcome.</p>
-      <p>This site is currently under construction.</p>
-      <p>More broken things coming soon.</p>
-       <p> follow us on X </p>
-        <p> @brok3nbydesign </p>
-    </div>
+    <br>
+    <button class="enter-btn" onclick="enterSite()">ENTER</button>
   </div>
+
+  <script>
+    function enterSite() {
+      window.location.href = "home.html";
+    }
+
+    // Optional: Auto redirect after video ends
+    const video = document.getElementById('splashVideo');
+    video.onended = function() {
+      // Uncomment the line below if you want it to auto-enter after video finishes
+      // enterSite();
+    };
+  </script>
 </body>
 </html>
