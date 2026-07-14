@@ -5,14 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brok3n by Design</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
     body {
       margin: 0;
       padding: 0;
-      background-color: #0a0a0a;
-      color: #00ff9f;
-      font-family: "VT323", "Courier New", monospace;
+      background-color: #000;
       overflow: hidden;
     }
 
@@ -30,49 +26,24 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: contrast(1.1) saturate(1.1);
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .title {
-      font-size: 4.5rem;
-      margin: 0;
-      text-shadow: 0 0 20px #00ff9f;
-      letter-spacing: 6px;
-    }
-
-    .tagline {
-      font-size: 1.8rem;
-      margin-top: 10px;
-      opacity: 0.9;
     }
 
     .enter-btn {
-      margin-top: 60px;
-      padding: 18px 60px;
-      font-size: 1.8rem;
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 50px;
+      font-size: 1.6rem;
       background: transparent;
       border: 2px solid #00ff9f;
       color: #00ff9f;
-      font-family: "VT323", monospace;
+      font-family: "Courier New", monospace;
       cursor: pointer;
       transition: all 0.3s ease;
       opacity: 0;
       pointer-events: none;
+      z-index: 10;
     }
 
     .enter-btn.show {
@@ -82,59 +53,34 @@
 
     .enter-btn:hover {
       background-color: #00ff9f;
-      color: #0a0a0a;
-    }
-
-    .scanlines {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        transparent,
-        transparent 4px,
-        rgba(0, 255, 159, 0.06) 4px,
-        rgba(0, 255, 159, 0.06) 8px
-      );
-      pointer-events: none;
-      z-index: 3;
+      color: #000;
     }
   </style>
 </head>
 <body>
 
   <div class="video-container">
-    <!-- Replace splash.mp4 with your actual video file -->
+    <!-- Make sure the path matches where you uploaded the video -->
     <video id="splashVideo" autoplay muted playsinline>
-      <source src="Brokenintro.mp4" type="video/mp4">
+      <source src="videos/BrokenIntro.mp4" type="video/mp4">
     </video>
 
-    <div class="overlay">
-      <h1 class="title">BROK3N BY DESIGN</h1>
-      <p class="tagline">It's in the algorithm, probably.</p>
-
-      <button class="enter-btn" id="enterBtn" onclick="enterSite()">
-        ENTER
-      </button>
-    </div>
-
-    <div class="scanlines"></div>
+    <button class="enter-btn" id="enterBtn" onclick="enterSite()">
+      ENTER
+    </button>
   </div>
 
   <script>
     const enterBtn = document.getElementById('enterBtn');
 
-    // Show Enter button after 10 seconds
+    // Show Enter button after 7 seconds
     setTimeout(() => {
       enterBtn.classList.add('show');
-    }, 10000);
+    }, 7000);
 
     function enterSite() {
       window.location.href = "home.html";
     }
-
-    // Optional: Allow pressing Enter key after button appears
-    document.addElementById('splashVideo').addEventListener('ended', () => {
-      enterBtn.classList.add('show');
-    });
   </script>
 
 </body>
