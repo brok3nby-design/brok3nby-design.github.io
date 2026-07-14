@@ -23,8 +23,8 @@
     }
 
     video {
-      max-width: 92%;      /* Much bigger now (~8% reduction) */
-      max-height: 92%;
+      max-width: 88%;
+      max-height: 88%;
       width: auto;
       height: auto;
       object-fit: contain;
@@ -57,22 +57,41 @@
       background-color: #00ff9f;
       color: #000;
     }
+
+    .sound-btn {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: transparent;
+      border: 1px solid #00ff9f;
+      color: #00ff9f;
+      padding: 8px 16px;
+      font-family: "Courier New", monospace;
+      cursor: pointer;
+      z-index: 20;
+    }
   </style>
 </head>
 <body>
 
   <div class="video-container">
-    <video id="splashVideo" autoplay loop playsinline>
+    <video id="splashVideo" autoplay muted loop playsinline>
       <source src="videos/BrokenIntro.mp4" type="video/mp4">
     </video>
 
     <button class="enter-btn" id="enterBtn" onclick="enterSite()">
       ENTER
     </button>
+
+    <button class="sound-btn" id="soundBtn" onclick="toggleSound()">
+      SOUND: OFF
+    </button>
   </div>
 
   <script>
+    const video = document.getElementById('splashVideo');
     const enterBtn = document.getElementById('enterBtn');
+    const soundBtn = document.getElementById('soundBtn');
 
     // Show Enter button after 7 seconds
     setTimeout(() => {
@@ -81,6 +100,17 @@
 
     function enterSite() {
       window.location.href = "home.html";
+    }
+
+    // Sound toggle
+    function toggleSound() {
+      if (video.muted) {
+        video.muted = false;
+        soundBtn.textContent = "SOUND: ON";
+      } else {
+        video.muted = true;
+        soundBtn.textContent = "SOUND: OFF";
+      }
     }
   </script>
 
