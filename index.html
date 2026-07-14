@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brok3n by Design</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+    body {
+      background-color: #0a0a0a;
+      color: #00ff9f;
+      font-family: "VT323", "Courier New", monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      line-height: 1.4;
+    }
+
+    .terminal {
+      background-color: #111;
+      border: 3px solid #00ff9f;
+      padding: 40px 50px;
+      max-width: 700px;
+      width: 90%;
+      box-shadow: 0 0 30px rgba(0, 255, 159, 0.4);
+      position: relative;
+    }
+
+    .terminal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        transparent,
+        transparent 3px,
+        rgba(0, 255, 159, 0.07) 3px,
+        rgba(0, 255, 159, 0.07) 6px
+      );
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 15px #00ff9f;
+      letter-spacing: 4px;
+    }
+
+    .tagline {
+      font-size: 1.6rem;
+      margin-bottom: 40px;
+      opacity: 0.85;
+    }
+
+    .content {
+      font-size: 1.5rem;
+    }
+
+    .content p {
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <h1>BROK3N BY DESIGN</h1>
+    <p class="tagline">It's in the algorithm, probably.</p>
+
+    <div class="content">
+      <p>Welcome.</p>
+      <p>This site is currently under construction.</p>
+      <p>More broken things coming soon.</p>
+    </div>
+  </div>
+</body>
+</html>
