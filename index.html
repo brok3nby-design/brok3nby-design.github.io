@@ -23,18 +23,20 @@
     }
 
     video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 85%;     /* Shrunk ~15% */
+      max-height: 85%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
     }
 
     .enter-btn {
       position: absolute;
-      bottom: 80px;
+      bottom: 60px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 16px 50px;
-      font-size: 1.6rem;
+      padding: 16px 55px;
+      font-size: 1.5rem;
       background: transparent;
       border: 2px solid #00ff9f;
       color: #00ff9f;
@@ -60,7 +62,6 @@
 <body>
 
   <div class="video-container">
-    <!-- Make sure the path matches where you uploaded the video -->
     <video id="splashVideo" autoplay muted playsinline>
       <source src="videos/Brokenintro.mp4" type="video/mp4">
     </video>
