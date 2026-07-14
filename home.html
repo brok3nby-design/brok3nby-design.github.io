@@ -25,59 +25,86 @@
       align-items: center;
     }
 
-    nav .logo {
-      font-size: 2rem;
-      text-shadow: 0 0 10px #00ff9f;
+    .logo {
+      font-size: 2.2rem;
+      text-shadow: 0 0 12px #00ff9f;
     }
 
     nav a {
       color: #00ff9f;
       text-decoration: none;
-      margin-left: 30px;
+      margin-left: 25px;
       font-size: 1.3rem;
     }
 
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 50px 20px;
     }
 
-    h1 {
-      font-size: 3.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 15px #00ff9f;
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
     }
 
-    .tagline {
-      font-size: 1.8rem;
-      margin-bottom: 50px;
-      opacity: 0.85;
+    .header h1 {
+      font-size: 4rem;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 20px #00ff9f;
     }
 
-    section {
-      margin-bottom: 70px;
+    .flicker {
+      font-size: 1.9rem;
+      margin: 0;
+      opacity: 0.9;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0%   { opacity: 0.85; }
+      100% { opacity: 1; }
     }
 
     h2 {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       border-bottom: 1px solid #00ff9f;
-      padding-bottom: 10px;
-      margin-bottom: 25px;
+      padding-bottom: 12px;
+      margin-bottom: 30px;
     }
 
-    .project {
+    .project-card {
       background-color: #111;
       border: 1px solid #00ff9f;
       padding: 25px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
     }
 
-    .socials a {
+    .project-card:hover {
+      border-color: #00ff9f;
+      box-shadow: 0 0 15px rgba(0, 255, 159, 0.3);
+    }
+
+    .project-card h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.8rem;
+    }
+
+    .view-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 25px;
+      border: 1px solid #00ff9f;
       color: #00ff9f;
-      margin-right: 25px;
       text-decoration: none;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .view-btn:hover {
+      background-color: #00ff9f;
+      color: #000;
     }
   </style>
 </head>
@@ -87,46 +114,69 @@
     <div class="logo">BROK3N BY DESIGN</div>
     <div>
       <a href="home.html">Home</a>
-      <a href="#current">Current</a>
-      <a href="#completed">Completed</a>
+      <a href="#current">Current Projects</a>
       <a href="#about">About</a>
     </div>
   </nav>
 
   <div class="container">
 
-    <h1>BROK3N BY DESIGN</h1>
-    <p class="tagline">It's in the algorithm, probably.</p>
+    <!-- Header -->
+    <div class="header">
+      <h1>BROK3N BY DESIGN</h1>
+      <p class="flicker">It's in the algorithm, probably.</p>
+    </div>
 
-    <!-- CURRENT PROJECTS -->
+    <!-- Current Projects -->
     <section id="current">
       <h2>Current Projects</h2>
-      <div class="project">
-        <h3>Project Name Here</h3>
-        <p>Short description of what you're working on right now...</p>
+
+      <!-- WRFM -->
+      <div class="project-card">
+        <h3>WRFM Radio Station</h3>
+        <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
+        <a href="wrfm.html" class="view-btn">Enter Station →</a>
+      </div>
+
+      <!-- Pocket Wilds -->
+      <div class="project-card">
+        <h3>Pocket Wilds</h3>
+        <p>A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
+        <a href="pocket-wilds.html" class="view-btn">View Project →</a>
+      </div>
+
+      <!-- DOQI -->
+      <div class="project-card">
+        <h3>DOQI</h3>
+        <p>A large-scale game currently in early development. More details coming soon.</p>
+        <a href="doqi.html" class="view-btn">View Project →</a>
+      </div>
+
+      <!-- CYOA -->
+      <div class="project-card">
+        <h3>CYOA</h3>
+        <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
+        <a href="cyoa.html" class="view-btn">Start Adventure →</a>
+      </div>
+
+      <!-- Macabre Dolls -->
+      <div class="project-card">
+        <h3>Macabre Dolls</h3>
+        <p>A dark and stylish card game with a haunting atmosphere.</p>
+        <a href="macabre-dolls.html" class="view-btn">View Project →</a>
       </div>
     </section>
 
-    <!-- COMPLETED PROJECTS -->
-    <section id="completed">
-      <h2>Completed Projects</h2>
-      <div class="project">
-        <h3>Game Title</h3>
-        <p>Short description + link to play/download if available.</p>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
+    <!-- About -->
     <section id="about">
       <h2>About</h2>
-      <p>Write something about yourself and what Brok3n by Design is about.</p>
+      <p>Brok3n by Design is an independent studio focused on creating strange, atmospheric, and slightly broken experiences.</p>
 
       <h2 style="margin-top: 50px;">Socials</h2>
-      <div class="socials">
-        <a href="https://x.com/brok3nbydesign" target="_blank">X / Twitter</a>
-        <a href="#" target="_blank">Itch.io</a>
-        <!-- Add more if needed -->
-      </div>
+      <p>
+        <a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a> &nbsp;&nbsp;
+        <a href="#" target="_blank" style="color:#00ff9f;">Itch.io</a>
+      </p>
     </section>
 
   </div>
