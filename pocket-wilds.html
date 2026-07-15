@@ -6,57 +6,147 @@
   <title>Pocket Wilds | Brok3n by Design</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-    body { background-color: #0a0a0a; color: #00ff9f; font-family: "VT323", "Courier New", monospace; margin: 0; padding: 0; line-height: 1.6; }
-    nav { background-color: #111; padding: 18px 40px; border-bottom: 2px solid #00ff9f; }
-    nav a { color: #00ff9f; text-decoration: none; font-size: 1.2rem; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-    .project-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 30px; margin-bottom: 20px; }
-    .project-header h1 { font-size: 2.8rem; margin: 0; text-shadow: 0 0 15px #00ff9f; }
-    .title-group { display: flex; align-items: baseline; gap: 20px; }
-    .twitter-link { font-size: 1.5rem; color: #00ffcc; text-decoration: none; }
-    .stats { text-align: right; font-size: 1.35rem; color: #00ffcc; }
-    .stats span { display: block; margin-bottom: 4px; }
-    h2 { font-size: 2rem; border-bottom: 1px solid #00ff9f; padding-bottom: 8px; margin-top: 35px; }
-    .game-wrapper {
-      position: relative;
-      border: 3px solid #00ff9f;
-      background: #000;
-      margin: 30px 0;
-    }
-    .game-wrapper iframe {
-      width: 100%;
-      height: 620px;
-      border: none;
-      display: block;
-    }
-    .fullscreen-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #000;
+
+    body {
+      background-color: #0a0a0a;
       color: #00ff9f;
-      border: 1px solid #00ff9f;
-      padding: 6px 14px;
-      font-family: "VT323", monospace;
-      font-size: 1rem;
-      cursor: pointer;
-      z-index: 10;
+      font-family: "VT323", "Courier New", monospace;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
     }
+
+    nav {
+      background-color: #111;
+      padding: 18px 40px;
+      border-bottom: 2px solid #00ff9f;
+    }
+
+    nav a {
+      color: #00ff9f;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .project-header h1 {
+      font-size: 2.8rem;
+      margin: 0;
+      text-shadow: 0 0 15px #00ff9f;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+    }
+
+    .twitter-link {
+      font-size: 1.5rem;
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    .stats {
+      text-align: right;
+      font-size: 1.35rem;
+      color: #00ffcc;
+    }
+
+    .stats span {
+      display: block;
+      margin-bottom: 4px;
+    }
+
     .beta-warning {
       background: #331100;
       border: 1px solid #ffaa00;
       color: #ffcc66;
       padding: 12px 20px;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       font-size: 1.2rem;
+    }
+
+    .image-placeholder {
+      border: 3px dashed #00ff9f;
+      padding: 120px 40px;
+      text-align: center;
+      margin: 30px 0;
+      color: #00aa66;
+      font-size: 1.4rem;
+    }
+
+    .play-button {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px 40px;
+      font-size: 2rem;
+      background: transparent;
+      border: 3px solid #00ff9f;
+      color: #00ff9f;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .play-button:hover {
+      background-color: #00ff9f;
+      color: #000;
+    }
+
+    h2 {
+      font-size: 2rem;
+      border-bottom: 1px solid #00ff9f;
+      padding-bottom: 8px;
+      margin-top: 40px;
+    }
+
+    .updates {
+      background-color: #111;
+      border: 1px solid #00ff9f;
+      padding: 20px;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 30px;
+    }
+
+    .update-item {
+      border-bottom: 1px dashed #00aa66;
+      padding: 12px 0;
+    }
+
+    .roadmap {
+      background-color: #111;
+      border: 1px solid #00ff9f;
+      padding: 25px;
     }
   </style>
 </head>
 <body>
 
-  <nav><a href="home.html">← Back to Home</a></nav>
+  <nav>
+    <a href="home.html">← Back to Home</a>
+  </nav>
 
   <div class="container">
+
+    <!-- Header -->
     <div class="project-header">
       <div class="title-group">
         <h1>Codename: Pocket Wilds</h1>
@@ -68,32 +158,38 @@
       </div>
     </div>
 
+    <!-- Beta Warning -->
     <div class="beta-warning">
-      ⚠️ <strong>Beta Version</strong> — This game is in early development. Expect bugs and changes.
+      ⚠️ <strong>Beta Version</strong> — This game is in early development. Expect bugs, balance changes, and missing features.
     </div>
 
     <p style="font-size:1.4rem;">A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
 
-    <!-- Playable Game with Fullscreen -->
-    <h2>Play Pocket Wilds</h2>
-    <div class="game-wrapper" id="gameWrapper">
-      <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Full Screen</button>
-      <iframe id="gameFrame" src="https://brok3nbydesign.com/pocket-wilds/" allowfullscreen></iframe>
+    <!-- Image Placeholder -->
+    <div class="image-placeholder">
+      Add game screenshot or cover art here
     </div>
 
-    <p style="text-align: center; margin-top: -15px;">
-      <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" style="color:#00ff9f;">Open in New Tab →</a>
-    </p>
+    <!-- Big Play Button -->
+    <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" class="play-button">
+      ▶ PLAY GAME
+    </a>
 
+    <!-- Development Updates -->
     <h2>Development Updates</h2>
     <div class="updates">
-      <div class="update-item"><strong>July 5, 2026</strong><br>Started world map prototype and combat system planning.</div>
+      <div class="update-item">
+        <strong>July 5, 2026</strong><br>
+        Started world map prototype and combat system planning.
+      </div>
     </div>
 
+    <!-- Screenshots & Art -->
     <h2>Screenshots & Art</h2>
     <div class="image-placeholder">Add main screenshot here</div>
     <div class="image-placeholder">Add character art here</div>
 
+    <!-- Roadmap -->
     <h2>Roadmap</h2>
     <div class="roadmap">
       <ul>
@@ -103,20 +199,8 @@
         <li>Early playable build</li>
       </ul>
     </div>
-  </div>
 
-  <script>
-    function toggleFullscreen() {
-      const elem = document.getElementById("gameWrapper");
-      if (!document.fullscreenElement) {
-        elem.requestFullscreen().catch(err => {
-          alert("Fullscreen not supported on this browser.");
-        });
-      } else {
-        document.exitFullscreen();
-      }
-    }
-  </script>
+  </div>
 
 </body>
 </html>
