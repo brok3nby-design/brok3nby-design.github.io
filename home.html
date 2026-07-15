@@ -4,216 +4,366 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brok3n by Design</title>
+  
+  <!-- Modern font for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #f5f5f5;
+      --muted: #9a9a9a;
+      --accent: #00ff9f;
+    }
 
     body {
-      background-color: #0a0a0a;
-      color: #00ff9f;
-      font-family: "VT323", "Courier New", monospace;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system_ui, sans-serif;
       margin: 0;
       padding: 0;
       line-height: 1.6;
     }
 
+    /* Retro font only for headings and logo */
+    h1, h2, .logo, .project-card h3 {
+      font-family: 'VT323', monospace;
+    }
+
     nav {
       background-color: #111;
-      padding: 16px 40px;
-      border-bottom: 2px solid #00ff9f;
+      padding: 20px 40px;
+      border-bottom: 1px solid #222;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .logo {
-      font-size: 2.1rem;
-      text-shadow: 0 0 12px #00ff9f;
+      font-size: 2.4rem;
+      color: var(--accent);
+      text-shadow: 0 0 15px var(--accent);
     }
 
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 30px;
     }
 
     nav a {
-      color: #00ff9f;
+      color: var(--text);
       text-decoration: none;
-      font-size: 1.25rem;
-    }
-
-    .music-btn {
-      background: transparent;
-      border: 1px solid #00ff9f;
-      color: #00ff9f;
-      padding: 6px 14px;
-      font-family: "VT323", monospace;
       font-size: 1rem;
-      cursor: pointer;
-      animation: pulse 2s infinite;
-    }
-
-    .music-btn.playing {
-      animation: none;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+      font-weight: 500;
     }
 
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 45px 20px;
+      padding: 0 20px;
     }
 
-    .header {
+    /* Hero Section */
+    .hero {
       text-align: center;
+      padding: 100px 20px 80px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      margin: 0 0 16px 0;
+      color: var(--accent);
+    }
+
+    .hero .tagline {
+      font-size: 1.5rem;
+      color: var(--muted);
       margin-bottom: 40px;
     }
 
-    #visualizer {
-      display: none;
-      width: 100%;
-      max-width: 700px;
-      height: 60px;
-      margin: 0 auto 20px;
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .header h1 {
-      font-size: 4rem;
-      margin: 0;
-      text-shadow: 0 0 20px #00ff9f;
+    /* Featured Game */
+    .featured {
+      background-color: var(--card);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
     }
 
-    .flicker {
-      font-size: 1.85rem;
-      margin: 2px 0 0 0;
-      opacity: 0.9;
-      animation: flicker 1.2s infinite alternate;
-      text-shadow: 0 0 8px #00ff9f;
+    .featured-image {
+      background-color: #222;
+      border-radius: 8px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 1.1rem;
+      border: 2px dashed #333;
     }
 
-    @keyframes flicker {
-      0% { opacity: 0.75; }
-      100% { opacity: 1; }
+    /* Project Cards */
+    .section {
+      margin-bottom: 100px;
     }
 
-    h2 {
-      font-size: 2.3rem;
-      border-bottom: 1px solid #00ff9f;
-      padding-bottom: 10px;
-      margin-bottom: 28px;
+    .section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      color: var(--text);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
     }
 
     .project-card {
-      background-color: #111;
-      border: 1px solid #00ff9f;
-      padding: 26px;
-      margin-bottom: 24px;
+      background-color: var(--card);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 28px;
       transition: all 0.3s ease;
     }
 
     .project-card:hover {
-      box-shadow: 0 0 15px rgba(0, 255, 159, 0.25);
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 255, 159, 0.1);
     }
 
     .project-card h3 {
+      font-size: 1.8rem;
       margin: 0 0 12px 0;
-      font-size: 1.75rem;
     }
 
-    .view-btn {
+    .status-badge {
       display: inline-block;
-      margin-top: 16px;
-      padding: 10px 26px;
-      border: 1px solid #00ff9f;
-      color: #00ff9f;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .status-beta { background: #ffcc00; color: #000; }
+    .status-dev { background: #3a7bd5; color: white; }
+    .status-prototype { background: #9b59b6; color: white; }
+
+    .project-card p {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .feature-tag {
+      background: #222;
+      color: #aaa;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 8px;
       text-decoration: none;
-      font-size: 1.15rem;
+      font-weight: 600;
+      font-size: 1rem;
       transition: all 0.3s ease;
     }
 
-    .view-btn:hover {
-      background-color: #00ff9f;
+    .btn-primary {
+      background: var(--accent);
       color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #00cc7a;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid #444;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      background: #111;
+      padding: 60px 20px 40px;
+      text-align: center;
+      border-top: 1px solid #222;
+    }
+
+    footer p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+
+    .social-links a {
+      color: var(--text);
+      margin: 0 15px;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
 
+  <!-- Navigation -->
   <nav>
     <div class="logo">BROK3N BY DESIGN</div>
     <div class="nav-right">
-      <a href="home.html">Home</a>
-      <a href="#current">Current Projects</a>
+      <a href="#released">Games</a>
+      <a href="#current">Labs</a>
       <a href="#about">About</a>
+      <a href="#music">Music</a>
       <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
     </div>
   </nav>
 
+  <!-- Hero -->
+  <div class="hero">
+    <h1>BROK3N BY DESIGN</h1>
+    <p class="tagline">Indie games.<br>Weird experiments.<br>Stories that don't quite behave.</p>
+    
+    <div class="hero-buttons">
+      <a href="#released" class="btn btn-primary">View Games</a>
+      <a href="#current" class="btn btn-secondary">See What's Next</a>
+    </div>
+  </div>
+
   <div class="container">
-    <div class="header">
-      <!-- Visualizer now sits above the title -->
-      <canvas id="visualizer"></canvas>
-      <h1>BROK3N BY DESIGN</h1>
-      <p class="flicker">It's in the algorithm, probably.</p>
-    </div>
 
- <!-- Released Games -->
-<section id="released">
-  <h2>Released Games</h2>
-  
-  <div class="project-card" style="border-color: #ffcc00;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-      <h3 style="margin: 0;">Pocket Wilds</h3>
-      <span style="background: #ffcc00; color: #000; padding: 2px 10px; font-size: 0.9rem; border-radius: 4px; font-weight: bold;">BETA</span>
-    </div>
-    <p style="color: #ffcc66; font-size: 1.1rem; margin-bottom: 10px;">
-      ⚠️ Early beta — features and balance may change.
-    </p>
-    <p>A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
-    <a href="pocket-wilds.html" class="view-btn">Play Game →</a>
-  </div>
-</section>
+    <!-- Featured Game -->
+    <section id="released" class="section">
+      <h2>Featured Game</h2>
+      
+      <div class="featured">
+        <div>
+          <div class="status-badge status-beta">BETA</div>
+          <h2 style="font-size: 2.8rem; margin: 10px 0;">Pocket Wilds</h2>
+          <p style="font-size: 1.2rem; color: #ccc;">A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
+          
+          <div class="features">
+            <span class="feature-tag">Adventure RPG</span>
+            <span class="feature-tag">Puzzle Dungeons</span>
+            <span class="feature-tag">Pixel Art</span>
+            <span class="feature-tag">Story Driven</span>
+          </div>
 
-<!-- In Development -->
-<section id="current" style="margin-top: 60px;">
-  <h2>In Development</h2>
-
-  <div class="project-card">
-    <h3>WRFM Radio Station</h3>
-    <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
-    <a href="wrfm.html" class="view-btn">Enter Station →</a>
-  </div>
-
-  <div class="project-card">
-    <h3>DOQI</h3>
-    <p>A large-scale game currently in early development. More details coming soon.</p>
-    <a href="doqi.html" class="view-btn">View Project →</a>
-  </div>
-
-  <div class="project-card">
-    <h3>CYOA</h3>
-    <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
-    <a href="cyoa.html" class="view-btn">Start Adventure →</a>
-  </div>
-
-  <div class="project-card">
-    <h3>Macabre Dolls</h3>
-    <p>A dark and stylish card game with a haunting atmosphere.</p>
-    <a href="macabre-dolls.html" class="view-btn">View Project →</a>
-  </div>
-</section>
-
-    <section id="about">
-      <h2>About</h2>
-      <p>Brok3n by Design is an independent studio creating strange, atmospheric, and slightly broken experiences.</p>
-      <h2 style="margin-top: 45px;">Socials</h2>
-      <p><a href="https://x.com/brok3nbydesign" target="_blank" style="color:#00ff9f;">X / Twitter</a></p>
+          <a href="pocket-wilds.html" class="btn btn-primary" style="margin-top: 10px;">▶ Play Beta</a>
+        </div>
+        
+        <div class="featured-image">
+          [ Game Screenshot / Cover Art Placeholder ]
+        </div>
+      </div>
     </section>
+
+    <!-- In Development -->
+    <section id="current" class="section">
+      <h2>In Development</h2>
+      
+      <div class="projects-grid">
+
+        <!-- WRFM -->
+        <div class="project-card">
+          <div class="status-badge status-dev">In Development</div>
+          <h3>WRFM Radio Station</h3>
+          <p>An interactive 1950s-style radio station with a sassy host.</p>
+          <a href="wrfm.html" class="btn btn-secondary">View Project</a>
+        </div>
+
+        <!-- DOQI -->
+        <div class="project-card">
+          <div class="status-badge status-prototype">Prototype</div>
+          <h3>DOQI</h3>
+          <p>A satirical personality game where every ridiculous decision secretly shapes who you become.</p>
+          <a href="doqi.html" class="btn btn-secondary">View Project</a>
+        </div>
+
+        <!-- CYOA -->
+        <div class="project-card">
+          <div class="status-badge status-dev">In Development</div>
+          <h3>CYOA</h3>
+          <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
+          <a href="cyoa.html" class="btn btn-secondary">View Project</a>
+        </div>
+
+        <!-- Macabre Dolls -->
+        <div class="project-card">
+          <div class="status-badge status-prototype">Prototype</div>
+          <h3>Macabre Dolls</h3>
+          <p>A dark and stylish card game with a haunting atmosphere.</p>
+          <a href="macabre-dolls.html" class="btn btn-secondary">View Project</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+      <h2>About the Studio</h2>
+      <p style="max-width: 700px; font-size: 1.15rem; color: #ccc;">
+        We build games that mix strange ideas, dark humor, nostalgia, and experimental mechanics. 
+        Every project explores something a little different — from retro RPGs and satirical personality tests 
+        to haunted card games and fictional radio stations.
+      </p>
+    </section>
+
   </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <h2 style="margin-bottom: 10px;">BROK3N BY DESIGN</h2>
+      <p>Creating games that shouldn't work... but somehow do.</p>
+      
+      <div class="social-links">
+        <a href="https://x.com/brok3nbydesign">X</a>
+        <a href="#">Itch.io</a>
+        <a href="#">GitHub</a>
+      </div>
+      
+      <p style="margin-top: 40px; font-size: 0.9rem; color: #666;">
+        © 2026 Brok3n by Design. All rights broken.
+      </p>
+    </div>
+  </footer>
 
   <!-- Background Music -->
   <audio id="bgMusic" loop>
@@ -222,87 +372,28 @@
   </audio>
 
   <script>
+    // Music functionality (kept from before)
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
-    const visualizer = document.getElementById('visualizer');
-    const ctx = visualizer.getContext('2d');
     let musicPlaying = false;
-    let audioContext, analyser, source;
-
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        source = audioContext.createMediaElementSource(music);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-        analyser.fftSize = 64;
-      }
-    }
-
-    function drawVisualizer() {
-      if (!musicPlaying) return;
-
-      visualizer.style.display = 'block';
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-
-      ctx.clearRect(0, 0, visualizer.width, visualizer.height);
-      ctx.fillStyle = '#00ff9f';
-
-      const barWidth = (visualizer.width / bufferLength) * 1.5;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2.2;
-        ctx.fillRect(x, visualizer.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-
-      requestAnimationFrame(drawVisualizer);
-    }
 
     function toggleMusic() {
-      initAudio();
-
       if (!musicPlaying) {
         music.play().then(() => {
           musicPlaying = true;
           musicBtn.textContent = "MUSIC: ON";
           musicBtn.classList.add('playing');
-          visualizer.width = 700;
-          visualizer.height = 60;
-          drawVisualizer();
         }).catch(() => {
-          alert("Please click the music button again to enable audio.");
+          alert("Click anywhere to enable audio.");
         });
       } else {
         music.pause();
         musicPlaying = false;
         musicBtn.textContent = "MUSIC: OFF";
         musicBtn.classList.remove('playing');
-        visualizer.style.display = 'none';
-        ctx.clearRect(0, 0, visualizer.width, visualizer.height);
       }
     }
-
-    // Auto-start music when coming from splash page
-    window.onload = function() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('playMusic') === 'true') {
-        music.muted = true;
-        music.play().then(() => {
-          music.muted = false;
-          musicPlaying = true;
-          musicBtn.textContent = "MUSIC: ON";
-          initAudio();
-          visualizer.width = 700;
-          visualizer.height = 60;
-          drawVisualizer();
-        }).catch(() => {});
-      }
-    };
   </script>
+
 </body>
 </html>
