@@ -4,137 +4,252 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pocket Wilds | Brok3n by Design</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #00ff9f;
+      --border: #2f2f2f;
+    }
 
     body {
-      background-color: #0a0a0a;
-      color: #00ff9f;
-      font-family: "VT323", "Courier New", monospace;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system_ui, sans-serif;
       margin: 0;
       padding: 0;
       line-height: 1.6;
     }
 
+    h1, h2, .logo {
+      font-family: 'VT323', monospace;
+    }
+
     nav {
       background-color: #111;
       padding: 18px 40px;
-      border-bottom: 2px solid #00ff9f;
+      border-bottom: 1px solid var(--border);
     }
 
     nav a {
-      color: #00ff9f;
+      color: var(--text);
       text-decoration: none;
-      font-size: 1.2rem;
+      font-weight: 500;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 0 20px;
     }
 
-    .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-bottom: 20px;
+    /* Hero Section */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
     }
 
-    .project-header h1 {
-      font-size: 2.8rem;
-      margin: 0;
-      text-shadow: 0 0 15px #00ff9f;
-    }
-
-    .title-group {
-      display: flex;
-      align-items: baseline;
-      gap: 20px;
-    }
-
-    .twitter-link {
-      font-size: 1.5rem;
-      color: #00ffcc;
-      text-decoration: none;
-    }
-
-    .stats {
-      text-align: right;
-      font-size: 1.35rem;
-      color: #00ffcc;
-    }
-
-    .stats span {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .beta-warning {
-      background: #331100;
-      border: 1px solid #ffaa00;
-      color: #ffcc66;
-      padding: 12px 20px;
+    .hero-image {
+      background-color: #222;
+      border: 2px dashed #444;
+      border-radius: 12px;
+      height: 420px;
       margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
       font-size: 1.2rem;
     }
 
-    .image-placeholder {
-      border: 3px dashed #00ff9f;
-      padding: 120px 40px;
-      text-align: center;
-      margin: 30px 0;
-      color: #00aa66;
-      font-size: 1.4rem;
+    .hero h1 {
+      font-size: 3.5rem;
+      margin: 0 0 8px 0;
+      color: var(--accent);
     }
 
-    .play-button {
-      display: block;
-      width: 100%;
-      max-width: 400px;
-      margin: 30px auto;
-      padding: 20px 40px;
-      font-size: 2rem;
-      background: transparent;
-      border: 3px solid #00ff9f;
-      color: #00ff9f;
-      text-align: center;
+    .hero .genre {
+      font-size: 1.3rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .status {
+      display: inline-block;
+      background: #ffcc00;
+      color: #000;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      color: #ccc;
+      font-size: 1.15rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-weight: 600;
       text-decoration: none;
+      font-size: 1.1rem;
       transition: all 0.3s ease;
     }
 
-    .play-button:hover {
-      background-color: #00ff9f;
+    .btn-primary {
+      background: var(--accent);
       color: #000;
     }
 
-    h2 {
+    .btn-primary:hover {
+      background: #00cc7a;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid #444;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section h2 {
       font-size: 2rem;
-      border-bottom: 1px solid #00ff9f;
-      padding-bottom: 8px;
-      margin-top: 40px;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .updates {
-      background-color: #111;
-      border: 1px solid #00ff9f;
-      padding: 20px;
-      max-height: 320px;
-      overflow-y: auto;
-      margin-bottom: 30px;
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
     }
 
-    .update-item {
-      border-bottom: 1px dashed #00aa66;
-      padding: 12px 0;
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      transition: all 0.3s ease;
     }
 
-    .roadmap {
-      background-color: #111;
-      border: 1px solid #00ff9f;
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 12px 0;
+      color: var(--accent);
+    }
+
+    /* Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-item {
+      background: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Changelog */
+    .changelog {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 25px;
+    }
+
+    .changelog-item {
+      border-bottom: 1px solid #222;
+      padding: 16px 0;
+    }
+
+    .changelog-item:last-child {
+      border-bottom: none;
+    }
+
+    .changelog-item h4 {
+      margin: 0 0 8px 0;
+      color: var(--accent);
+    }
+
+    /* Roadmap */
+    .roadmap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 25px;
+    }
+
+    .milestone {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+    }
+
+    .milestone .check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .milestone.done .check { background: var(--accent); color: #000; }
+    .milestone.current .check { background: #ffcc00; color: #000; }
+    .milestone.pending .check { background: #333; color: #888; }
+
+    /* Footer */
+    footer {
+      background: #111;
+      padding: 50px 20px 30px;
+      text-align: center;
+      border-top: 1px solid var(--border);
     }
   </style>
 </head>
@@ -146,61 +261,140 @@
 
   <div class="container">
 
-    <!-- Header -->
-    <div class="project-header">
-      <div class="title-group">
-        <h1>Codename: Pocket Wilds</h1>
-        <a href="https://x.com/brok3nbydesign" target="_blank" class="twitter-link">X / Twitter</a>
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-image">
+        [ Large Cover Art / Gameplay Screenshot Placeholder ]
       </div>
-      <div class="stats">
-        <span><strong>Progress:</strong> 12%</span>
-        <span><strong>Expected Release:</strong> TBA</span>
+
+      <div class="status-badge status-beta" style="background:#ffcc00; color:#000; padding:6px 18px; border-radius:999px; font-weight:700;">
+        OPEN BETA
       </div>
-    </div>
 
-    <!-- Beta Warning -->
-    <div class="beta-warning">
-      ⚠️ <strong>Beta Version</strong> — This game is in early development. Expect bugs, balance changes, and missing features.
-    </div>
+      <h1>Pocket Wilds</h1>
+      <p class="genre">Adventure RPG • Single Player • Pixel Art</p>
 
-    <p style="font-size:1.4rem;">A hybrid between classic Zelda exploration and Final Fantasy storytelling.</p>
+      <p>A modern pixel adventure inspired by classic Zelda exploration and Final Fantasy storytelling.</p>
 
-    <!-- Image Placeholder -->
-    <div class="image-placeholder">
-      Add game screenshot or cover art here
-    </div>
-
-    <!-- Big Play Button -->
-    <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" class="play-button">
-      ▶ PLAY GAME
-    </a>
-
-    <!-- Development Updates -->
-    <h2>Development Updates</h2>
-    <div class="updates">
-      <div class="update-item">
-        <strong>July 5, 2026</strong><br>
-        Started world map prototype and combat system planning.
+      <div class="hero-buttons">
+        <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" class="btn btn-primary">▶ PLAY THE BETA</a>
+        <a href="#" class="btn btn-secondary">Follow Development</a>
       </div>
     </div>
 
-    <!-- Screenshots & Art -->
-    <h2>Screenshots & Art</h2>
-    <div class="image-placeholder">Add main screenshot here</div>
-    <div class="image-placeholder">Add character art here</div>
+    <!-- Game Description -->
+    <div class="section">
+      <h2>Overview</h2>
+      <p style="max-width: 760px; font-size: 1.15rem; color: #ccc;">
+        Explore a handcrafted world filled with secrets, solve clever puzzles, battle strange creatures, 
+        and uncover a story about memory, identity, and the cost of power.
+      </p>
+    </div>
+
+    <!-- Features -->
+    <div class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Explore</h3>
+          <p>Large handcrafted world filled with secrets and hidden paths.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Battle</h3>
+          <p>Strategic turn-based combat with deep equipment and skill systems.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Collect</h3>
+          <p>Discover rare equipment, treasures, and powerful artifacts.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Story</h3>
+          <p>Character-driven narrative with meaningful choices and consequences.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="section">
+      <h2>Gallery</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item">[ Forest Region Screenshot ]</div>
+        <div class="gallery-item">[ Combat Screenshot ]</div>
+        <div class="gallery-item">[ Village Screenshot ]</div>
+        <div class="gallery-item">[ Boss Fight Screenshot ]</div>
+      </div>
+    </div>
+
+    <!-- Latest Development -->
+    <div class="section">
+      <h2>Latest Development</h2>
+      <div class="changelog">
+        <div class="changelog-item">
+          <h4>Version 0.1.3 — July 2026</h4>
+          <strong>Added</strong>
+          <ul>
+            <li>New enemy types and AI behaviors</li>
+            <li>Forest region expansion</li>
+            <li>Dialogue system improvements</li>
+          </ul>
+          <strong>Fixed</strong>
+          <ul>
+            <li>Collision and pathfinding bugs</li>
+            <li>Save file corruption issues</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <!-- Roadmap -->
-    <h2>Roadmap</h2>
-    <div class="roadmap">
-      <ul>
-        <li>Finish world map prototype</li>
-        <li>Implement turn-based combat</li>
-        <li>Create first dungeon</li>
-        <li>Early playable build</li>
-      </ul>
+    <div class="section">
+      <h2>Roadmap</h2>
+      <div class="roadmap">
+        <div class="milestone done">
+          <div class="check">✓</div>
+          <div>World Prototype Complete</div>
+        </div>
+        <div class="milestone done">
+          <div class="check">✓</div>
+          <div>Inventory & Equipment System</div>
+        </div>
+        <div class="milestone current">
+          <div class="check">◐</div>
+          <div>Turn-Based Combat</div>
+        </div>
+        <div class="milestone pending">
+          <div class="check">○</div>
+          <div>First Dungeon</div>
+        </div>
+        <div class="milestone pending">
+          <div class="check">○</div>
+          <div>Boss Battle</div>
+        </div>
+        <div class="milestone pending">
+          <div class="check">○</div>
+          <div>Early Access Release</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Community -->
+    <div class="section">
+      <h2>Community</h2>
+      <p>Follow development and share feedback:</p>
+      <p>
+        <a href="https://x.com/brok3nbydesign" target="_blank" style="color: var(--accent);">X / Twitter</a>
+      </p>
     </div>
 
   </div>
+
+  <footer>
+    <div class="container">
+      <p><strong>▶ Play the Beta</strong> &nbsp;&nbsp; 
+         <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank">Open in New Tab</a></p>
+      <p style="margin-top: 30px; color: #666;">© 2026 Brok3n by Design</p>
+    </div>
+  </footer>
 
 </body>
 </html>
