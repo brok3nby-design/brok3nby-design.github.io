@@ -4,23 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Macabre Dolls | Brok3n by Design</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-    body { background-color: #0a0a0a; color: #00ff9f; font-family: "VT323", "Courier New", monospace; margin: 0; padding: 0; line-height: 1.6; }
-    nav { background-color: #111; padding: 18px 40px; border-bottom: 2px solid #00ff9f; }
-    nav a { color: #00ff9f; text-decoration: none; font-size: 1.2rem; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-    .project-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 30px; margin-bottom: 20px; }
-    .project-header h1 { font-size: 2.8rem; margin: 0; text-shadow: 0 0 15px #00ff9f; }
-    .title-group { display: flex; align-items: baseline; gap: 20px; }
-    .twitter-link { font-size: 1.5rem; color: #00ffcc; text-decoration: none; }
-    .stats { text-align: right; font-size: 1.35rem; color: #00ffcc; }
-    .stats span { display: block; margin-bottom: 4px; }
-    h2 { font-size: 2rem; border-bottom: 1px solid #00ff9f; padding-bottom: 8px; margin-top: 35px; }
-    .updates { background-color: #111; border: 1px solid #00ff9f; padding: 20px; max-height: 320px; overflow-y: auto; margin-bottom: 30px; }
-    .update-item { border-bottom: 1px dashed #00aa66; padding: 12px 0; }
-    .image-placeholder { border: 2px dashed #00ff9f; padding: 45px; text-align: center; margin: 15px 0; color: #00aa66; }
-    .roadmap { background-color: #111; border: 1px solid #00ff9f; padding: 25px; }
+    :root { --bg:#0b0b0b; --card:#151515; --text:#eeeeee; --muted:#999999; --accent:#00ff9f; --border:#2f2f2f; }
+    body { background:var(--bg); color:var(--text); font-family:'Inter',system_ui,sans-serif; margin:0; padding:0; line-height:1.6; }
+    h1,h2 { font-family:'VT323',monospace; }
+    nav { background:#111; padding:18px 40px; border-bottom:1px solid var(--border); }
+    nav a { color:var(--text); text-decoration:none; }
+    .container { max-width:1100px; margin:0 auto; padding:0 20px; }
+    .hero { padding:60px 0 40px; text-align:center; }
+    .hero-image { background:#222; border:2px dashed #444; border-radius:12px; height:380px; margin-bottom:30px; display:flex; align-items:center; justify-content:center; color:#666; }
+    .hero h1 { font-size:3.5rem; margin:0 0 8px; color:var(--accent); }
+    .status { display:inline-block; background:#9b59b6; color:white; padding:4px 16px; border-radius:20px; font-weight:600; margin-bottom:20px; }
+    .hero p { max-width:620px; margin:0 auto 30px; color:#ccc; font-size:1.15rem; }
+    .btn { padding:16px 36px; border-radius:8px; font-weight:600; text-decoration:none; display:inline-block; }
+    .btn-primary { background:var(--accent); color:#000; }
+    .btn-secondary { background:transparent; color:var(--text); border:2px solid #444; }
+    .section { margin-bottom:80px; }
+    .section h2 { font-size:2rem; margin-bottom:25px; border-bottom:1px solid var(--border); padding-bottom:10px; }
+    .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+    .feature-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; }
+    .feature-card h3 { color:var(--accent); margin:0 0 12px; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+    .gallery-item { background:#222; border-radius:8px; aspect-ratio:16/9; }
+    .changelog, .roadmap { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:25px; }
+    footer { background:#111; padding:50px 20px 30px; text-align:center; border-top:1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -28,37 +36,54 @@
   <nav><a href="home.html">← Back to Home</a></nav>
 
   <div class="container">
-    <div class="project-header">
-      <div class="title-group">
-        <h1>Codename: Macabre Dolls</h1>
-        <a href="https://x.com/brok3nbydesign" target="_blank" class="twitter-link">X / Twitter</a>
-      </div>
-      <div class="stats">
-        <span><strong>Progress:</strong> 5%</span>
-        <span><strong>Expected Release:</strong> TBA</span>
+    <div class="hero">
+      <div class="hero-image">[ Macabre Dolls Card Art Placeholder ]</div>
+      <div class="status">PROTOTYPE</div>
+      <h1>Macabre Dolls</h1>
+      <p class="genre">Dark Card Game • Atmospheric • Strategy</p>
+      <p>A dark and stylish card game with a haunting atmosphere.</p>
+      <a href="#" class="btn btn-primary">Follow Development</a>
+    </div>
+
+    <div class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card"><h3>Haunting Theme</h3><p>Beautifully dark art and unsettling lore.</p></div>
+        <div class="feature-card"><h3>Strategic Depth</h3><p>Deep card interactions and combo systems.</p></div>
+        <div class="feature-card"><h3>Dark Humor</h3><p>Twisted flavor text and morbid comedy.</p></div>
       </div>
     </div>
 
-    <p style="font-size:1.4rem;">A dark and stylish card game with a haunting atmosphere.</p>
-
-    <h2>Development Updates</h2>
-    <div class="updates">
-      <div class="update-item"><strong>July 3, 2026</strong><br>Initial card design and theme exploration.</div>
+    <div class="section">
+      <h2>Gallery</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item">[ Card Art ]</div>
+        <div class="gallery-item">[ Gameplay Screenshot ]</div>
+      </div>
     </div>
 
-    <h2>Screenshots & Art</h2>
-    <div class="image-placeholder">Add card art here</div>
+    <div class="section">
+      <h2>Latest Development</h2>
+      <div class="changelog">
+        <div class="changelog-item"><strong>July 2026</strong> — Initial card design and core mechanics explored.</div>
+      </div>
+    </div>
 
-    <h2>Roadmap</h2>
-    <div class="roadmap">
-      <ul>
-        <li>Finalize core card mechanics</li>
-        <li>Complete first set of cards</li>
-        <li>Playtesting phase</li>
-        <li>Digital prototype</li>
-      </ul>
+    <div class="section">
+      <h2>Roadmap</h2>
+      <div class="roadmap">
+        <div>◐ Core Card Mechanics</div>
+        <div>○ First Card Set Complete</div>
+        <div>○ Playtesting Phase</div>
+        <div>○ Digital Prototype</div>
+      </div>
     </div>
   </div>
+
+  <footer>
+    <p>Follow development on <a href="https://x.com/brok3nbydesign">X</a></p>
+    <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
+  </footer>
 
 </body>
 </html>
