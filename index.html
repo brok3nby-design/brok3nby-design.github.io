@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brok3n by Design — Indie Game Studio</title>
+  <meta name="description" content="Brok3n by Design is an indie game studio making strange, story-driven games. Play Pocket Wilds and follow what's next.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+    }
+
+    video {
+      max-width: 96%;
+      max-height: 96%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .enter-btn {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 18px 60px;
+      font-size: 1.6rem;
+      background: transparent;
+      border: 2px solid #00ff9f;
+      color: #00ff9f;
+      font-family: "Courier New", monospace;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .enter-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .enter-btn:hover {
+      background-color: #00ff9f;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-container">
+    <video id="splashVideo" autoplay muted loop playsinline>
+      <source src="videos/BrokenIntro.mp4" type="video/mp4">
+    </video>
+
+    <button class="enter-btn" id="enterBtn" onclick="enterSite()">
+      ENTER
+    </button>
+  </div>
+
+  <script>
+    const enterBtn = document.getElementById('enterBtn');
+
+    // Show Enter button after a few seconds
+    setTimeout(() => {
+      enterBtn.classList.add('show');
+    }, 3000);
+
+    function enterSite() {
+      // This passes the parameter so music starts on home page
+      window.location.href = "home.html?playMusic=true";
+    }
+  </script>
+
+</body>
+</html>
