@@ -79,21 +79,24 @@
       border-radius: 12px;
       height: 420px;
       margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-size: 1.2rem;
       position: relative;
       overflow: hidden;
     }
     .hero-image::after {
       content: "POCKET WILDS";
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       font-family: 'VT323', monospace;
       font-size: 4rem;
-      color: #222;
-      letter-spacing: 8px;
+      color: #f0f0f0;
+      letter-spacing: 10px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.85), 0 0 40px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 25;
+      white-space: nowrap;
+      opacity: 0.85;
     }
     .hero h1 {
       font-size: 3.8rem;
@@ -308,6 +311,61 @@
       color: var(--accent);
       text-decoration: none;
     }
+
+    /* Hero Slideshow */
+    .hero-slideshow {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .hero-slideshow img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.85s cubic-bezier(0.4, 0.0, 0.2, 1);
+      border-radius: 9px;
+    }
+    .hero-slideshow img.active {
+      opacity: 1;
+      z-index: 2;
+    }
+    .hero-dots {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 9px;
+      z-index: 30;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .hero-dot:hover {
+      background: rgba(255,255,255,0.85);
+      transform: scale(1.25);
+    }
+    .hero-dot.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      transform: scale(1.15);
+    }
   </style>
 </head>
 <body>
@@ -319,7 +377,18 @@
     <!-- Hero Section -->
     <div class="hero">
       <div class="hero-image">
-        [ Large Cover Art / Hero Screenshot Placeholder ]
+        <div class="hero-slideshow" id="hero-slideshow">
+          <img src="images/pocket-wilds-1.png" alt="The Meadowlands - Starting region" class="active">
+          <img src="images/pocket-wilds-2.png" alt="Real-time combat in the wilds">
+          <img src="images/pocket-wilds-3.png" alt="Hero inventory and equipment screen">
+          <img src="images/pocket-wilds-4.png" alt="Campfire shop with wandering peddler">
+          <img src="images/pocket-wilds-5.png" alt="Turn-based boss battle">
+          <img src="images/pocket-wilds-6.png" alt="Level up perk selection">
+          <img src="images/pocket-wilds-7.png" alt="Weapon forging and upgrading">
+          <img src="images/pocket-wilds-8.png" alt="Legendary wanderer encounter">
+          <img src="images/pocket-wilds-9.png" alt="Champion of the Wilds - Crown ending">
+        </div>
+        <div class="hero-dots" id="hero-dots"></div>
       </div>
      
       <div class="status">OPEN BETA • v1.0</div>
@@ -542,5 +611,88 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slideshowEl = document.getElementById('hero-slideshow');
+      const dotsContainer = document.getElementById('hero-dots');
+      if (!slideshowEl || !dotsContainer) return;
+
+      const slides = slideshowEl.querySelectorAll('img');
+      let current = 0;
+      let interval = null;
+
+      // Create navigation dots
+      slides.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'hero-dot' + (index === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (index + 1));
+        dot.addEventListener('click', () => {
+          goToSlide(index);
+        });
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = dotsContainer.querySelectorAll('.hero-dot');
+
+      function updateDots() {
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === current);
+        });
+      }
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+        current = index;
+        updateDots();
+      }
+
+      function goToSlide(index) {
+        stopSlideshow();
+        showSlide(index);
+        // Resume auto-advance after user interaction
+        setTimeout(startSlideshow, 6500);
+      }
+
+      function nextSlide() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }
+
+      function startSlideshow() {
+        if (interval) clearInterval(interval);
+        interval = setInterval(nextSlide, 4800);
+      }
+
+      function stopSlideshow() {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }
+
+      // Initialize
+      showSlide(0);
+      startSlideshow();
+
+      // Pause/resume on hover over the hero image area
+      const heroContainer = document.querySelector('.hero-image');
+      if (heroContainer) {
+        heroContainer.addEventListener('mouseenter', stopSlideshow);
+        heroContainer.addEventListener('mouseleave', startSlideshow);
+      }
+
+      // Click on the slideshow area advances to next slide
+      slideshowEl.addEventListener('click', (e) => {
+        // Don't advance if clicking on a dot (dots are outside slideshowEl but in same parent)
+        if (e.target.closest('.hero-dots')) return;
+        stopSlideshow();
+        nextSlide();
+        setTimeout(startSlideshow, 5500);
+      });
+    });
+  </script>
 </body>
 </html>
