@@ -208,6 +208,10 @@
     .status-dev { background: #3a7bd5; color: white; }
     .status-prototype { background: #9b59b6; color: white; }
     .status-rnd { background: #16a085; color: white; }
+    .status-hybrid {
+      background: linear-gradient(90deg, #3a7bd5 0%, #9b59b6 100%);
+      color: white;
+    }
     .project-card p {
       color: var(--muted);
       margin-bottom: 20px;
@@ -271,7 +275,7 @@
     .legend-item .status-badge {
       margin-bottom: 0;
       flex-shrink: 0;
-      min-width: 140px;
+      min-width: 150px;
       text-align: center;
     }
     .legend-desc {
@@ -421,14 +425,14 @@
 
       <div class="projects-grid">
         <div class="project-card">
-          <div class="status-badge status-dev">In Development</div>
+          <div class="status-badge status-hybrid">Dev Prototype</div>
           <h3>WRFM 97.1 Radio Station</h3>
           <p>An interactive 1950s-style radio station inspired by GTA's radio stations. Hosted by a sassy host Vera Lang.</p>
           <a href="wrfm.html" class="btn btn-secondary">View Project</a>
         </div>
 
         <div class="project-card">
-          <div class="status-badge status-dev">In Development</div>
+          <div class="status-badge status-hybrid">Dev Prototype</div>
           <h3>DOQI</h3>
           <p>A satirical personality game where every ridiculous decision secretly shapes your future with the department.</p>
           <a href="doqi.html" class="btn btn-secondary">View Project</a>
@@ -452,12 +456,16 @@
       <!-- Status Legend -->
       <div class="status-legend">
         <div class="legend-item">
-          <span class="status-badge status-dev">In Development</span>
-          <span class="legend-desc">First production pass. Art style established, story taking shape, and core gameplay systems being built.</span>
-        </div>
-        <div class="legend-item">
           <span class="status-badge status-rnd">R&amp;D</span>
           <span class="legend-desc">Exploration phase. Brainstorming ideas, developing the look & feel, and figuring out what works as a foundation.</span>
+        </div>
+        <div class="legend-item">
+          <span class="status-badge status-dev">In Development</span>
+          <span class="legend-desc">Building from R&D. Art, systems and story are actively being created — no fully working build yet.</span>
+        </div>
+        <div class="legend-item">
+          <span class="status-badge status-hybrid">Dev Prototype</span>
+          <span class="legend-desc">Basic working version exists. Core features are playable while the rest of the project continues to be built.</span>
         </div>
         <div class="legend-item">
           <span class="status-badge status-prototype">Prototype</span>
