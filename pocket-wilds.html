@@ -60,7 +60,7 @@
       nav { padding: 14px 18px; }
       .container { padding: 0 16px; }
       .hero h1 { font-size: 2.8rem; }
-      .hero-image { height: 260px; }
+      .hero-image { height: 260px; max-width: 100%; }
       .hero-buttons { flex-direction: column; align-items: center; }
     }
     .container {
@@ -74,14 +74,17 @@
       text-align: center;
     }
     .hero-image {
-      background-color: #1a1a1a;
-      border: 3px solid #333;
-      border-radius: 12px;
-      height: 420px;
-      margin-bottom: 30px;
-      position: relative;
-      overflow: hidden;
-    }
+  background-color: #1a1a1a;
+  border: 3px solid #333;
+  border-radius: 12px;
+  height: 420px;
+  max-width: 800px;          /* ← makes the box match the image width instead of being full-page wide */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+}
     .hero-image::after {
       content: "POCKET WILDS";
       position: absolute;
