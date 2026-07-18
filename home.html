@@ -63,6 +63,9 @@
       text-decoration: none;
       font-weight: 500;
     }
+    nav a:hover {
+      color: var(--accent);
+    }
     .music-btn {
       background: transparent;
       border: 1px solid var(--accent);
@@ -265,7 +268,6 @@
       border-color: var(--accent);
       color: var(--accent);
     }
-
     /* Status Legend */
     .status-legend {
       margin-top: 56px;
@@ -293,7 +295,6 @@
       font-size: 0.95rem;
       line-height: 1.45;
     }
-
     /* Visualizer */
     #visualizer {
       display: none;
@@ -389,12 +390,11 @@
     <div class="nav-right">
       <a href="#released">Games</a>
       <a href="#current">Labs</a>
-      <a href="#about">About</a>
+      <a href="about.html">About</a>
       <a href="index.html">Watch Intro</a>
       <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
     </div>
   </nav>
-
   <!-- Hero -->
   <div class="hero">
     <h1>BROK3N BY DESIGN</h1>
@@ -404,7 +404,6 @@
       <a href="#current" class="btn btn-secondary">See What's Next</a>
     </div>
   </div>
-
   <div class="container">
     <!-- Featured Game -->
     <section id="released" class="section">
@@ -428,11 +427,9 @@
         </div>
       </div>
     </section>
-
     <!-- In Development -->
     <section id="current" class="section">
       <h2>In Development</h2>
-
       <div class="projects-grid">
         <div class="project-card">
           <div class="status-badge status-hybrid">In Dev / Prototype</div>
@@ -440,28 +437,24 @@
           <p>An interactive 1950s-style radio station inspired by GTA's radio stations. Hosted by a sassy host Vera Lang.</p>
           <a href="wrfm.html" class="btn btn-secondary">View Project</a>
         </div>
-
         <div class="project-card">
           <div class="status-badge status-hybrid">In Dev / Prototype</div>
           <h3>DOQI</h3>
           <p>A satirical personality game where every ridiculous decision secretly shapes your future with the department.</p>
           <a href="doqi.html" class="btn btn-secondary">View Project</a>
         </div>
-
         <div class="project-card">
           <div class="status-badge status-rnd">R&amp;D</div>
           <h3>CYOA</h3>
           <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
           <a href="cyoa.html" class="btn btn-secondary">View Project</a>
         </div>
-
         <div class="project-card">
           <div class="status-badge status-rnd">R&amp;D</div>
           <h3>Code Name "Macabre Dolls"</h3>
           <p>A dark and stylish card game with a haunting atmosphere.</p>
           <a href="macabre-dolls.html" class="btn btn-secondary">View Project</a>
         </div>
-
         <div class="project-card">
           <div class="status-badge status-beta">Beta</div>
           <h3>Pocket Wilds</h3>
@@ -469,7 +462,6 @@
           <a href="pocket-wilds.html" class="btn btn-secondary">Play Beta</a>
         </div>
       </div>
-
       <!-- Status Legend -->
       <div class="status-legend">
         <div class="legend-item">
@@ -502,18 +494,25 @@
         </div>
       </div>
     </section>
-
-    <!-- About -->
+    <!-- About (enhanced) -->
     <section id="about" class="section">
       <h2>About the Studio</h2>
-      <p style="max-width: 700px; font-size: 1.15rem; color: #ccc;">
-        We build games that mix strange ideas, dark humor, nostalgia, and experimental mechanics.
-        Every project explores something a little different — from retro RPGs and satirical personality tests
-        to haunted card games and fictional radio stations.
-      </p>
+      <div style="max-width: 720px;">
+        <p style="font-size: 1.15rem; color: #ccc; margin-bottom: 18px;">
+          We build games that mix strange ideas, dark humor, nostalgia, and experimental mechanics.
+          Every project explores something a little different — from retro RPGs and satirical personality tests
+          to haunted card games and fictional radio stations.
+        </p>
+        <p style="font-size: 1.05rem; color: #aaa; margin-bottom: 28px;">
+          Making things that feel a little broken on purpose.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <a href="mailto:hello@brok3nbydesign.com" class="btn btn-primary">Email the Studio</a>
+          <a href="about.html" class="btn btn-secondary">More About the Studio →</a>
+        </div>
+      </div>
     </section>
   </div>
-
   <!-- Footer -->
   <footer>
     <div class="container">
@@ -527,13 +526,11 @@
       </p>
     </div>
   </footer>
-
   <!-- Background Music -->
   <audio id="bgMusic" loop>
     <source src="sounds/site_music_1.ogg" type="audio/ogg">
     <source src="sounds/site_music_1.mp3" type="audio/mpeg">
   </audio>
-
   <script>
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
@@ -541,7 +538,6 @@
     const ctx = visualizer.getContext('2d');
     let musicPlaying = false;
     let audioContext, analyser, source;
-
     function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -552,7 +548,6 @@
         analyser.fftSize = 64;
       }
     }
-
     function drawVisualizer() {
       if (!musicPlaying) return;
       visualizer.style.display = 'block';
@@ -570,7 +565,6 @@
       }
       requestAnimationFrame(drawVisualizer);
     }
-
     function toggleMusic() {
       initAudio();
       if (!musicPlaying) {
@@ -593,7 +587,6 @@
         ctx.clearRect(0, 0, visualizer.width, visualizer.height);
       }
     }
-
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('playMusic') === 'true') {
@@ -609,7 +602,6 @@
         }).catch(() => {});
       }
     };
-
     // Pocket Wilds Carousel
     const pocketImages = [
       "images/pocket-wilds-1.png",
@@ -621,7 +613,6 @@
     const dotsContainer = document.getElementById('carouselDots');
     let currentIndex = 0;
     let slideInterval;
-
     function createSlides() {
       slidesContainer.innerHTML = '';
       pocketImages.forEach((src, index) => {
@@ -633,7 +624,6 @@
         slidesContainer.appendChild(img);
       });
     }
-
     function createDots() {
       dotsContainer.innerHTML = '';
       pocketImages.forEach((_, index) => {
@@ -649,7 +639,6 @@
         dotsContainer.appendChild(dot);
       });
     }
-
     function showSlide() {
       const slides = document.querySelectorAll('.carousel-slide');
       const dots = document.querySelectorAll('.carousel-dot');
@@ -660,17 +649,14 @@
         dot.classList.toggle('active', i === currentIndex);
       });
     }
-
     function nextSlide() {
       currentIndex = (currentIndex + 1) % pocketImages.length;
       showSlide();
     }
-
     function startAutoSlide() {
       clearInterval(slideInterval);
       slideInterval = setInterval(nextSlide, 4500);
     }
-
     createSlides();
     createDots();
     showSlide();
