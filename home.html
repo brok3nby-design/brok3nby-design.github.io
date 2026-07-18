@@ -183,6 +183,9 @@
       border-radius: 12px;
       padding: 28px;
       transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
     .project-card:hover {
       border-color: var(--accent);
@@ -202,12 +205,13 @@
       margin-bottom: 12px;
     }
     .status-beta { background: #ffcc00; color: #000; }
-.status-dev { background: #3a7bd5; color: white; }
-.status-prototype { background: #9b59b6; color: white; }
-.status-rnd { background: #16a085; color: white; }
+    .status-dev { background: #3a7bd5; color: white; }
+    .status-prototype { background: #9b59b6; color: white; }
+    .status-rnd { background: #16a085; color: white; }
     .project-card p {
       color: var(--muted);
       margin-bottom: 20px;
+      flex-grow: 1;
     }
     .features {
       display: flex;
@@ -241,6 +245,7 @@
       background: transparent;
       color: var(--text);
       border: 1px solid #444;
+      margin-top: auto; /* pins button to bottom of every card */
     }
     .btn-secondary:hover {
       border-color: var(--accent);
@@ -339,29 +344,27 @@
       <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
     </div>
   </nav>
-
   <!-- Hero -->
   <div class="hero">
     <h1>BROK3N BY DESIGN</h1>
     <p class="tagline">It's in the algorithm, probably.</p>
-   
+  
     <div class="hero-buttons">
       <a href="#released" class="btn btn-primary">View Games</a>
       <a href="#current" class="btn btn-secondary">See What's Next</a>
     </div>
   </div>
-
   <div class="container">
     <!-- Featured Game with Carousel -->
     <section id="released" class="section">
       <h2>Featured Game</h2>
-      
+     
       <div class="featured">
         <div>
           <div class="status-badge status-beta">BETA</div>
           <h2 style="font-size: 2.6rem; margin: 10px 0;">Pocket Wilds</h2>
           <p style="font-size: 1.15rem; color: #ccc;">A hybrid between classic Zelda exploration and Final Fantasy.</p>
-         
+        
           <div class="features">
             <span class="feature-tag">Adventure RPG</span>
             <span class="feature-tag">Puzzle Dungeons</span>
@@ -370,7 +373,7 @@
           </div>
           <a href="pocket-wilds.html" class="btn btn-primary">▶ Play Beta</a>
         </div>
-       
+      
         <!-- Carousel -->
         <div class="featured-image" id="pocketCarousel">
           <div class="carousel-slides" id="carouselSlides"></div>
@@ -378,11 +381,10 @@
         </div>
       </div>
     </section>
-
     <!-- In Development -->
     <section id="current" class="section">
       <h2>In Development</h2>
-     
+    
       <div class="projects-grid">
         <div class="project-card">
           <div class="status-badge status-dev">In Development</div>
@@ -390,28 +392,29 @@
           <p>An interactive 1950s-style radio station inspired by GTA's radio stations. Hosted by a sassy host Vera Lang.</p>
           <a href="wrfm.html" class="btn btn-secondary">View Project</a>
         </div>
+
         <div class="project-card">
           <div class="status-badge status-dev">In Development</div>
           <h3>DOQI</h3>
           <p>A satirical personality game where every ridiculous decision secretly shapes your future with the department.</p>
           <a href="doqi.html" class="btn btn-secondary">View Project</a>
         </div>
-      <div class="project-card">
-  <div class="status-badge status-rnd">R&amp;D</div>
-  <h3>CYOA</h3>
-  <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
-  <a href="cyoa.html" class="btn btn-secondary">View Project</a>
-</div>
 
-<div class="project-card">
-  <div class="status-badge status-rnd">R&amp;D</div>
-  <h3>Code Name "Macabre Dolls"</h3>
-  <p>A dark and stylish card game with a haunting atmosphere.</p>
-  <a href="macabre-dolls.html" class="btn btn-secondary">View Project</a>
-</div>
+        <div class="project-card">
+          <div class="status-badge status-rnd">R&amp;D</div>
+          <h3>CYOA</h3>
+          <p>An interactive choose-your-own-adventure experience guided by the reader.</p>
+          <a href="cyoa.html" class="btn btn-secondary">View Project</a>
+        </div>
+
+        <div class="project-card">
+          <div class="status-badge status-rnd">R&amp;D</div>
+          <h3>Code Name "Macabre Dolls"</h3>
+          <p>A dark and stylish card game with a haunting atmosphere.</p>
+          <a href="macabre-dolls.html" class="btn btn-secondary">View Project</a>
+        </div>
       </div>
     </section>
-
     <!-- About -->
     <section id="about" class="section">
       <h2>About the Studio</h2>
@@ -422,29 +425,26 @@
       </p>
     </section>
   </div>
-
   <!-- Footer -->
   <footer>
     <div class="container">
       <h2 style="margin-bottom: 10px;">BROK3N BY DESIGN</h2>
       <p>Creating games that shouldn't work... but somehow do.</p>
-     
+    
       <div class="social-links">
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">@brok3nbydesign on X</a>
       </div>
-     
+    
       <p style="margin-top: 40px; font-size: 0.9rem; color: #666;">
         © 2026 Brok3n by Design. All rights broken.
       </p>
     </div>
   </footer>
-
   <!-- Background Music -->
   <audio id="bgMusic" loop>
     <source src="sounds/site_music_1.ogg" type="audio/ogg">
     <source src="sounds/site_music_1.mp3" type="audio/mpeg">
   </audio>
-
   <script>
     // Original Music Script
     const music = document.getElementById('bgMusic');
@@ -453,7 +453,6 @@
     const ctx = visualizer.getContext('2d');
     let musicPlaying = false;
     let audioContext, analyser, source;
-
     function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -464,7 +463,6 @@
         analyser.fftSize = 64;
       }
     }
-
     function drawVisualizer() {
       if (!musicPlaying) return;
       visualizer.style.display = 'block';
@@ -482,7 +480,6 @@
       }
       requestAnimationFrame(drawVisualizer);
     }
-
     function toggleMusic() {
       initAudio();
       if (!musicPlaying) {
@@ -505,7 +502,6 @@
         ctx.clearRect(0, 0, visualizer.width, visualizer.height);
       }
     }
-
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('playMusic') === 'true') {
@@ -521,7 +517,6 @@
         }).catch(() => {});
       }
     };
-
     // Pocket Wilds Carousel - Fade + Slide
     const pocketImages = [
       "images/pocket-wilds-1.png",
@@ -530,12 +525,10 @@
       "images/pocket-wilds-4.png"
       // Add more images here as needed
     ];
-
     const slidesContainer = document.getElementById('carouselSlides');
     const dotsContainer = document.getElementById('carouselDots');
     let currentIndex = 0;
     let slideInterval;
-
     function createSlides() {
       slidesContainer.innerHTML = '';
       pocketImages.forEach((src, index) => {
@@ -547,48 +540,43 @@
         slidesContainer.appendChild(img);
       });
     }
-
     function createDots() {
       dotsContainer.innerHTML = '';
       pocketImages.forEach((_, index) => {
         const dot = document.createElement('div');
         dot.classList.add('carousel-dot');
         if (index === 0) dot.classList.add('active');
-        
+       
         dot.addEventListener('click', () => {
           clearInterval(slideInterval);
           currentIndex = index;
           showSlide();
           startAutoSlide();
         });
-        
+       
         dotsContainer.appendChild(dot);
       });
     }
-
     function showSlide() {
       const slides = document.querySelectorAll('.carousel-slide');
       const dots = document.querySelectorAll('.carousel-dot');
-      
+     
       slides.forEach((slide, i) => {
         slide.classList.toggle('active', i === currentIndex);
       });
-      
+     
       dots.forEach((dot, i) => {
         dot.classList.toggle('active', i === currentIndex);
       });
     }
-
     function nextSlide() {
       currentIndex = (currentIndex + 1) % pocketImages.length;
       showSlide();
     }
-
     function startAutoSlide() {
       clearInterval(slideInterval);
       slideInterval = setInterval(nextSlide, 4500); // Change every 4.5 seconds
     }
-
     // Initialize Carousel
     createSlides();
     createDots();
