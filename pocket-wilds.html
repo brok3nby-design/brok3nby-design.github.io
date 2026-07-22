@@ -685,6 +685,14 @@
       const dotsContainer = document.getElementById('hero-dots');
       if (!slideshowEl || !dotsContainer) return;
 
+      // Randomize slide order on each page load (Fisher-Yates)
+      const shuffleItems = [...slideshowEl.children];
+      for (let i = shuffleItems.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffleItems[i], shuffleItems[j]] = [shuffleItems[j], shuffleItems[i]];
+      }
+      shuffleItems.forEach(el => slideshowEl.appendChild(el));
+
       const slides = slideshowEl.querySelectorAll('img');
       let current = 0;
       let interval = null;
@@ -770,10 +778,19 @@
   </div>
   <script>
     (function(){
-      const imgs = [...document.querySelectorAll('.gallery-grid img')];
+      const grid = document.querySelector('.gallery-grid');
       const lb = document.getElementById('lightbox');
       const lbImg = document.getElementById('lbImg');
-      if (!imgs.length || !lb) return;
+      if (!grid || !lb) return;
+      // Randomize gallery order on each page load (Fisher-Yates)
+      const items = [...grid.children];
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      items.forEach(el => grid.appendChild(el));
+      const imgs = [...grid.querySelectorAll('img')];
+      if (!imgs.length) return;
       let idx = 0;
       function show(i){ idx = (i + imgs.length) % imgs.length; lbImg.src = imgs[idx].src; lbImg.alt = imgs[idx].alt; }
       function open(i){ show(i); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
