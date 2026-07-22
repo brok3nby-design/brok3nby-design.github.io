@@ -662,13 +662,23 @@
       const wantPlay = params.get('playMusic') === 'true' || localStorage.getItem('bbd_music_playing') === '1';
       if (wantPlay) autoStartMusic();
     };
-    // Pocket Wilds Carousel
-    const pocketImages = [
-      "images/pocket-wilds-1.png",
-      "images/pocket-wilds-2.png",
-      "images/pocket-wilds-3.png",
-      "images/pocket-wilds-4.png"
+    // Pocket Wilds Carousel — random selection from the full screenshot pool each load
+    const pocketPool = [
+      "images/pocket-wilds-1.png","images/pocket-wilds-2.png","images/pocket-wilds-3.png",
+      "images/pocket-wilds-4.png","images/pocket-wilds-5.png","images/pocket-wilds-6.png",
+      "images/pocket-wilds-7.png","images/pocket-wilds-8.png","images/pocket-wilds-9.png",
+      "images/pocket-wilds-10.png","images/pocket-wilds-11.jpg","images/pocket-wilds-12.jpg",
+      "images/pocket-wilds-13.jpg","images/pocket-wilds-14.jpg","images/pocket-wilds-15.jpg",
+      "images/pocket-wilds-16.jpg","images/pocket-wilds-17.jpg","images/pocket-wilds-18.jpg",
+      "images/pocket-wilds-19.jpg","images/pocket-wilds-20.jpg","images/pocket-wilds-21.jpg",
+      "images/pocket-wilds-22.jpg","images/pocket-wilds-23.jpg","images/pocket-wilds-24.jpg",
+      "images/pocket-wilds-25.jpg"
     ];
+    for (let i = pocketPool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pocketPool[i], pocketPool[j]] = [pocketPool[j], pocketPool[i]];
+    }
+    const pocketImages = pocketPool.slice(0, 6);
     const slidesContainer = document.getElementById('carouselSlides');
     const dotsContainer = document.getElementById('carouselDots');
     let currentIndex = 0;
