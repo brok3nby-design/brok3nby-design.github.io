@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Brok3n by Design</title>
+  <meta name="description" content="Learn about Brok3n by Design, the indie game studio behind strange, story-driven games full of dark humor, nostalgia, and experimental mechanics.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About — Brok3n by Design">
+  <meta property="og:description" content="The story behind the studio that makes games that shouldn't work... but somehow do.">
+  <meta property="og:url" content="https://brok3nbydesign.com/about.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@brok3nbydesign">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #00ff9f;
+      --border: #2f2f2f;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    h1, h2, h3, .logo {
+      font-family: 'VT323', monospace;
+    }
+    nav {
+      background-color: #111;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    .logo {
+      font-size: 2.4rem;
+      color: var(--accent);
+      text-shadow: 0 0 15px var(--accent);
+    }
+    .logo a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover, nav a.active {
+      color: var(--accent);
+    }
+    .music-btn {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 14px;
+      font-family: 'VT323', monospace;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 50px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      margin: 0 0 12px 0;
+      color: var(--accent);
+    }
+    .hero .tagline {
+      font-size: 1.4rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    /* Sections */
+    .section {
+      margin-bottom: 80px;
+    }
+    .section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 24px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .section h3 {
+      font-size: 1.6rem;
+      margin: 28px 0 12px 0;
+      color: var(--accent);
+    }
+    .section p {
+      color: #ccc;
+      font-size: 1.1rem;
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+    .section .placeholder {
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      color: var(--muted);
+      font-style: italic;
+      margin: 16px 0 24px;
+    }
+    .section .placeholder strong {
+      color: var(--accent);
+      font-style: normal;
+      display: block;
+      margin-bottom: 8px;
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+    }
+    /* Cards for team / philosophy */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
+    .info-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 255, 159, 0.08);
+    }
+    .info-card h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+    .info-card p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+    /* Contact block */
+    .contact-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .contact-block p {
+      margin: 0;
+      max-width: 420px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #00cc7a;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid #444;
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    /* Visualizer */
+    #visualizer {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      height: 50px;
+      margin: 0 auto;
+    }
+    /* Footer */
+    footer {
+      background: #111;
+      padding: 60px 20px 40px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+    .social-links a {
+      color: var(--text);
+      margin: 0 15px;
+      text-decoration: none;
+    }
+    .social-links a:hover {
+      color: var(--accent);
+    }
+    /* Responsive */
+    @media (max-width: 680px) {
+      nav {
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px 20px;
+      }
+      .nav-center {
+        position: static;
+        transform: none;
+        order: 3;
+      }
+      .nav-right {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px 18px;
+      }
+      .logo {
+        font-size: 2rem;
+      }
+      .hero {
+        padding: 50px 16px 40px;
+      }
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      .hero .tagline {
+        font-size: 1.15rem;
+      }
+      .section h2 {
+        font-size: 1.9rem;
+      }
+      .contact-block {
+        flex-direction: column;
+        text-align: center;
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo"><a href="home.html">BROK3N BY DESIGN</a></div>
+    <div class="nav-center">
+      <canvas id="visualizer"></canvas>
+    </div>
+    <div class="nav-right">
+      <a href="home.html#released">Games</a>
+      <a href="home.html#current">Labs</a>
+      <a href="about.html" class="active">About</a>
+      <a href="index.html">Watch Intro</a>
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>ABOUT THE STUDIO</h1>
+    <p class="tagline">Games that shouldn't work... but somehow do.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- Who We Are -->
+    <section class="section">
+      <h2>Who We Are</h2>
+      <p style="font-size:1.3rem; color:var(--accent); font-weight:600; margin-bottom:22px;">
+        Solo game developer. Flow Programmer.
+      </p>
+      <p>
+        I don't code the traditional way. I direct, refine, and obsessively iterate with AI tools until the
+        game in my head becomes the one on the screen. Pixel art RPGs, interactive stories, and whatever else
+        refuses to leave me alone. One person. No team. No shortcuts on the feel.
+      </p>
+    </section>
+
+    <!-- The Name -->
+    <section class="section">
+      <h2>Why "Brok3n by Design"?</h2>
+      <p>
+        Look, "Flawless by Design" felt like a lie, and the domain was probably taken anyway.
+      </p>
+      <p style="margin-top:16px;">
+        The honest version: everything here starts as a glorious mess — half-finished systems, features held
+        together with tape and stubbornness, and at least one bug I've officially reclassified as "a mechanic."
+        Then I iterate until the broken parts either become the best part or quietly vanish before anyone notices.
+        The cracks aren't a flaw in the plan. They <em>are</em> the plan.
+      </p>
+      <p style="margin-top:16px; color:#aaa;">
+        And the "3" instead of an "e"? Every indie dev is contractually required to swap at least one vowel for a
+        number. I don't make the rules. I just quietly resent them.
+      </p>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="section">
+      <h2>What We Believe</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>No Shortcuts on the Feel</h3>
+          <p>A game can be rough around the edges, but it has to <em>feel</em> right. I'll rebuild the same system ten times until it plays the way it does in my head.</p>
+        </div>
+        <div class="info-card">
+          <h3>Flow Programming</h3>
+          <p>I don't write traditional code — I direct and wrestle AI tools the way a designer wrestles systems, iterating hard and cutting whatever doesn't earn its place.</p>
+        </div>
+        <div class="info-card">
+          <h3>Strange Beats Safe</h3>
+          <p>I'd rather make something memorable and a little broken than something polished and forgettable.</p>
+        </div>
+        <div class="info-card">
+          <h3>One Person, All In</h3>
+          <p>No team, no committee, no "good enough." Every pixel, sound, and awkward joke is a deliberate choice by one stubborn human.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Work -->
+    <section class="section">
+      <h2>What We're Building</h2>
+      <p>
+        From hybrid Zelda × Final Fantasy adventures (Pocket Wilds) to satirical personality tests (DOQI),
+        interactive radio stations (WRFM 97.1), choose-your-own-adventures, and haunted card games —
+        every title explores a different corner of "what if".
+      </p>
+      <p>
+        You can see the full list and current status on the main page under <strong>Games</strong> and <strong>Labs</strong>.
+      </p>
+    </section>
+
+    <!-- Team / Solo -->
+    <section class="section">
+      <h2>The One-Person Studio</h2>
+      <p style="font-size:1.3rem; color:var(--accent); font-weight:600; margin-bottom:22px;">
+        One-person game studio. Part-time. Full obsession.
+      </p>
+      <p>
+        I'm a lifelong gamer and compulsive idea machine who finally got tired of waiting for a team I can't afford.
+        I don't write traditional code. I direct, refine, and wrestle with AI tools the same way a game designer
+        wrestles with systems — iterating hard, cutting what doesn't feel right, and rebuilding until the thing
+        actually plays the way it does in my head.
+      </p>
+      <p style="margin-top:16px;">
+        Most of the work is the part people never see: endless fine-tuning, visual polish in Photoshop, video editing,
+        balancing, and the quiet perfectionism that keeps me up at night. I call the process
+        <strong>Flow Programming</strong> — staying in the current of an idea and shaping it through constant
+        back-and-forth until it stops feeling like a prototype and starts feeling like a game.
+      </p>
+      <p style="margin-top:16px; color:#bbb; font-style:italic;">
+        Everything here is made by one stubborn Canadian with too many ideas and zero patience for "good enough."
+      </p>
+    </section>
+
+    <!-- Contact -->
+    <section class="section">
+      <h2>Get in Touch</h2>
+      <div class="contact-block">
+        <div>
+          <p style="font-size: 1.15rem; color: #ccc;">
+            Questions, collabs, feedback, or just want to say the games are gloriously broken?
+            Drop a line.
+          </p>
+          <p style="margin-top: 12px; color: var(--muted); font-size: 0.95rem;">
+            Prefer social? Find me on X.
+          </p>
+        </div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="mailto:brok3nbydesign@pm.me" class="btn btn-primary">Email the Studio</a>
+          <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">@brok3nbydesign</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <h2 style="margin-bottom: 10px;">BROK3N BY DESIGN</h2>
+      <p>Creating games that shouldn't work... but somehow do.</p>
+      <div class="social-links">
+        <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">@brok3nbydesign on X</a>
+      </div>
+      <p style="margin-top: 40px; font-size: 0.9rem; color: #666;">
+        © 2026 Brok3n by Design. All rights broken.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Background Music (same as main page) -->
+  <audio id="bgMusic" loop>
+    <source src="sounds/site_music_1.ogg" type="audio/ogg">
+    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    const visualizer = document.getElementById('visualizer');
+    const ctx = visualizer.getContext('2d');
+    let musicPlaying = false;
+    let audioContext, analyser, source;
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        source = audioContext.createMediaElementSource(music);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        analyser.fftSize = 64;
+      }
+    }
+    function drawVisualizer() {
+      if (!musicPlaying) return;
+      visualizer.style.display = 'block';
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+      ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+      ctx.fillStyle = '#00ff9f';
+      const barWidth = (visualizer.width / bufferLength) * 1.5;
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] / 2.2;
+        ctx.fillRect(x, visualizer.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+      requestAnimationFrame(drawVisualizer);
+    }
+    function toggleMusic() {
+      initAudio();
+      if (!musicPlaying) {
+        music.play().then(() => {
+          musicPlaying = true;
+          musicBtn.textContent = "MUSIC: ON";
+          musicBtn.classList.add('playing');
+          visualizer.width = 600;
+          visualizer.height = 50;
+          drawVisualizer();
+          localStorage.setItem('bbd_music_playing', '1');
+        }).catch(() => {
+          alert("Please click the music button again to enable audio.");
+        });
+      } else {
+        music.pause();
+        musicPlaying = false;
+        musicBtn.textContent = "MUSIC: OFF";
+        musicBtn.classList.remove('playing');
+        visualizer.style.display = 'none';
+        ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+        localStorage.setItem('bbd_music_playing', '0');
+      }
+    }
+    // Resume playback position across page navigations
+    const savedTime = parseFloat(localStorage.getItem('bbd_music_time') || '0');
+    function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
+    if (music.readyState >= 1) restoreTime();
+    else music.addEventListener('loadedmetadata', restoreTime);
+    music.addEventListener('timeupdate', () => {
+      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
+    });
+    function persistMusic() {
+      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
+    }
+    window.addEventListener('pagehide', persistMusic);
+    window.addEventListener('beforeunload', persistMusic);
+    function autoStartMusic() {
+      music.muted = true;
+      music.play().then(() => {
+        music.muted = false;
+        musicPlaying = true;
+        musicBtn.textContent = "MUSIC: ON";
+        musicBtn.classList.add('playing');
+        initAudio();
+        visualizer.width = 600;
+        visualizer.height = 50;
+        drawVisualizer();
+        localStorage.setItem('bbd_music_playing', '1');
+      }).catch(() => {
+        music.muted = false;
+        const resume = () => {
+          toggleMusic();
+          document.removeEventListener('pointerdown', resume);
+          document.removeEventListener('keydown', resume);
+        };
+        document.addEventListener('pointerdown', resume);
+        document.addEventListener('keydown', resume);
+      });
+    }
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const wantPlay = params.get('playMusic') === 'true' || localStorage.getItem('bbd_music_playing') === '1';
+      if (wantPlay) autoStartMusic();
+    };
+  </script>
+</body>
+</html>
