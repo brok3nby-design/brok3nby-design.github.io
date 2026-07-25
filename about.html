@@ -139,6 +139,23 @@
       font-family: 'VT323', monospace;
       font-size: 1.1rem;
     }
+    /* Status pills (matching home page) */
+    .status-badge {
+      display: inline-block;
+      width: fit-content;
+      max-width: 100%;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0;
+      white-space: normal;
+      vertical-align: middle;
+    }
+    .status-flow {
+      background: #00e5ff;
+      color: #000;
+    }
     /* Cards for team / philosophy */
     .info-grid {
       display: grid;
@@ -315,7 +332,8 @@
         A new stage in development.
       </p>
       <p>
-        Most people call it vibe coding. I call it <strong style="color:#00e5ff;">Flow</strong>.
+        Most people call it vibe coding. I call it 
+        <span class="status-badge status-flow">Flow</span>.
       </p>
       <p style="margin-top:16px;">
         Flow Programming is the enhanced, disciplined version of working with AI — not just throwing prompts and hoping for the best. 
@@ -328,7 +346,8 @@
         while the real work happens — the quiet, stubborn fine-tuning that turns “it works” into “this is it.”
       </p>
       <p style="margin-top:16px; color:#aaa;">
-        One person. No traditional code. No team. Just Flow.
+        One person. No traditional code. No team. Just 
+        <span class="status-badge status-flow">Flow</span>.
       </p>
     </section>
 
