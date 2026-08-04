@@ -63,6 +63,11 @@
       text-decoration: none;
       font-weight: 500;
     }
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
     .music-btn {
       background: transparent;
       border: 1px solid var(--accent);
@@ -92,7 +97,8 @@
     .hero .tagline {
       font-size: 1.5rem;
       color: var(--muted);
-      margin-bottom: 40px;
+      max-width: 700px;
+      margin: 0 auto 40px;
     }
     .hero-buttons {
       display: flex;
@@ -162,6 +168,8 @@
     .carousel-dot {
       width: 10px;
       height: 10px;
+      padding: 0;
+      border: 0;
       background: rgba(255,255,255,0.4);
       border-radius: 50%;
       cursor: pointer;
@@ -192,26 +200,6 @@
       transform: translateY(-4px);
       box-shadow: 0 10px 30px rgba(0, 255, 159, 0.1);
     }
-    /* Enhanced Pocket Wilds card */
-    .project-card.highlight {
-      border: 1px solid rgba(0, 255, 159, 0.45);
-      box-shadow: 0 0 0 1px rgba(0, 255, 159, 0.15), 0 8px 24px rgba(0, 255, 159, 0.08);
-      position: relative;
-    }
-    .project-card.highlight:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(0, 255, 159, 0.4), 0 12px 32px rgba(0, 255, 159, 0.18);
-      transform: translateY(-5px);
-    }
-    .also-featured {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-      opacity: 0.9;
-    }
     .project-card h3 {
       font-size: 1.8rem;
       margin: 0 0 12px 0;
@@ -229,6 +217,10 @@
     }
     .status-release {
       background: #b8ff00;
+      color: #000;
+    }
+    .status-beta {
+      background: var(--accent);
       color: #000;
     }
     .status-flow {
@@ -288,23 +280,50 @@
     }
     /* Trailer Modal */
     .trailer-modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,.9);
-      display: none; align-items: center; justify-content: center;
-      z-index: 2000; padding: 20px;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
     }
-    .trailer-modal.open { display: flex; }
-    .trailer-modal-inner { position: relative; width: min(960px, 100%); }
+    .trailer-modal.open {
+      display: flex;
+    }
+    .trailer-modal-inner {
+      position: relative;
+      width: min(960px, 100%);
+    }
     .trailer-modal video {
-      width: 100%; height: auto; display: block; border-radius: 10px;
-      background: #000; box-shadow: 0 16px 50px rgba(0,0,0,.6);
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      background: #000;
+      box-shadow: 0 16px 50px rgba(0,0,0,.6);
     }
     .trailer-close {
-      position: absolute; top: -46px; right: 0;
-      background: transparent; border: none; color: #fff;
-      font-size: 2.6rem; line-height: 1; cursor: pointer; font-family: sans-serif;
+      position: absolute;
+      top: -46px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 2.6rem;
+      line-height: 1;
+      cursor: pointer;
+      font-family: sans-serif;
     }
-    .trailer-close:hover { color: var(--accent); }
-    @media (max-width: 600px) { .trailer-close { top: -40px; } }
+    .trailer-close:hover {
+      color: var(--accent);
+    }
+    @media (max-width: 600px) {
+      .trailer-close {
+        top: -40px;
+      }
+    }
     /* Status Legend */
     .status-legend {
       margin-top: 56px;
@@ -432,22 +451,24 @@
       <button class="music-btn" id="musicBtn" onclick="toggleMusic()">MUSIC: OFF</button>
     </div>
   </nav>
+
   <!-- Hero -->
   <div class="hero">
     <h1>BROK3N BY DESIGN</h1>
-    <p class="tagline">It's in the algorithm, probably.</p>
+    <p class="tagline">Strange games, dark humor, and experimental worlds from a one-person indie studio.</p>
     <div class="hero-buttons">
-      <a href="#released" class="btn btn-primary">View Games</a>
-      <a href="#current" class="btn btn-secondary">See What's Next</a>
+      <a href="pocket-wilds.html" class="btn btn-primary">▶ Play Pocket Wilds</a>
+      <a href="#current" class="btn btn-secondary">Explore the Lab</a>
     </div>
   </div>
+
   <div class="container">
     <!-- Featured Game -->
     <section id="released" class="section">
       <h2>Featured Game</h2>
       <div class="featured">
         <div>
-          <div class="status-badge status-flow">Flow</div>
+          <div class="status-badge status-beta">Playable Beta</div>
           <h2 style="font-size: 2.6rem; margin: 10px 0;">Pocket Wilds</h2>
           <p style="font-size: 1.15rem; color: #ccc;">A hybrid between classic Zelda exploration and Final Fantasy.</p>
           <div class="features">
@@ -467,6 +488,7 @@
         </div>
       </div>
     </section>
+
     <!-- In Development -->
     <section id="current" class="section">
       <h2>In Development</h2>
@@ -495,15 +517,8 @@
           <p>A dark and stylish card game with a haunting atmosphere.</p>
           <a href="macabre-dolls.html" class="btn btn-secondary">View Project</a>
         </div>
-        <!-- Enhanced Pocket Wilds card -->
-        <div class="project-card highlight">
-          <div class="also-featured">Also Featured</div>
-          <div class="status-badge status-flow">Flow</div>
-          <h3>Pocket Wilds</h3>
-          <p>A hybrid between classic Zelda exploration and Final Fantasy.</p>
-          <a href="pocket-wilds.html" class="btn btn-primary">▶ Play Beta</a>
-        </div>
       </div>
+
       <!-- Status Legend -->
       <div class="status-legend">
         <div class="legend-item">
@@ -511,19 +526,24 @@
           <span class="legend-desc">Launched and available to play on itch.io, Steam, or other platforms.</span>
         </div>
         <div class="legend-item">
+          <span class="status-badge status-beta">Playable Beta</span>
+          <span class="legend-desc">Playable now, with systems, balance, and design still being actively refined.</span>
+        </div>
+        <div class="legend-item">
           <span class="status-badge status-flow">Flow</span>
           <span class="legend-desc">The game is fully playable and runs, but systems, balance, and design are still in active motion. Heavy iteration and fine-tuning continues — nothing is locked yet.</span>
         </div>
         <div class="legend-item">
           <span class="status-badge status-dev">In Development</span>
-          <span class="legend-desc">Building from the R&D phase. Art, systems and story are being created — no working game or app yet.</span>
+          <span class="legend-desc">Building from the R&amp;D phase. Art, systems and story are being created — no working game or app yet.</span>
         </div>
         <div class="legend-item">
           <span class="status-badge status-rnd">R&amp;D</span>
-          <span class="legend-desc">Exploration phase. Brainstorming ideas, developing the look & feel, and figuring out what works as a foundation.</span>
+          <span class="legend-desc">Exploration phase. Brainstorming ideas, developing the look &amp; feel, and figuring out what works as a foundation.</span>
         </div>
       </div>
     </section>
+
     <!-- About -->
     <section id="about" class="section">
       <h2>About the Studio</h2>
@@ -540,6 +560,7 @@
       </div>
     </section>
   </div>
+
   <!-- Footer -->
   <footer>
     <div class="container">
@@ -553,11 +574,13 @@
       </p>
     </div>
   </footer>
+
   <!-- Background Music -->
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="none">
     <source src="sounds/site_music_1.ogg" type="audio/ogg">
     <source src="sounds/site_music_1.mp3" type="audio/mpeg">
   </audio>
+
   <script>
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
@@ -565,6 +588,7 @@
     const ctx = visualizer.getContext('2d');
     let musicPlaying = false;
     let audioContext, analyser, source;
+
     function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -575,6 +599,7 @@
         analyser.fftSize = 64;
       }
     }
+
     function drawVisualizer() {
       if (!musicPlaying) return;
       visualizer.style.display = 'block';
@@ -592,6 +617,7 @@
       }
       requestAnimationFrame(drawVisualizer);
     }
+
     function toggleMusic() {
       initAudio();
       if (!musicPlaying) {
@@ -616,19 +642,36 @@
         localStorage.setItem('bbd_music_playing', '0');
       }
     }
+
     // Resume playback position across page navigations
     const savedTime = parseFloat(localStorage.getItem('bbd_music_time') || '0');
-    function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
+
+    function restoreTime() {
+      if (savedTime > 0 && music.duration && savedTime < music.duration) {
+        try {
+          music.currentTime = savedTime;
+        } catch (e) {}
+      }
+    }
+
     if (music.readyState >= 1) restoreTime();
     else music.addEventListener('loadedmetadata', restoreTime);
+
     music.addEventListener('timeupdate', () => {
-      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
+      if (!music.paused) {
+        localStorage.setItem('bbd_music_time', music.currentTime);
+      }
     });
+
     function persistMusic() {
-      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
+      if (!music.paused) {
+        localStorage.setItem('bbd_music_time', music.currentTime);
+      }
     }
+
     window.addEventListener('pagehide', persistMusic);
     window.addEventListener('beforeunload', persistMusic);
+
     function autoStartMusic() {
       music.muted = true;
       music.play().then(() => {
@@ -643,86 +686,139 @@
         localStorage.setItem('bbd_music_playing', '1');
       }).catch(() => {
         music.muted = false;
+
         // Autoplay blocked — resume on first user interaction
         const resume = () => {
           toggleMusic();
           document.removeEventListener('pointerdown', resume);
           document.removeEventListener('keydown', resume);
         };
+
         document.addEventListener('pointerdown', resume);
         document.addEventListener('keydown', resume);
       });
     }
+
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
-      const wantPlay = params.get('playMusic') === 'true' || localStorage.getItem('bbd_music_playing') === '1';
+      const wantPlay =
+        params.get('playMusic') === 'true' ||
+        localStorage.getItem('bbd_music_playing') === '1';
+
       if (wantPlay) autoStartMusic();
     };
+
     // Pocket Wilds Carousel — random selection from the full screenshot pool each load
     const pocketPool = [
-      "images/pocket-wilds-1.png","images/pocket-wilds-2.png","images/pocket-wilds-3.png",
-      "images/pocket-wilds-4.png","images/pocket-wilds-5.png","images/pocket-wilds-6.png",
-      "images/pocket-wilds-7.png","images/pocket-wilds-8.png","images/pocket-wilds-9.png",
-      "images/pocket-wilds-10.png","images/pocket-wilds-11.jpg","images/pocket-wilds-12.jpg",
-      "images/pocket-wilds-13.jpg","images/pocket-wilds-14.jpg","images/pocket-wilds-15.jpg",
-      "images/pocket-wilds-16.jpg","images/pocket-wilds-17.jpg","images/pocket-wilds-18.jpg",
-      "images/pocket-wilds-19.jpg","images/pocket-wilds-20.jpg","images/pocket-wilds-21.jpg",
-      "images/pocket-wilds-22.jpg","images/pocket-wilds-23.jpg","images/pocket-wilds-24.jpg",
+      "images/pocket-wilds-1.png",
+      "images/pocket-wilds-2.png",
+      "images/pocket-wilds-3.png",
+      "images/pocket-wilds-4.png",
+      "images/pocket-wilds-5.png",
+      "images/pocket-wilds-6.png",
+      "images/pocket-wilds-7.png",
+      "images/pocket-wilds-8.png",
+      "images/pocket-wilds-9.png",
+      "images/pocket-wilds-10.png",
+      "images/pocket-wilds-11.jpg",
+      "images/pocket-wilds-12.jpg",
+      "images/pocket-wilds-13.jpg",
+      "images/pocket-wilds-14.jpg",
+      "images/pocket-wilds-15.jpg",
+      "images/pocket-wilds-16.jpg",
+      "images/pocket-wilds-17.jpg",
+      "images/pocket-wilds-18.jpg",
+      "images/pocket-wilds-19.jpg",
+      "images/pocket-wilds-20.jpg",
+      "images/pocket-wilds-21.jpg",
+      "images/pocket-wilds-22.jpg",
+      "images/pocket-wilds-23.jpg",
+      "images/pocket-wilds-24.jpg",
       "images/pocket-wilds-25.jpg"
     ];
+
     for (let i = pocketPool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pocketPool[i], pocketPool[j]] = [pocketPool[j], pocketPool[i]];
     }
+
     const pocketImages = pocketPool.slice(0, 6);
     const slidesContainer = document.getElementById('carouselSlides');
     const dotsContainer = document.getElementById('carouselDots');
     let currentIndex = 0;
     let slideInterval;
+
     function createSlides() {
       slidesContainer.innerHTML = '';
+
       pocketImages.forEach((src, index) => {
         const img = document.createElement('img');
         img.classList.add('carousel-slide');
         img.src = src;
         img.alt = `Pocket Wilds Screenshot ${index + 1}`;
-        if (index === 0) img.classList.add('active');
+
+        if (index === 0) {
+          img.classList.add('active');
+        }
+
         slidesContainer.appendChild(img);
       });
     }
+
     function createDots() {
       dotsContainer.innerHTML = '';
+
       pocketImages.forEach((_, index) => {
-        const dot = document.createElement('div');
+        const dot = document.createElement('button');
+        dot.type = 'button';
         dot.classList.add('carousel-dot');
-        if (index === 0) dot.classList.add('active');
+        dot.setAttribute(
+          'aria-label',
+          `Show Pocket Wilds screenshot ${index + 1} of ${pocketImages.length}`
+        );
+
+        if (index === 0) {
+          dot.classList.add('active');
+        }
+
         dot.addEventListener('click', () => {
           clearInterval(slideInterval);
           currentIndex = index;
           showSlide();
           startAutoSlide();
         });
+
         dotsContainer.appendChild(dot);
       });
     }
+
     function showSlide() {
       const slides = document.querySelectorAll('.carousel-slide');
       const dots = document.querySelectorAll('.carousel-dot');
+
       slides.forEach((slide, i) => {
         slide.classList.toggle('active', i === currentIndex);
       });
+
       dots.forEach((dot, i) => {
         dot.classList.toggle('active', i === currentIndex);
+        dot.setAttribute(
+          'aria-current',
+          i === currentIndex ? 'true' : 'false'
+        );
       });
     }
+
     function nextSlide() {
       currentIndex = (currentIndex + 1) % pocketImages.length;
       showSlide();
     }
+
     function startAutoSlide() {
       clearInterval(slideInterval);
       slideInterval = setInterval(nextSlide, 4500);
     }
+
     createSlides();
     createDots();
     showSlide();
@@ -732,41 +828,92 @@
   <!-- Trailer Modal -->
   <div class="trailer-modal" id="trailerModal">
     <div class="trailer-modal-inner">
-      <button class="trailer-close" id="trailerClose" aria-label="Close trailer">&times;</button>
-      <video id="homeTrailer" controls playsinline preload="none" poster="images/title/title_main.jpg">
+      <button
+        class="trailer-close"
+        id="trailerClose"
+        aria-label="Close trailer"
+      >
+        &times;
+      </button>
+
+      <video
+        id="homeTrailer"
+        controls
+        playsinline
+        preload="none"
+        poster="images/title/title_main.jpg"
+      >
         <source src="videos/PW_Trailer.mp4" type="video/mp4">
       </video>
     </div>
   </div>
+
   <script>
-    (function(){
+    (function() {
       const modal = document.getElementById('trailerModal');
       const video = document.getElementById('homeTrailer');
       const openBtn = document.getElementById('watchTrailerBtn');
       const closeBtn = document.getElementById('trailerClose');
       const bg = document.getElementById('bgMusic');
+
       if (!modal || !video || !openBtn) return;
+
       let musicWasOn = false;
-      function open(){
+
+      function open() {
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
         musicWasOn = bg && !bg.paused;
-        if (musicWasOn) bg.pause();
-        try { video.currentTime = 0; } catch(e){}
+
+        if (musicWasOn) {
+          bg.pause();
+        }
+
+        try {
+          video.currentTime = 0;
+        } catch (e) {}
+
         video.play().catch(() => {});
       }
-      function close(){
+
+      function close() {
         modal.classList.remove('open');
         document.body.style.overflow = '';
         video.pause();
-        if (musicWasOn && localStorage.getItem('bbd_music_playing') === '1') bg.play().catch(() => {});
+
+        if (
+          musicWasOn &&
+          localStorage.getItem('bbd_music_playing') === '1'
+        ) {
+          bg.play().catch(() => {});
+        }
       }
+
       openBtn.addEventListener('click', open);
       closeBtn.addEventListener('click', close);
-      modal.addEventListener('click', e => { if (e.target === modal) close(); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+
+      modal.addEventListener('click', event => {
+        if (event.target === modal) {
+          close();
+        }
+      });
+
+      document.addEventListener('keydown', event => {
+        if (
+          event.key === 'Escape' &&
+          modal.classList.contains('open')
+        ) {
+          close();
+        }
+      });
+
       video.addEventListener('ended', () => {
-        if (musicWasOn && localStorage.getItem('bbd_music_playing') === '1') bg.play().catch(() => {});
+        if (
+          musicWasOn &&
+          localStorage.getItem('bbd_music_playing') === '1'
+        ) {
+          bg.play().catch(() => {});
+        }
       });
     })();
   </script>
