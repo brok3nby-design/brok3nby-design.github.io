@@ -184,7 +184,7 @@
       margin: 0;
       font-size: 1.02rem;
     }
-    /* Gallery - FIXED */
+    /* Gallery */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -197,7 +197,7 @@
       border: 1px solid #333;
       transition: transform 0.3s ease;
       position: relative;
-      min-height: 180px; /* fallback */
+      min-height: 180px;
     }
     .gallery-item:hover {
       transform: scale(1.03);
@@ -206,24 +206,92 @@
     .gallery-item img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* shows full image, no cropping */
+      object-fit: contain;
       display: block;
       background: #1a1a1a;
       cursor: zoom-in;
     }
     /* Trailer */
-    .trailer-frame { max-width: 900px; margin: 0 auto; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#000; box-shadow:0 12px 44px rgba(0,0,0,.5); }
-    .trailer-frame video { width:100%; height:auto; display:block; }
+    .trailer-frame {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 12px 44px rgba(0,0,0,.5);
+    }
+    .trailer-frame video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
     /* Lightbox */
-    .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.93); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px; cursor:zoom-out; }
-    .lightbox.open { display:flex; }
-    .lightbox img { max-width:95%; max-height:92%; object-fit:contain; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,.6); cursor:default; }
-    .lightbox-close { position:absolute; top:14px; right:24px; color:#fff; font-size:2.6rem; line-height:1; cursor:pointer; font-family:sans-serif; opacity:.85; }
-    .lightbox-close:hover { opacity:1; color:var(--accent); }
-    .lightbox-nav { position:absolute; top:50%; transform:translateY(-50%); color:#fff; font-size:2.6rem; cursor:pointer; padding:14px 20px; user-select:none; opacity:.7; font-family:sans-serif; }
-    .lightbox-nav:hover { opacity:1; color:var(--accent); }
-    .lightbox-prev { left:4px; } .lightbox-next { right:4px; }
-    @media (max-width:600px){ .lightbox-nav{ font-size:2rem; padding:10px 14px; } }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.93);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      cursor: zoom-out;
+    }
+    .lightbox.open {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 95%;
+      max-height: 92%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 14px;
+      right: 24px;
+      color: #fff;
+      font-size: 2.6rem;
+      line-height: 1;
+      cursor: pointer;
+      font-family: sans-serif;
+      opacity: .85;
+    }
+    .lightbox-close:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 2.6rem;
+      cursor: pointer;
+      padding: 14px 20px;
+      user-select: none;
+      opacity: .7;
+      font-family: sans-serif;
+    }
+    .lightbox-nav:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+    .lightbox-prev {
+      left: 4px;
+    }
+    .lightbox-next {
+      right: 4px;
+    }
+    @media (max-width: 600px) {
+      .lightbox-nav {
+        font-size: 2rem;
+        padding: 10px 14px;
+      }
+    }
     /* Changelog */
     .changelog {
       background: var(--card);
@@ -269,7 +337,7 @@
       text-align: center;
       color: var(--gold);
     }
-    /* Roadmap / Future */
+    /* Roadmap */
     .roadmap {
       background: var(--card);
       border: 1px solid var(--border);
@@ -293,9 +361,18 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
-    .milestone.done .check { background: var(--accent); color: #000; }
-    .milestone.current .check { background: #ffcc00; color: #000; }
-    .milestone.pending .check { background: #333; color: #888; }
+    .milestone.done .check {
+      background: var(--accent);
+      color: #000;
+    }
+    .milestone.current .check {
+      background: #ffcc00;
+      color: #000;
+    }
+    .milestone.pending .check {
+      background: #333;
+      color: #888;
+    }
     /* Footer */
     footer {
       background: #111;
@@ -367,6 +444,11 @@
       box-shadow: 0 0 12px var(--accent);
       transform: scale(1.15);
     }
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
   </style>
 </head>
 <body>
@@ -374,6 +456,7 @@
     <a href="home.html" class="brand">BROK3N BY DESIGN</a>
     <a href="home.html">← Back to Home</a>
   </nav>
+
   <div class="container">
     <!-- Hero Section -->
     <div class="hero">
@@ -391,14 +474,14 @@
         </div>
         <div class="hero-dots" id="hero-dots"></div>
       </div>
-     
+
       <div class="status">OPEN BETA • v1.0</div>
-     
+
       <h1>Pocket Wilds</h1>
       <p class="genre">GBC-Style Action RPG • Pixel Art • Single Player</p>
-     
+
       <p><strong>The crown is shattered. The wilds remember.</strong></p>
-     
+
       <div class="hero-buttons">
         <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" class="btn btn-primary">▶ PLAY THE GAME</a>
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow on X</a>
@@ -474,81 +557,31 @@
     <div class="section">
       <h2>Gallery</h2>
       <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-1.png" alt="The Meadowlands - Starting region">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-2.png" alt="Real-time combat in the wilds">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-3.png" alt="Hero inventory and equipment screen">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-4.png" alt="Campfire shop with wandering peddler">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-5.png" alt="Turn-based boss battle">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-6.png" alt="Level up perk selection">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-7.png" alt="Weapon forging and upgrading">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-8.png" alt="Legendary wanderer encounter">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-9.png" alt="Champion of the Wilds - Crown ending">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-10.png" alt="Exploring the wilds" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-11.jpg" alt="The Gardens region" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-12.jpg" alt="The Burned Lands region" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-13.jpg" alt="Ancient archway" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-14.jpg" alt="Treasure and loot" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-15.jpg" alt="The Mystic class" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-16.jpg" alt="Ashka, a wilds character" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-17.jpg" alt="The Gilded Slime wanderer" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-18.jpg" alt="Crab enemy" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-19.jpg" alt="Golem enemy" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-20.jpg" alt="Arriving in the wilds" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-21.jpg" alt="The fallen king" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-22.jpg" alt="A ceremony" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-23.jpg" alt="A confession" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-24.jpg" alt="A dark twist" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="images/pocket-wilds-25.jpg" alt="Dawn ending" loading="lazy">
-        </div>
+        <div class="gallery-item"><img src="images/pocket-wilds-1.png" alt="The Meadowlands - Starting region"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-2.png" alt="Real-time combat in the wilds"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-3.png" alt="Hero inventory and equipment screen"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-4.png" alt="Campfire shop with wandering peddler"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-5.png" alt="Turn-based boss battle"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-6.png" alt="Level up perk selection"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-7.png" alt="Weapon forging and upgrading"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-8.png" alt="Legendary wanderer encounter"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-9.png" alt="Champion of the Wilds - Crown ending"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-10.png" alt="Exploring the wilds" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-11.jpg" alt="The Gardens region" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-12.jpg" alt="The Burned Lands region" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-13.jpg" alt="Ancient archway" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-14.jpg" alt="Treasure and loot" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-15.jpg" alt="The Mystic class" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-16.jpg" alt="Ashka, a wilds character" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-17.jpg" alt="The Gilded Slime wanderer" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-18.jpg" alt="Crab enemy" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-19.jpg" alt="Golem enemy" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-20.jpg" alt="Arriving in the wilds" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-21.jpg" alt="The fallen king" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-22.jpg" alt="A ceremony" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-23.jpg" alt="A confession" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-24.jpg" alt="A dark twist" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/pocket-wilds-25.jpg" alt="Dawn ending" loading="lazy"></div>
       </div>
     </div>
 
@@ -670,11 +703,12 @@
   <footer>
     <div class="container">
       <p>
-        <strong>▶ Play Pocket Wilds</strong> &nbsp;&nbsp;
+        <strong>▶ Play Pocket Wilds</strong>&nbsp;&nbsp;
         <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" style="color: var(--accent);">Open in New Tab</a>
       </p>
       <div class="credit">
-        Pocket Wilds © 2026 • Developed by <a href="https://x.com/brok3nbydesign" target="_blank">@brok3nbydesign</a><br>
+        Pocket Wilds © 2026 • Developed by
+        <a href="https://x.com/brok3nbydesign" target="_blank">@brok3nbydesign</a>
       </div>
     </div>
   </footer>
@@ -683,15 +717,23 @@
     document.addEventListener('DOMContentLoaded', () => {
       const slideshowEl = document.getElementById('hero-slideshow');
       const dotsContainer = document.getElementById('hero-dots');
+
       if (!slideshowEl || !dotsContainer) return;
 
-      // Randomize slide order on each page load (Fisher-Yates)
+      // Randomize slide order on each page load
       const shuffleItems = [...slideshowEl.children];
+
       for (let i = shuffleItems.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [shuffleItems[i], shuffleItems[j]] = [shuffleItems[j], shuffleItems[i]];
+        [shuffleItems[i], shuffleItems[j]] = [
+          shuffleItems[j],
+          shuffleItems[i]
+        ];
       }
-      shuffleItems.forEach(el => slideshowEl.appendChild(el));
+
+      shuffleItems.forEach(element => {
+        slideshowEl.appendChild(element);
+      });
 
       const slides = slideshowEl.querySelectorAll('img');
       let current = 0;
@@ -702,24 +744,27 @@
         const dot = document.createElement('div');
         dot.className = 'hero-dot' + (index === 0 ? ' active' : '');
         dot.setAttribute('aria-label', 'Go to slide ' + (index + 1));
+
         dot.addEventListener('click', () => {
           goToSlide(index);
         });
+
         dotsContainer.appendChild(dot);
       });
 
       const dots = dotsContainer.querySelectorAll('.hero-dot');
 
       function updateDots() {
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === current);
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === current);
         });
       }
 
       function showSlide(index) {
-        slides.forEach((slide, i) => {
-          slide.classList.toggle('active', i === index);
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle('active', slideIndex === index);
         });
+
         current = index;
         updateDots();
       }
@@ -727,7 +772,6 @@
       function goToSlide(index) {
         stopSlideshow();
         showSlide(index);
-        // Resume auto-advance after user interaction
         setTimeout(startSlideshow, 6500);
       }
 
@@ -737,7 +781,10 @@
       }
 
       function startSlideshow() {
-        if (interval) clearInterval(interval);
+        if (interval) {
+          clearInterval(interval);
+        }
+
         interval = setInterval(nextSlide, 4800);
       }
 
@@ -748,20 +795,19 @@
         }
       }
 
-      // Initialize
       showSlide(0);
       startSlideshow();
 
-      // Pause/resume on hover over the hero image area
       const heroContainer = document.querySelector('.hero-image');
+
       if (heroContainer) {
         heroContainer.addEventListener('mouseenter', stopSlideshow);
         heroContainer.addEventListener('mouseleave', startSlideshow);
       }
 
-      // Click on the slideshow area advances to next slide
-      slideshowEl.addEventListener('click', (e) => {
-        if (e.target.closest('.hero-dots')) return;
+      slideshowEl.addEventListener('click', event => {
+        if (event.target.closest('.hero-dots')) return;
+
         stopSlideshow();
         nextSlide();
         setTimeout(startSlideshow, 5500);
@@ -776,88 +822,241 @@
     <img id="lbImg" src="" alt="">
     <span class="lightbox-nav lightbox-next" id="lbNext">&#10095;</span>
   </div>
+
   <script>
-    (function(){
+    (function() {
       const grid = document.querySelector('.gallery-grid');
-      const lb = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lbImg');
-      if (!grid || !lb) return;
-      // Randomize gallery order on each page load (Fisher-Yates)
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lbImg');
+
+      if (!grid || !lightbox) return;
+
+      // Randomize gallery order
       const items = [...grid.children];
+
       for (let i = items.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [items[i], items[j]] = [items[j], items[i]];
       }
-      items.forEach(el => grid.appendChild(el));
-      const imgs = [...grid.querySelectorAll('img')];
-      if (!imgs.length) return;
-      let idx = 0;
-      function show(i){ idx = (i + imgs.length) % imgs.length; lbImg.src = imgs[idx].src; lbImg.alt = imgs[idx].alt; }
-      function open(i){ show(i); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-      function close(){ lb.classList.remove('open'); document.body.style.overflow = ''; }
-      imgs.forEach((im, i) => im.addEventListener('click', () => open(i)));
+
+      items.forEach(element => {
+        grid.appendChild(element);
+      });
+
+      const images = [...grid.querySelectorAll('img')];
+
+      if (!images.length) return;
+
+      let index = 0;
+
+      function show(nextIndex) {
+        index = (nextIndex + images.length) % images.length;
+        lightboxImage.src = images[index].src;
+        lightboxImage.alt = images[index].alt;
+      }
+
+      function open(nextIndex) {
+        show(nextIndex);
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      images.forEach((image, imageIndex) => {
+        image.addEventListener('click', () => {
+          open(imageIndex);
+        });
+      });
+
       document.getElementById('lbClose').addEventListener('click', close);
-      document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
-      document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
-      lb.addEventListener('click', e => { if (e.target === lb) close(); });
-      document.addEventListener('keydown', e => {
-        if (!lb.classList.contains('open')) return;
-        if (e.key === 'Escape') close();
-        else if (e.key === 'ArrowLeft') show(idx - 1);
-        else if (e.key === 'ArrowRight') show(idx + 1);
+
+      document.getElementById('lbPrev').addEventListener('click', event => {
+        event.stopPropagation();
+        show(index - 1);
+      });
+
+      document.getElementById('lbNext').addEventListener('click', event => {
+        event.stopPropagation();
+        show(index + 1);
+      });
+
+      lightbox.addEventListener('click', event => {
+        if (event.target === lightbox) {
+          close();
+        }
+      });
+
+      document.addEventListener('keydown', event => {
+        if (!lightbox.classList.contains('open')) return;
+
+        if (event.key === 'Escape') {
+          close();
+        } else if (event.key === 'ArrowLeft') {
+          show(index - 1);
+        } else if (event.key === 'ArrowRight') {
+          show(index + 1);
+        }
       });
     })();
   </script>
 
-  <!-- Site-wide background music (continues across pages) -->
-  <audio id="bgMusic" loop preload="auto">
+  <!-- Site-wide background music -->
+  <audio id="bgMusic" loop preload="none">
     <source src="sounds/site_music_1.ogg" type="audio/ogg">
     <source src="sounds/site_music_1.mp3" type="audio/mpeg">
   </audio>
-  <button class="floating-music-btn" id="musicBtn" aria-label="Toggle background music">&#9834; MUSIC: OFF</button>
+
+  <button
+    class="floating-music-btn"
+    id="musicBtn"
+    aria-label="Toggle background music"
+  >
+    &#9834; MUSIC: OFF
+  </button>
+
   <style>
-    .floating-music-btn { position:fixed; bottom:20px; right:20px; z-index:900; background:rgba(17,17,17,.85); color:var(--text); border:1px solid var(--accent); border-radius:999px; padding:10px 18px; font-family:'VT323',monospace; font-size:1.15rem; letter-spacing:1px; cursor:pointer; backdrop-filter:blur(6px); transition:all .2s ease; }
-    .floating-music-btn:hover { color:var(--accent); box-shadow:0 0 14px rgba(0,255,159,.35); }
-    .floating-music-btn.playing { color:var(--accent); }
+    .floating-music-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 900;
+      background: rgba(17,17,17,.85);
+      color: var(--text);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-family: 'VT323', monospace;
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: all .2s ease;
+    }
+    .floating-music-btn:hover {
+      color: var(--accent);
+      box-shadow: 0 0 14px rgba(0,255,159,.35);
+    }
+    .floating-music-btn.playing {
+      color: var(--accent);
+    }
   </style>
+
   <script>
-    (function(){
+    (function() {
       const music = document.getElementById('bgMusic');
-      const btn = document.getElementById('musicBtn');
+      const button = document.getElementById('musicBtn');
+
       if (!music) return;
-      const P = 'bbd_music_playing', T = 'bbd_music_time';
-      const savedTime = parseFloat(localStorage.getItem(T) || '0');
-      function on(){ btn.textContent = '♪ MUSIC: ON'; btn.classList.add('playing'); }
-      function off(){ btn.textContent = '♪ MUSIC: OFF'; btn.classList.remove('playing'); }
-      function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
-      if (music.readyState >= 1) restoreTime();
-      else music.addEventListener('loadedmetadata', restoreTime);
-      music.addEventListener('timeupdate', () => { if (!music.paused) localStorage.setItem(T, music.currentTime); });
-      function persist(){ if (!music.paused) localStorage.setItem(T, music.currentTime); }
+
+      const PLAYING_KEY = 'bbd_music_playing';
+      const TIME_KEY = 'bbd_music_time';
+      const savedTime = parseFloat(
+        localStorage.getItem(TIME_KEY) || '0'
+      );
+
+      function showOn() {
+        button.textContent = '♪ MUSIC: ON';
+        button.classList.add('playing');
+      }
+
+      function showOff() {
+        button.textContent = '♪ MUSIC: OFF';
+        button.classList.remove('playing');
+      }
+
+      function restoreTime() {
+        if (
+          savedTime > 0 &&
+          music.duration &&
+          savedTime < music.duration
+        ) {
+          try {
+            music.currentTime = savedTime;
+          } catch (error) {}
+        }
+      }
+
+      if (music.readyState >= 1) {
+        restoreTime();
+      } else {
+        music.addEventListener('loadedmetadata', restoreTime);
+      }
+
+      music.addEventListener('timeupdate', () => {
+        if (!music.paused) {
+          localStorage.setItem(TIME_KEY, music.currentTime);
+        }
+      });
+
+      function persist() {
+        if (!music.paused) {
+          localStorage.setItem(TIME_KEY, music.currentTime);
+        }
+      }
+
       window.addEventListener('pagehide', persist);
       window.addEventListener('beforeunload', persist);
-      function start(){ return music.play().then(() => { on(); localStorage.setItem(P, '1'); }); }
-      btn.addEventListener('click', () => {
-        if (music.paused) start().catch(() => {});
-        else { music.pause(); off(); localStorage.setItem(P, '0'); }
+
+      function start() {
+        return music.play().then(() => {
+          showOn();
+          localStorage.setItem(PLAYING_KEY, '1');
+        });
+      }
+
+      button.addEventListener('click', () => {
+        if (music.paused) {
+          start().catch(() => {});
+        } else {
+          music.pause();
+          showOff();
+          localStorage.setItem(PLAYING_KEY, '0');
+        }
       });
-      if (localStorage.getItem(P) === '1') {
+
+      if (localStorage.getItem(PLAYING_KEY) === '1') {
         start().catch(() => {
-          const resume = () => { start().finally(() => {
-            document.removeEventListener('pointerdown', resume);
-            document.removeEventListener('keydown', resume);
-          }); };
+          const resume = () => {
+            start().finally(() => {
+              document.removeEventListener('pointerdown', resume);
+              document.removeEventListener('keydown', resume);
+            });
+          };
+
           document.addEventListener('pointerdown', resume);
           document.addEventListener('keydown', resume);
         });
-      } else { off(); }
+      } else {
+        showOff();
+      }
 
-      // Pause background music while the trailer plays, then resume
+      // Pause background music while the trailer plays
       const trailer = document.getElementById('pwTrailer');
+
       if (trailer) {
         let musicWasOn = false;
-        trailer.addEventListener('play', () => { musicWasOn = !music.paused; if (musicWasOn) music.pause(); });
-        const resumeMusic = () => { if (musicWasOn && localStorage.getItem(P) === '1') start().catch(() => {}); };
+
+        trailer.addEventListener('play', () => {
+          musicWasOn = !music.paused;
+
+          if (musicWasOn) {
+            music.pause();
+          }
+        });
+
+        const resumeMusic = () => {
+          if (
+            musicWasOn &&
+            localStorage.getItem(PLAYING_KEY) === '1'
+          ) {
+            start().catch(() => {});
+          }
+        };
+
         trailer.addEventListener('pause', resumeMusic);
         trailer.addEventListener('ended', resumeMusic);
       }
