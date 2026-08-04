@@ -46,19 +46,18 @@
       font-family: "Courier New", monospace;
       cursor: pointer;
       transition: all 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
       z-index: 10;
     }
 
-    .enter-btn.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .enter-btn:hover {
+    .enter-btn:hover,
+    .enter-btn:focus-visible {
       background-color: #00ff9f;
       color: #000;
+    }
+
+    .enter-btn:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 4px;
     }
   </style>
 </head>
@@ -75,16 +74,8 @@
   </div>
 
   <script>
-    const enterBtn = document.getElementById('enterBtn');
-
-    // Show Enter button after a few seconds
-    setTimeout(() => {
-      enterBtn.classList.add('show');
-    }, 3000);
-
     function enterSite() {
-      // This passes the parameter so music starts on home page
-      window.location.href = "home.html?playMusic=true";
+      window.location.href = "home.html";
     }
   </script>
 
