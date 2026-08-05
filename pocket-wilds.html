@@ -226,6 +226,15 @@
       height: auto;
       display: block;
     }
+    /* Newsletter */
+    .newsletter { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+    .newsletter h3 { font-family: 'VT323', monospace; color: var(--accent); font-size: 1.7rem; margin: 0 0 8px; }
+    .newsletter p { color: #ccc; margin: 0 0 16px; }
+    .newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .newsletter-form input[type="email"] { flex: 1 1 240px; min-width: 0; padding: 12px 14px; border-radius: 8px; border: 1px solid #444; background: #0f0f0f; color: var(--text); font-size: 1rem; }
+    .newsletter-form input[type="email"]:focus { outline: none; border-color: var(--accent); }
+    .newsletter-form button { cursor: pointer; border: none; font: inherit; font-weight: 600; }
+    .newsletter-fine { font-size: .85rem; color: #777; margin: 12px 0 0; }
     /* Lightbox */
     .lightbox {
       position: fixed;
@@ -693,9 +702,18 @@
     <!-- Community -->
     <div class="section">
       <h2>Community &amp; Feedback</h2>
-      <p>Follow development, share your runs, and give feedback:</p>
-      <p style="margin-top: 12px;">
-        <a href="https://x.com/brok3nbydesign" target="_blank" style="color: var(--accent); font-weight: 600;">@brok3nbydesign on X</a>
+      <p>Get Pocket Wilds updates, beta notes, and new build announcements by email — or follow along on X.</p>
+      <div class="newsletter" style="margin-top: 18px; max-width: 620px;">
+        <h3>Pocket Wilds Updates</h3>
+        <p>Beta notes, new build announcements, and behind-the-scenes development, straight to your inbox.</p>
+        <form action="https://buttondown.com/api/emails/embed-subscribe/brok3nbydesign" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.com/brok3nbydesign','popupwindow')" class="newsletter-form">
+          <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" required>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <p class="newsletter-fine">No spam. Unsubscribe anytime.</p>
+      </div>
+      <p style="margin-top: 16px;">
+        <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">@brok3nbydesign on X</a>
       </p>
     </div>
   </div>
