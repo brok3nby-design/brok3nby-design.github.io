@@ -278,6 +278,15 @@
       border-color: var(--accent);
       color: var(--accent);
     }
+    /* Newsletter */
+    .newsletter { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+    .newsletter h3 { font-family: 'VT323', monospace; color: var(--accent); font-size: 1.7rem; margin: 0 0 8px; }
+    .newsletter p { color: #ccc; margin: 0 0 16px; }
+    .newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .newsletter-form input[type="email"] { flex: 1 1 240px; min-width: 0; padding: 12px 14px; border-radius: 8px; border: 1px solid #444; background: #0f0f0f; color: var(--text); font-size: 1rem; }
+    .newsletter-form input[type="email"]:focus { outline: none; border-color: var(--accent); }
+    .newsletter-form button { cursor: pointer; border: none; font: inherit; font-weight: 600; }
+    .newsletter-fine { font-size: .85rem; color: #777; margin: 12px 0 0; }
     /* Trailer Modal */
     .trailer-modal {
       position: fixed;
@@ -500,10 +509,22 @@
           <a href="wrfm.html" class="btn btn-secondary">View Project</a>
         </div>
         <div class="project-card">
+          <div class="status-badge status-flow">Flow</div>
+          <h3>Lumina Dice</h3>
+          <p>A prismatic dice roguelike — roll living crystal prisms, refract their light, and form radiant constellations to shatter escalating Echoes.</p>
+          <a href="lumina-dice.html" class="btn btn-secondary">View Project</a>
+        </div>
+        <div class="project-card">
           <div class="status-badge status-dev">In Development</div>
           <h3>DOQI</h3>
           <p>A satirical personality game where every ridiculous decision secretly shapes your future with the department.</p>
           <a href="doqi.html" class="btn btn-secondary">View Project</a>
+        </div>
+        <div class="project-card">
+          <div class="status-badge status-dev">In Development</div>
+          <h3>Labyrinth Fate</h3>
+          <p>A dark narrative dice game where every decision is settled by chance, and the world remembers what you accept.</p>
+          <a href="labyrinth-fate.html" class="btn btn-secondary">View Project</a>
         </div>
         <div class="project-card">
           <div class="status-badge status-rnd">R&amp;D</div>
@@ -556,6 +577,15 @@
         <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-top: 24px;">
           <a href="mailto:brok3nbydesign@pm.me" class="btn btn-primary">Email the Studio</a>
           <a href="about.html" class="btn btn-secondary">More About the Studio →</a>
+        </div>
+        <div class="newsletter" style="margin-top: 36px; max-width: 560px;">
+          <h3>Join the Field Notes</h3>
+          <p>Get occasional updates on Pocket Wilds, weird prototypes, demos, and broken little experiments.</p>
+          <form action="https://buttondown.com/api/emails/embed-subscribe/brok3nbydesign" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.com/brok3nbydesign','popupwindow')" class="newsletter-form">
+            <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" required>
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+          </form>
+          <p class="newsletter-fine">No spam. Unsubscribe anytime.</p>
         </div>
       </div>
     </section>
