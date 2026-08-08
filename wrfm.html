@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WRFM Radio Station | Brok3n by Design</title>
-  <meta name="description" content="WRFM 97.1 — an interactive 1950s-style radio station with a sassy host and 50+ achievements. In development at Brok3n by Design.">
+  <meta name="description" content="WRFM Radio — a playable 1950s satirical radio station hosted by Vera Lang, with After Hours programming and 50+ achievements. Play free in your browser.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="WRFM Radio Station | Brok3n by Design">
-  <meta property="og:description" content="An interactive 1950s-style radio station with a sassy host and 50+ achievements.">
+  <meta property="og:description" content="Tune in to a playable 1950s satirical radio station hosted by Vera Lang, with After Hours programming and 50+ achievements.">
   <meta property="og:url" content="https://brok3nbydesign.com/wrfm.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/wrfm/wrfm_01.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -147,8 +147,8 @@
     }
     .status {
       display: inline-block;
-      background: #3a7bd5;
-      color: white;
+      background: var(--accent);
+      color: #000;
       padding: 4px 16px;
       border-radius: 20px;
       font-weight: 600;
@@ -175,6 +175,13 @@
       background: transparent;
       color: var(--text);
       border: 2px solid #444;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
     .section {
       margin-bottom: 80px;
@@ -332,11 +339,14 @@
         <div class="hero-dots" id="hero-dots"></div>
       </div>
 
-      <div class="status">IN DEVELOPMENT</div>
+      <div class="status">PLAYABLE NOW · FLOW BUILD</div>
       <h1>WRFM Radio Station</h1>
       <p class="genre">Interactive Fiction • Retro Radio • Achievement Hunter</p>
       <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
-      <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-primary">Follow Development</a>
+      <div class="hero-actions">
+        <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-primary">▶ PLAY WRFM</a>
+        <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow Updates</a>
+      </div>
     </div>
 
     <div class="section">
@@ -373,23 +383,23 @@
     <div class="section">
       <h2>Latest Development</h2>
       <div class="changelog">
-        <div class="changelog-item"><strong>July 2026</strong> — Core radio UI and playlist system completed.</div>
+        <div class="changelog-item"><strong>August 2026</strong> — WRFM After Hours is live and playable in the browser.</div>
       </div>
     </div>
 
     <div class="section">
-      <h2>Roadmap</h2>
+      <h2>What’s Next</h2>
       <div class="roadmap">
+        <div>✓ Public Playable Build</div>
         <div>✓ Core Radio System</div>
         <div>◐ Host Personality &amp; Voice</div>
-        <div>○ 50 Achievements</div>
-        <div>○ Public Beta</div>
+        <div>◐ Achievement Tuning &amp; Secrets</div>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>Follow development on <a href="https://x.com/brok3nbydesign">X</a></p>
+    <p><a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">▶ Play WRFM</a> · Follow updates on <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">X</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
   </footer>
 
