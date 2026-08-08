@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WRFM Radio — After Hours | Brok3n by Design</title>
-  <meta name="description" content="WRFM Radio — a playable 1950s satirical radio station hosted by Vera Lang, with After Hours programming and 50+ achievements. Play free in your browser.">
+  <meta name="description" content="WRFM Radio is a synchronized live station: every listener hears the same song at the same time. Tune in with Vera Lang, climb the listener leaderboard, and unlock 50+ achievements.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="WRFM Radio — After Hours | Brok3n by Design">
-  <meta property="og:description" content="Tune in to a playable 1950s satirical radio station hosted by Vera Lang, with After Hours programming and 50+ achievements.">
+  <meta property="og:description" content="One live station, one shared timeline. Tune in with Vera Lang, climb the listener leaderboard, and unlock 50+ achievements.">
   <meta property="og:url" content="https://brok3nbydesign.com/wrfm.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/wrfm/wrfm_01.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -22,6 +22,9 @@
       --muted: #999999;
       --accent: #00ff9f;
       --border: #2f2f2f;
+    }
+    html {
+      scroll-behavior: smooth;
     }
     body {
       background: var(--bg);
@@ -66,6 +69,23 @@
       }
       .hero-image {
         height: 240px;
+      }
+      .live-station {
+        padding: 20px 14px;
+      }
+      .live-station h2 {
+        font-size: 2.15rem;
+      }
+      .station-frame {
+        height: 680px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      .on-air-dot {
+        animation: none;
       }
     }
     .container {
@@ -147,12 +167,13 @@
     }
     .status {
       display: inline-block;
-      background: var(--accent);
-      color: #000;
+      background: #ff4057;
+      color: #fff;
       padding: 4px 16px;
       border-radius: 20px;
       font-weight: 600;
       margin-bottom: 20px;
+      box-shadow: 0 0 18px rgba(255, 64, 87, .3);
     }
     .hero p {
       max-width: 620px;
@@ -182,6 +203,68 @@
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
+    }
+    .live-station {
+      background:
+        radial-gradient(circle at top right, rgba(255,64,87,.14), transparent 40%),
+        linear-gradient(145deg, #171112, #101010 60%);
+      border: 1px solid #463034;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.3);
+    }
+    .live-station h2 {
+      margin: 8px 0 12px;
+      border-bottom: 0;
+      padding-bottom: 0;
+      font-size: 2.6rem;
+      color: var(--text);
+    }
+    .live-station-copy {
+      max-width: 760px;
+      margin: 0 0 24px;
+      color: #c8c8c8;
+      font-size: 1.08rem;
+    }
+    .on-air-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #ff7181;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .on-air-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff4057;
+      box-shadow: 0 0 14px #ff4057;
+      animation: on-air-pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes on-air-pulse {
+      50% { opacity: .45; transform: scale(.82); }
+    }
+    .station-frame-shell {
+      overflow: hidden;
+      background: #12080a;
+      border: 1px solid #5b343b;
+      border-radius: 12px;
+      box-shadow: 0 14px 45px rgba(0,0,0,.45);
+    }
+    .station-frame {
+      display: block;
+      width: 100%;
+      height: 720px;
+      border: 0;
+      background: #12080a;
+    }
+    .station-note {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: .92rem;
     }
     .section {
       margin-bottom: 80px;
@@ -339,26 +422,49 @@
         <div class="hero-dots" id="hero-dots"></div>
       </div>
 
-      <div class="status">PLAYABLE NOW · FLOW BUILD</div>
+      <div class="status">● LIVE NOW · PLAYABLE</div>
       <h1>WRFM Radio Station</h1>
-      <p class="genre">Interactive Fiction • Retro Radio • Achievement Hunter</p>
-      <p>An interactive 1950s-style radio station with a sassy host and over 50 achievements to unlock.</p>
+      <p class="genre">Synchronized Live Radio • Interactive Fiction • Achievement Hunter</p>
+      <p>One station. One shared timeline. Everyone listening hears the same song at the same moment.</p>
       <div class="hero-actions">
-        <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-primary">▶ PLAY WRFM</a>
+        <a href="#live-station" class="btn btn-primary">● TUNE IN LIVE</a>
+        <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-secondary">Open Full Screen</a>
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow Updates</a>
       </div>
     </div>
+
+    <section class="section live-station" id="live-station" aria-labelledby="live-station-heading">
+      <div class="on-air-label"><span class="on-air-dot" aria-hidden="true"></span> On air · synchronized worldwide</div>
+      <h2 id="live-station-heading">Listen to WRFM right here</h2>
+      <p class="live-station-copy">This is a real shared broadcast, not a personal playlist. Join at any time and you’ll drop into the exact song and moment every other listener is hearing.</p>
+      <div class="station-frame-shell">
+        <iframe
+          class="station-frame"
+          src="https://brok3nby-design.github.io/wrfm/"
+          title="WRFM synchronized live radio player"
+          allow="autoplay; fullscreen"
+          referrerpolicy="strict-origin-when-cross-origin"
+        >
+          <a href="https://brok3nby-design.github.io/wrfm/">Open the WRFM live station</a>
+        </iframe>
+      </div>
+      <p class="station-note">Want the full-screen experience? <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">Open WRFM in a new tab →</a></p>
+    </section>
 
     <div class="section">
       <h2>Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <h3>Live Radio</h3>
-          <p>Listen to procedurally generated broadcasts and music.</p>
+          <h3>One Shared Broadcast</h3>
+          <p>Every listener hears the same song at the same time, wherever they tune in from.</p>
         </div>
         <div class="feature-card">
-          <h3>Sassy Host</h3>
-          <p>A fully voiced host with a lot to say.</p>
+          <h3>Listener Leaderboard</h3>
+          <p>Make your listening count and see how you rank against the station’s most dedicated regulars.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Hosted by Vera Lang</h3>
+          <p>A fully voiced, sharp-tongued host with plenty to say between songs.</p>
         </div>
         <div class="feature-card">
           <h3>50+ Achievements</h3>
@@ -383,7 +489,7 @@
     <div class="section">
       <h2>Latest Development</h2>
       <div class="changelog">
-        <div class="changelog-item"><strong>August 2026</strong> — WRFM After Hours is live and playable in the browser.</div>
+        <div class="changelog-item"><strong>August 2026</strong> — WRFM is now a synchronized live station with a listener leaderboard. Everyone tunes into the same broadcast timeline.</div>
       </div>
     </div>
 
@@ -391,6 +497,8 @@
       <h2>What’s Next</h2>
       <div class="roadmap">
         <div>✓ Public Playable Build</div>
+        <div>✓ Synchronized Live Broadcast</div>
+        <div>✓ Listener Leaderboard</div>
         <div>✓ Core Radio System</div>
         <div>◐ Host Personality &amp; Voice</div>
         <div>◐ Achievement Tuning &amp; Secrets</div>
@@ -399,7 +507,7 @@
   </div>
 
   <footer>
-    <p><a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">▶ Play WRFM</a> · Follow updates on <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">X</a></p>
+    <p><a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">● Listen to WRFM Live</a> · Follow updates on <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">X</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
   </footer>
 
@@ -603,6 +711,7 @@
     class="floating-music-btn"
     id="musicBtn"
     aria-label="Toggle background music"
+    hidden
   >
     &#9834; MUSIC: OFF
   </button>
@@ -640,6 +749,11 @@
       const button = document.getElementById('musicBtn');
 
       if (!music) return;
+
+      // The embedded WRFM station owns this page's audio experience.
+      music.pause();
+      button.hidden = true;
+      return;
 
       const PLAYING_KEY = 'bbd_music_playing';
       const TIME_KEY = 'bbd_music_time';
