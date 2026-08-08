@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocket Wilds — Update Log</title>
+<meta name="description" content="The complete Pocket Wilds development update log from Brok3n by Design.">
+<style>
+  *{ box-sizing:border-box; }
+  .pw-log{
+    --ink:#0b0a14; --panel:#14132a; --line:#3b4466;
+    --gold:#ffd54a; --txt:#e8e6f0; --dim:#9aa0b8; --blue:#9ad8ff;
+    background:var(--ink); color:var(--txt);
+    font-family:"Trebuchet MS","Segoe UI",Verdana,Arial,sans-serif;
+    max-width:860px; margin:0 auto; padding:32px 20px 60px;
+  }
+  .pw-log h1{
+    text-align:center; color:var(--gold); letter-spacing:4px;
+    font-size:clamp(24px,4vw,38px); margin:0 0 4px;
+    text-shadow:0 2px 0 #7a5a00, 0 4px 18px rgba(255,213,74,.25);
+  }
+  .pw-log .byline{
+    text-align:center; color:var(--dim); letter-spacing:3px;
+    font-size:13px; text-transform:uppercase; margin:0 0 34px;
+  }
+  .pw-log .build{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    margin:0 0 18px; padding:0 22px 16px; overflow:hidden;
+    box-shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+  .pw-log .build header{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    border-bottom:1px solid var(--line); margin:0 -22px 12px; padding:14px 22px 10px;
+    background:linear-gradient(180deg, rgba(255,213,74,.07), transparent);
+  }
+  .pw-log h2{
+    color:var(--gold); font-size:17px; letter-spacing:2px; margin:0;
+  }
+  .pw-log time{
+    color:var(--blue); font-size:12px; letter-spacing:2px; white-space:nowrap;
+    text-transform:uppercase;
+  }
+  .pw-log ul{ margin:0; padding:0 0 0 20px; }
+  .pw-log li{
+    margin:0 0 8px; line-height:1.55; font-size:15px; color:var(--txt);
+  }
+  .pw-log li::marker{ color:var(--gold); }
+  .pw-log .log-nav{
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    margin:0 0 30px;
+  }
+  .pw-log .log-nav a{
+    color:var(--blue); text-decoration:none; font-weight:700;
+  }
+  .pw-log .log-nav a:hover{ color:var(--gold); }
+  .pw-log .log-nav a:focus-visible{
+    outline:3px solid var(--gold); outline-offset:4px;
+  }
+  @media (max-width:520px){
+    .pw-log .build header{ flex-direction:column; gap:2px; }
+    .pw-log .log-nav{ align-items:flex-start; flex-direction:column; }
+  }
+</style>
+</head>
+<body style="margin:0;background:#0b0a14">
+  <main class="pw-log">
+    <nav class="log-nav" aria-label="Page navigation">
+      <a href="pocket-wilds.html">← Back to Pocket Wilds</a>
+      <a href="home.html">Brok3n by Design Home</a>
+    </nav>
+    <h1>POCKET WILDS</h1>
+    <p class="byline">Update Log &mdash; by Brok3n By Design</p>
+    <section class="build">
+      <header>
+        <h2>BUILD 8-AUG-EF</h2>
+        <time>AUG 8, 2026</time>
+      </header>
+      <ul>
+        <li>Every word in the game is crystal clear now: all in-game text renders on a new overlay at your monitor’s true resolution instead of being stretched up with the pixels, and the menus trade their typewriter font for a clean modern face.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 8-AUG-EE</h2>
+        <time>AUG 8, 2026</time>
+      </header>
+      <ul>
+        <li>Painted ground tiles now load as .jpg too - the new Meadowlands and Verdant Wilds grass renders at last.</li>
+        <li>Painted grass tufts are planted, not hovering: their base sits on the ground and the draw order flips exactly at your feet.</li>
+        <li>Tall grass grows half again as often across every ring, and every world sprite set now accepts TEN variants (a through j).</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 8-AUG-ED</h2>
+        <time>AUG 8, 2026</time>
+      </header>
+      <ul>
+        <li>Camp folk gather in close around their fire now, the blinking ! floats properly above their taller painted heads, and the camp speaks with one voice: a single TALK prompt over the flames instead of labels over each head.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 8-AUG-EC</h2>
+        <time>AUG 8, 2026</time>
+      </header>
+      <ul>
+        <li>The knight finally carries a sword worth the name: a broad two-row blade with a gold crossguard and longer reach, in the carried stance and all three swing directions - the old one-pixel stick is retired.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 7-AUG-EB</h2>
+        <time>AUG 7, 2026</time>
+      </header>
+      <ul>
+        <li>The vault hoard is a proper stack now: every coin sits upright and face-on, nested brick-tight so no gap shows through the mound - no more coins strewn at odd angles.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 7-AUG-EA</h2>
+        <time>AUG 7, 2026</time>
+      </header>
+      <ul>
+        <li>The camp folk grew into themselves: painted figures now stand a head taller than your hero instead of coming up short.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 7-AUG-DZ</h2>
+        <time>AUG 7, 2026</time>
+      </header>
+      <ul>
+        <li>The Meadowlands camp folk are painted figures in the world now - Brand and Old Maren stand at their fire in person, swaying gently, instead of pixel stand-ins.</li>
+        <li>Camps now sit properly among the trees: a tree in front of the fire stands in front, one behind stands behind. No more folk hidden under a canopy that should be behind them.</li>
+        <li>The sprite keyer forgives a drifting backdrop: art that arrives on raspberry-pink instead of true magenta is cut out just the same.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 5-AUG-DY</h2>
+        <time>AUG 5, 2026</time>
+      </header>
+      <ul>
+        <li>Camp seating swapped: your hero keeps the LEFT side of the fire, the folk speak from the RIGHT - ringed in a soft pulsing firelight border while the words are theirs.</li>
+        <li>Your portrait stays fully lit throughout - no more dimming while you listen.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 5-AUG-DX</h2>
+        <time>AUG 5, 2026</time>
+      </header>
+      <ul>
+        <li>The camps are a fireside scene now, not a menu. The folk stand on the left and speak FIRST, unprompted - protector, then storyteller - while your chosen hero listens on the right, lit and dimmed as the words pass between you.</li>
+        <li>Bright to-do bubbles pulse in the corner - HEAR THE CAMP FOLK, ACCEPT THE CAMP TASK, TURN IN THE CAMP TASK - each one checking off with a green tick and slipping away when honoured.</li>
+        <li>The gold boxes are gone. Dialogue sits in dark glass, the camp task is a quiet amber strip, and the camp folk are small chips you can tap any time to hear again.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 5-AUG-DW</h2>
+        <time>AUG 5, 2026</time>
+      </header>
+      <ul>
+        <li>Stance art has arrived: Mossback, the Bramble King and Old Quillback now ACT their stances on the battle card — rearing up to strike, hunkering behind their guard, channelling with glowing eyes, reeling wide open.</li>
+        <li>Battle portraits on a magenta backdrop are keyed automatically: the creature is cut out and staged on the card, so the scene stays rock steady while the pose changes. Works for base portraits, stance art and the codex gallery alike.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DV</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>THE ALLOCATION. Your landed dice are no longer just an attack — they are a hand to spend. Open ALLOCATE and tap each die onto a job: STRIKE for damage, GUARD to block that many pips of the next blow, FOCUS to recover its pips as stamina (8+ pips also build momentum).</li>
+        <li>Enough GUARD takes even a telegraphed mighty blow on the chin: no damage, and no shattered die. A third answer to the windup, alongside dodging and gambling.</li>
+        <li>Cracked dice are worth nothing on any job — but shunting your 1s out of the strike keeps them from stumbling it. The tray rewards the clever.</li>
+        <li>Fewer strike dice means a lighter blow, and a channelled cast now only breaks if your strike is heavy for your WHOLE pool — you cannot cheese it with one lucky die.</li>
+        <li>Spend everything on defense and breath if you like: no strike, no stamina cost, you simply set your stance for a turn.</li>
+        <li>The quick path is untouched: ENTER still strikes with everything, exactly as before. The LUNGE commits every die and never allocates.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DT</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>The dice are yours to play now. When an attack roll lands, the tray WAITS: tap any dice to HOLD them, then REROLL the rest — once per throw — or STRIKE to take it as it lies.</li>
+        <li>Rerolling is a real gamble: every rethrown die can crack. Keep what is good, risk what is not, and read the stance before you decide.</li>
+        <li>Works with mouse, touch, or keyboard: number keys hold each die, R rerolls, ENTER strikes.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DS</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>Battle enemies are ready to ACT their stances: drop in per-stance portrait art and the boss card swaps the moment it settles into a pose. Missing art falls back cleanly, so stances can arrive one image at a time.</li>
+        <li>The big stance word now rises in the gap between the two cards instead of over the enemy&#x27;s face.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DR</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>Bosses no longer act at random. Every boss ends its turn settled into a visible STANCE — shown under its health bar — and its next move is exactly what the stance promises.</li>
+        <li>PROWLING swings normally. WINDING UP is the big telegraphed blow: dodge it and the boss is left EXPOSED, or gamble a hit into the swing for +25%.</li>
+        <li>GUARDING halves your blows and blocks all momentum — dodge for stamina, drink, or set up instead of wasting a good roll. Your UNLEASH pierces straight through it.</li>
+        <li>CHANNELLING telegraphs its special. Land a HEAVY hit — a strong roll, a shield bash, a bomb — and the cast breaks, leaving it reeling and EXPOSED.</li>
+        <li>EXPOSED is never chosen and only earned: it takes +60% damage and can barely swing back. Dodges and cast-breaks buy you the window.</li>
+        <li>Hovering ATTACK now also shows what the stance will do to your damage before you commit, and the message strip prompts the counter-play.</li>
+        <li>Battle text greets bosses properly at last — &quot;THE EMPEROR RAISES ITS GUARD&quot;, not &quot;THE RAISES ITS GUARD&quot;.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DQ</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>Battle dice now mean what they show. Damage used to be your roll divided by your own pool&#x27;s average — so a bigger pool changed almost nothing, and five hard-earned bonus dice were worth less than one weapon level. Now every pip is worth a fixed slice of your weapon&#x27;s power: a fresh hero hits exactly as before, but each die you forge, wear or take as a boon adds its full face value to the throw.</li>
+        <li>The damage ceiling is gone. A huge pool rolling hot now hits like it looks — the dice themselves are the only cap.</li>
+        <li>SHATTER finally has teeth: losing your biggest die now truly costs you its pips, not a rounding error.</li>
+        <li>Fair warning for veteran hoards: a fully-kitted hero now hits roughly twice as hard in the dice arena as before. The wilds may need to answer that in a future build.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 4-AUG-DP</h2>
+        <time>AUG 4, 2026</time>
+      </header>
+      <ul>
+        <li>A HOW TO PLAY board now stands in your yard, by the gate you leave through. Press E for a four-part guide: the wilds, dice battles, getting stronger, and home &amp; hoard.</li>
+        <li>The vault&#x27;s THIS HERO view finally means something. It counts everything your current hero has earned — what they are carrying AND everything they have already banked — instead of emptying itself the moment you made a deposit.</li>
+        <li>The other view is now labelled ALL TIME: every hero you have ever played, together.</li>
+        <li>The class-choice screen tells you your battle dice up front — the attack pool you throw, the d20 you dodge with, and what that handful is like to play.</li>
+        <li>The battle command reads ATTACK / ROLL, so it is clear that choosing it throws dice.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 3-AUG-DN</h2>
+        <time>AUG 3, 2026</time>
+      </header>
+      <ul>
+        <li>The corner portrait is now a real portrait. It finds your hero&#x27;s face in the artwork and frames head and shoulders, instead of shrinking the whole figure down until it looked like the overworld sprite.</li>
+        <li>Your chosen face is loaded the moment a run begins, so it is already there on the first frame and in your first battle rather than fading in late.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 3-AUG-DM</h2>
+        <time>AUG 3, 2026</time>
+      </header>
+      <ul>
+        <li>The sealed warden waiting in each delve now draws at its true proportions instead of being squeezed into a square, and its crown sits on its head rather than hovering above it.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 3-AUG-DL</h2>
+        <time>AUG 3, 2026</time>
+      </header>
+      <ul>
+        <li>Every beast now moves like itself. Slimes surge and rest, rats dart, wolves circle, beetles charge, crabs sidle, snakes weave, golems grind forward and drakes swoop — with lean, bob, squash and stretch on top.</li>
+        <li>Monsters telegraph. A melee beast pulls back before it commits, so a hit can be read and stepped away from instead of simply happening on contact.</li>
+        <li>Ranged creatures charge a shot before releasing it, and the bolt now carries its caster&#x27;s colour.</li>
+        <li>Slain beasts leave a brief tumbling death pose instead of blinking out of existence.</li>
+        <li>Tier, elite and champion creatures keep their own colours now. Instead of being drowned in a tint they wear what happened to them: scars, spikes, shoulder growths, glowing cracks and orbiting motes.</li>
+        <li>The wilds are inhabited, not sprinkled. Beasts arrive as colonies, packs, patrols and marching lines, and drift back toward the place they call home.</li>
+        <li>Species now trail their own ambient life — slime droplets, spores, dust, mist, embers and bone.</li>
+        <li>The four legendary wanderers are no longer recoloured copies of ordinary beasts. The Gilded Slime, Starfang, Voidmaw and the Bone Emperor are each drawn from scratch, in four frames.</li>
+        <li>Each legend moves by its own nature: the Gilded Slime hunts treasure, Starfang circles overhead, Voidmaw tears holes in space, and the Bone Emperor marches an ancient road. They announce themselves with their own sound, a reveal and a name — and ordinary beasts get out of their way.</li>
+        <li>Floating &quot;!&quot; and &quot;?&quot; markers are gone. Creatures signal with a ground flare and an eye glint instead.</li>
+        <li>Legendary wanderers, the Named Beasts and death poses all sort into the world properly now, so nothing draws through a tree.</li>
+        <li>Under the hood: the four motion beats now share their two painted frames instead of baking each one twice, so the richer animation costs no extra memory or loading time.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 2-AUG-DK</h2>
+        <time>AUG 2, 2026</time>
+      </header>
+      <ul>
+        <li>Overworld HUD rebuilt. Health, stamina, level and XP now sit on a dark plate, and every HUD label is outlined, so nothing is lost against snow, sand, firelight or cave dark.</li>
+        <li>Your gold moved out of the item clutter onto its own row at double size, with the coin beside it.</li>
+        <li>Potions and bombs moved to the right-hand kit column, under your weapon and special.</li>
+        <li>Your chosen portrait now watches from the bottom-right corner, framed. The frame turns red when you are badly hurt.</li>
+        <li>The vault chest moved off the middle of the floor and back against the left wall of your home.</li>
+        <li>Fixed: the treasure-room backdrop could visibly swap to a different picture a moment after you walked into the vault.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 2-AUG-DJ</h2>
+        <time>AUG 2, 2026</time>
+      </header>
+      <ul>
+        <li>Boon cards redrawn: portrait art with no frame and no backing plate, so the artwork itself is the card.</li>
+        <li>Boons now have a rarity — COMMON, RARE, EPIC and LEGENDARY. Rare cards glow, epic and legendary pulse, so a good pull announces itself.</li>
+        <li>The boon step now explains what a boon actually IS, with a rarity key underneath.</li>
+        <li>The name screen shows your in-game sprite walking on the spot next to your portrait, so you see exactly who you are about to steer.</li>
+        <li>FULLSCREEN moved next to BACK and is no longer gold — gold is now only ever the way forward.</li>
+        <li>SET FORTH rebuilt as a proper finale button: bigger, brighter and gently pulsing.</li>
+        <li>The send-off screen says less and says it larger.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 2-AUG-DH</h2>
+        <time>AUG 2, 2026</time>
+      </header>
+      <ul>
+        <li>All four built-in heroes now rebuild from their hand-authored maps at 20x24, preserving the baked miniature style while giving silhouettes and equipment more room.</li>
+        <li>Knight, lancer, mystic and shade each have their own softness, edge, lighting and eye treatment instead of sharing one universal bake.</li>
+        <li>Walking now uses four beats in every direction. Built-in attacks use three real posed frames, and every class has a dedicated guard or special pose.</li>
+        <li>Removed the accidental second outline, preserved action-frame proportions, and upgraded hero-sheet and inventory previews to high-resolution smooth canvases.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DG</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>BIG FIX — bonus dice were making you WORSE. Stumbles and fumbles triggered on a flat count of 1s (2 and 3) no matter how many dice you threw, so every extra die a boon gave you raised your chance of failing. A loaded-up lancer was failing nearly half his attacks.</li>
+        <li>Those thresholds now scale with the size of your pool. Failure sits around 1-6% at every pool size, and collecting dice makes you MORE reliable, not less. Starting pools are unchanged.</li>
+        <li>The d20 uses the built-in die again, so every die in the pool matches.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DF</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The hero forge fits a landscape phone with NO scrolling — every step (class, boon, avatar, points, name) sizes itself to the screen, with LOCK IN always visible.</li>
+        <li>Only the avatar portrait grid scrolls, inside its own box.</li>
+        <li>Points screen shows as two tidy columns on phones; nothing cut off top or bottom.</li>
+        <li>Class emblems 15% smaller everywhere.</li>
+        <li>Boon cards are ready to show art: drop art/ui/boon_&lt;id&gt;.jpg files in and they appear.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DE</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>Fixed the screen flashing during play. Drawing a camp threw an error part-way through the frame, so everything after it — trees, monsters, your hero — vanished for that frame. It struck on alternating frames because the camp’s &quot;!&quot; prompt blinks, which is what made it strobe.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DD</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The lancer carries a proper spear from the side now — wooden shaft, steel head. Those two black marks by his shoulder were loose pixels, not a weapon.</li>
+        <li>Fixed a missing colour in the hero palette that left a hole in the lancer’s feather.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DC</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>Heroes lost the heavy black border — the sprites already carried their own outline and the renderer was drawing a second one on top.</li>
+        <li>The vault backdrop no longer swaps to a different picture a moment after you walk in.</li>
+        <li>The shadowed coins at the back of the hoard no longer look washed out.</li>
+        <li>The gold pile stacks all the way up to the hint at the top of the vault, and spreads the full width of the stage.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DB</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>Overworld trees shrunk 25% so they sit properly against the hero again — both the painted tree art and the built-in biome trees.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 1-AUG-DA</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The heroes are 25% bigger — easier to see, and better matched to the trees and monsters around them.</li>
+        <li>Melee reach extended: the sword now hits from a bit further out, and the spear keeps its lead over it.</li>
+        <li>The swing arc follows the new reach, so what you see is still what you hit.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CZ</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The heroes are back to the original hand-drawn 16x16 sprites, painted the same way as the coins, gems and ground so they belong to the world again.</li>
+        <li>The tall detailed figures are gone — that road chased more detail than a sprite this size can hold.</li>
+        <li>Attacks swing the weapon icon again, the way they always used to.</li>
+        <li>Every place the hero is drawn — world, hero panel, inventory, camp folk, battle card, title art — now sizes itself from the sprite instead of assuming a fixed shape.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CY</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The knight’s sword doubled again — a proper hand-and-a-half blade now, thick and long enough to have real weight behind it.</li>
+        <li>The kite shield doubled to match, and from behind you now see its planked wooden back and arm straps instead of the painted face.</li>
+        <li>The swing arc re-centred on the longer blade.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CX</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The knight carries a real sword now — broad fullered blade, heavy crossguard, proper pommel. The old one read as a walking cane.</li>
+        <li>His kite shield is much bigger too, and the raised guard is a genuine wall.</li>
+        <li>Melee reach pulled back to match the drawn blade. The old range was tuned for the retired photo sprites and was hitting a full tile past the steel.</li>
+        <li>The swing arc now sweeps along the blade instead of way out in front of it.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CW</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The Shade arrives, and all four heroes are now hand-drawn: a floating crown, a body of violet-black smoke, and two daggers held in hands of vapour.</li>
+        <li>It drifts instead of walking, attacks with a twin cross-slash, and its VEIL draws the smoke inward and pulls the crown down into the dark.</li>
+        <li>Every class now has its own attack and guard poses in all four directions.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CV</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The mystic, redrawn from reference: navy and gold robe with purple lining, gem-clasped shoulder cape, slicked hair and beard — and a raven on his shoulder.</li>
+        <li>Casting is now a three-beat spell (gather, release, settle) with the light building at the staff head, and blocking raises a warding sigil.</li>
+        <li>Three of the four heroes are now hand-drawn with full pose sets. The shade is next.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CU</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The lancer joins the knight — redrawn from reference: spiky brown hair, leather jerkin and cross-straps, steel pauldron, red hip sash, and the long spear.</li>
+        <li>Spear thrusts in every direction (coil, full lunge, recover) and a braced shaft-guard block.</li>
+        <li>The lancer gets a wider frame than the knight so a full thrust has real reach.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CT</h2>
+        <time>AUG 1, 2026</time>
+      </header>
+      <ul>
+        <li>The knight is reborn — redrawn from reference in the smooth baked style: black hair, silver plate, blue crown shield, gold-trimmed tabard.</li>
+        <li>Real attack animation in every direction (windup, strike, follow-through) and a braced shield-block pose.</li>
+        <li>The photo-sprite knight is retired; the baked figure is the hero everywhere, on every platform.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CS</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Forge: the landscape class emblems ARE the buttons now — full image at its true shape, name overlaid, no frame around it.</li>
+        <li>Locked classes show their emblem darkened with ??? until earned.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CR</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>This update log! The build tag on the title screen is now a button — click it any time to see what changed.</li>
+        <li>Title screen: &quot;Created by&quot; moved below EXIT GAME; footer text spaced out.</li>
+        <li>Gold rain on the title screen — coins slowly fall from behind the logo to the foot of the menu, with soft coin sounds.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CQ</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Level-up cards now ALWAYS include at least one boon — and one class ability while any remain unclaimed.</li>
+        <li>Verified over 400 draws: no boon-less draws, no duplicates, every card reachable.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CP</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Boon pool grown from 8 to 53 — including dice boons that add extra dice to your battle pool.</li>
+        <li>Character creation offers 3 random boons from the full pool, different every forge.</li>
+        <li>Class item-art on the forge (helmet &amp; sword for knight, etc.).</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CO</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Attack swipe pushed out to double distance on every angle; sword hit range 46 to 60px, spear up to match.</li>
+        <li>All overworld trees doubled in size — both painted art and the built-in biome trees.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CN</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Swipe FX raised from the feet to chest height and rotates with the attack — upward attacks sweep overhead.</li>
+        <li>Melee reach extended so you no longer need to touch enemies to hit them.</li>
+        <li>Built-in hero figures now bake lazily — ~250ms faster boot; your sprite art takes over when present.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CK-CM</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Hero world sprite grown to 2 tiles tall and widened 20%.</li>
+        <li>Brand-new sharp downscaler: one-pass area average + unsharp mask (+40% measured edge detail). Purple magenta halo eliminated.</li>
+        <li>One sprite set now dresses a whole class (av_knight_*), with per-gender and per-portrait overrides.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CI-CJ</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Player-made hero WORLD sprites wired in: walk + up to 6 attack frames, magenta-keyed, auto-scaled.</li>
+        <li>Attack animation sweeps through all frames across each swing.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CH</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Premium minted gold coin (crown emboss, milled edge) used everywhere — overworld, HUD and Vault.</li>
+        <li>Dice faces rebaked at higher detail with angle-lit facets; dice pool lands in a tight cluster.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CE-CG</h2>
+        <time>JUL 31, 2026</time>
+      </header>
+      <ul>
+        <li>Every monster redesigned as its own painted figure with its own size — 16 species, gradient shading, glows.</li>
+        <li>Heroes redrawn as tall painted figures; terrain overhauled: smooth ground, painterly tufts/flowers, tall overhanging trees, per-biome rocks.</li>
+        <li>All game text switched from blocky pixels to crisp vector type.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-CA-CD</h2>
+        <time>JUL 30, 2026</time>
+      </header>
+      <ul>
+        <li>DICE-POOL COMBAT: every class rolls its own fistful of dice (knight 2d12+2d8, mystic 2d20...).</li>
+        <li>Gear and forge levels add bonus dice; boss telegraphs can SHATTER your biggest die.</li>
+        <li>Exploration checks: trapped delve chests (DEX) and ancient shrines (WIS) with graded outcomes.</li>
+        <li>Battle menu previews exactly what you will roll; vault background is player-choosable.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-BO-BZ</h2>
+        <time>JUL 30, 2026</time>
+      </header>
+      <ul>
+        <li>Grand Delve rebuilt: 12 rooms, locked boss vault (clear all jailers), levers, cracked walls, a great chest.</li>
+        <li>The greed story arc: camp folk react to your wealth, the Vault whispers, and the crown offers a final choice.</li>
+        <li>Mobile INTERACT button; William reacts to your hero portrait picks.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-BD-BN</h2>
+        <time>JUL 29, 2026</time>
+      </header>
+      <ul>
+        <li>TREASURE: gold &amp; gems drop in the wild; bank them at home in your VAULT — a clickable, jingling hoard that survives death and new games.</li>
+        <li>Peddler SELL tab, fast-travel between camps, and buyable decorations for the homestead.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-AV-BC</h2>
+        <time>JUL 28-29, 2026</time>
+      </header>
+      <ul>
+        <li>The HOMESTEAD: wake at home, walk the gate into the wilds; redesigned pause menu; 3-channel volume.</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-AP-AU</h2>
+        <time>JUL 28, 2026</time>
+      </header>
+      <ul>
+        <li>RPG core: 6 attributes, level 100 cap, point-buy creation, class abilities at milestone level-ups.</li>
+        <li>Enemy scaling rebalanced end-to-end (no more one-shot deaths at high level).</li>
+      </ul>
+    </section>
+    <section class="build">
+      <header>
+        <h2>BUILD 27-JUL-AA-AO</h2>
+        <time>JUL 26-28, 2026</time>
+      </header>
+      <ul>
+        <li>Painted art pipeline: monsters, bestiary, scenes, title; battle music (10 tracks); layered SFX voices; world sprite hooks.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
