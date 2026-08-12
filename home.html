@@ -233,6 +233,16 @@
       margin-bottom: 12px;
       white-space: normal;
     }
+    .status-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .status-group .status-badge {
+      margin-bottom: 0;
+    }
     .status-release {
       background: #b8ff00;
       color: #000;
@@ -549,13 +559,16 @@
       <h2>In Development</h2>
       <div class="projects-grid">
         <div class="project-card">
-          <div class="status-badge status-dev">New · In Development</div>
+          <div class="status-group" aria-label="Project status: In Development and Flow">
+            <div class="status-badge status-dev">In Development</div>
+            <div class="status-badge status-flow">Flow</div>
+          </div>
           <h3>Speck</h3>
           <p>A persistent shared-world adventure about exploring, gathering, crafting, building a home, and finding your place alongside everyone else.</p>
           <a href="speck.html" class="btn btn-secondary">View Project</a>
         </div>
         <div class="project-card">
-          <div class="status-badge status-flow">Flow</div>
+          <div class="status-badge status-dev">In Development</div>
           <h3>Lumina Dice</h3>
           <p>A prismatic dice roguelike — roll living crystal prisms, refract their light, and form radiant constellations to shatter escalating Echoes.</p>
           <a href="lumina-dice.html" class="btn btn-secondary">View Project</a>

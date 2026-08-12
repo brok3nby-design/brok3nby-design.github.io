@@ -133,6 +133,21 @@
       font-weight: 600;
       letter-spacing: .05em;
     }
+    .status-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .status-group .status {
+      margin-bottom: 0;
+    }
+    .status-flow {
+      border-color: rgba(0,229,255,.5);
+      background: rgba(0,229,255,.12);
+      color: #00e5ff;
+    }
     .hero h1 {
       margin: 0 0 10px;
       color: var(--speck);
@@ -271,7 +286,10 @@
         </div>
       </div>
 
-      <div class="status">IN DEVELOPMENT</div>
+      <div class="status-group" aria-label="Project status: In Development and Flow">
+        <div class="status">IN DEVELOPMENT</div>
+        <div class="status status-flow">FLOW</div>
+      </div>
       <h1>SPECK</h1>
       <p class="genre">Persistent Shared World • Exploration • Crafting • Building</p>
       <p>A mysterious online adventure about exploring a vast living place, building somewhere to call your own, and discovering what emerges when everyone leaves a mark on the same world.</p>
