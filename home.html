@@ -89,6 +89,40 @@
       background: rgba(255, 64, 87, .18);
       box-shadow: 0 0 18px rgba(255, 64, 87, .28);
     }
+    .wrfm-live-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .wrfm-live-hint {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: max-content;
+      max-width: 220px;
+      color: #ff93a0;
+      font-size: .76rem;
+      line-height: 1.25;
+      text-align: right;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 4px #000);
+      animation: wrfmHintPulse 2.4s ease-in-out infinite;
+      z-index: 5;
+    }
+    .wrfm-live-hint strong {
+      color: #fff;
+    }
+    .wrfm-live-hint::before {
+      content: '↑';
+      display: inline-block;
+      margin-right: 5px;
+      color: #ff4057;
+      font-size: 1rem;
+    }
+    @keyframes wrfmHintPulse {
+      0%, 100% { opacity: .72; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(2px); }
+    }
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -178,6 +212,19 @@
     .wrfm-inline-header strong {
       color: #ff7181;
     }
+    .wrfm-inline-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .wrfm-keeps-playing {
+      max-width: 190px;
+      color: #aaa;
+      font-size: .78rem;
+      line-height: 1.25;
+      text-align: right;
+    }
     .wrfm-inline-close {
       flex: 0 0 auto;
       border: 1px solid #444;
@@ -198,6 +245,34 @@
       min-height: 520px;
       border: 0;
       background: #080808;
+    }
+    .wrfm-reopen {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #ff4057;
+      border-radius: 999px;
+      background: rgba(17, 17, 17, .96);
+      color: #fff;
+      padding: 11px 16px;
+      font: 600 .88rem/1 'Inter', system-ui, sans-serif;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, .55), 0 0 18px rgba(255, 64, 87, .22);
+      cursor: pointer;
+    }
+    .wrfm-reopen[hidden] {
+      display: none;
+    }
+    .wrfm-reopen-dot {
+      color: #ff4057;
+      animation: wrfmOnAirPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes wrfmOnAirPulse {
+      0%, 100% { opacity: .45; }
+      50% { opacity: 1; }
     }
     .carousel-slides {
       position: relative;
@@ -500,6 +575,14 @@
       }
       .wrfm-inline-header {
         align-items: flex-start;
+        flex-direction: column;
+      }
+      .wrfm-inline-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .wrfm-keeps-playing {
+        text-align: left;
       }
       .wrfm-inline-frame {
         height: 72vh;
@@ -546,7 +629,10 @@
       <a href="#current">Labs</a>
       <a href="about.html">About</a>
       <a href="index.html">Watch Intro</a>
-      <button type="button" class="wrfm-live-link" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● 97.1 WRFM · LIVE</button>
+      <div class="wrfm-live-wrap">
+        <button type="button" class="wrfm-live-link" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● 97.1 WRFM · LIVE</button>
+        <span class="wrfm-live-hint" aria-hidden="true"><strong>Listen without leaving.</strong> Open the live station here.</span>
+      </div>
     </div>
   </nav>
 
@@ -611,7 +697,10 @@
         <div class="wrfm-inline-player" id="wrfmInlinePlayer" hidden>
           <div class="wrfm-inline-header">
             <span><strong>WRFM 97.1 is on air.</strong> Press “Tune In” in the station below to start listening.</span>
-            <button type="button" class="wrfm-inline-close" id="wrfmInlineClose" aria-label="Close the inline WRFM player">Close</button>
+            <div class="wrfm-inline-actions">
+              <span class="wrfm-keeps-playing">Music keeps playing when this panel is closed.</span>
+              <button type="button" class="wrfm-inline-close" id="wrfmInlineClose" aria-label="Close the inline WRFM player">Close</button>
+            </div>
           </div>
           <iframe
             class="wrfm-inline-frame"
@@ -624,6 +713,11 @@
         </div>
       </div>
     </section>
+
+    <button type="button" class="wrfm-reopen" id="wrfmReopen" aria-controls="wrfmInlinePlayer" aria-expanded="false" hidden>
+      <span class="wrfm-reopen-dot" aria-hidden="true">●</span>
+      WRFM stays live · Reopen
+    </button>
 
     <!-- In Development -->
     <section id="current" class="section">
@@ -983,6 +1077,7 @@
     const wrfmPlayer = document.getElementById('wrfmInlinePlayer');
     const wrfmFrame = document.getElementById('wrfmInlineFrame');
     const wrfmClose = document.getElementById('wrfmInlineClose');
+    const wrfmReopen = document.getElementById('wrfmReopen');
     const wrfmListenButtons = document.querySelectorAll('[data-wrfm-listen]');
 
     function setWrfmExpanded(expanded) {
@@ -1010,6 +1105,7 @@
       }
 
       wrfmPlayer.hidden = false;
+      if (wrfmReopen) wrfmReopen.hidden = true;
       setWrfmExpanded(true);
       wrfmPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -1017,6 +1113,7 @@
     function closeWrfmPlayer() {
       if (!wrfmPlayer) return;
       wrfmPlayer.hidden = true;
+      if (wrfmReopen && wrfmFrame.src) wrfmReopen.hidden = false;
       setWrfmExpanded(false);
     }
 
@@ -1026,6 +1123,10 @@
 
     if (wrfmClose) {
       wrfmClose.addEventListener('click', closeWrfmPlayer);
+    }
+
+    if (wrfmReopen) {
+      wrfmReopen.addEventListener('click', openWrfmPlayer);
     }
   </script>
 
