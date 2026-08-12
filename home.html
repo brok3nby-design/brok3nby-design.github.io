@@ -82,6 +82,7 @@
       letter-spacing: .06em;
       line-height: 1;
       box-shadow: 0 0 14px rgba(255, 64, 87, .14);
+      cursor: pointer;
     }
     .wrfm-live-link:hover {
       color: #fff;
@@ -152,6 +153,51 @@
       display: block;
       object-fit: contain;
       background: #0d0d0d;
+    }
+    .wrfm-inline-player {
+      grid-column: 1 / -1;
+      margin-top: 4px;
+      border: 1px solid rgba(255, 64, 87, .5);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #080808;
+      box-shadow: 0 0 28px rgba(255, 64, 87, .12);
+    }
+    .wrfm-inline-player[hidden] {
+      display: none;
+    }
+    .wrfm-inline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #2f2f2f;
+      color: #ccc;
+    }
+    .wrfm-inline-header strong {
+      color: #ff7181;
+    }
+    .wrfm-inline-close {
+      flex: 0 0 auto;
+      border: 1px solid #444;
+      border-radius: 7px;
+      background: transparent;
+      color: #ddd;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+    .wrfm-inline-close:hover {
+      border-color: #ff4057;
+      color: #fff;
+    }
+    .wrfm-inline-frame {
+      display: block;
+      width: 100%;
+      height: min(720px, 78vh);
+      min-height: 520px;
+      border: 0;
+      background: #080808;
     }
     .carousel-slides {
       position: relative;
@@ -293,6 +339,9 @@
       font-weight: 600;
       text-decoration: none;
       transition: all 0.3s ease;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
     }
     .btn-primary {
       background: var(--accent);
@@ -449,6 +498,13 @@
         justify-content: center;
         gap: 16px 18px;
       }
+      .wrfm-inline-header {
+        align-items: flex-start;
+      }
+      .wrfm-inline-frame {
+        height: 72vh;
+        min-height: 480px;
+      }
       .logo {
         font-size: 2rem;
       }
@@ -490,7 +546,7 @@
       <a href="#current">Labs</a>
       <a href="about.html">About</a>
       <a href="index.html">Watch Intro</a>
-      <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="wrfm-live-link" aria-label="Listen live to WRFM 97.1">● 97.1 WRFM · LIVE</a>
+      <button type="button" class="wrfm-live-link" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● 97.1 WRFM · LIVE</button>
     </div>
   </nav>
 
@@ -500,7 +556,7 @@
     <p class="tagline">Strange games, dark humor, and experimental worlds from a one-person indie studio.</p>
     <div class="hero-buttons">
       <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Pocket Wilds</a>
-      <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-primary">● Listen to WRFM Live</a>
+      <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen Here to WRFM</button>
       <a href="#current" class="btn btn-secondary">Explore the Lab</a>
     </div>
   </div>
@@ -544,12 +600,27 @@
             <span class="feature-tag">Vera Lang</span>
           </div>
           <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-            <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-primary">● Tune In Live</a>
+            <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen Here</button>
+            <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-secondary">Open Full Player ↗</a>
             <a href="wrfm.html" class="btn btn-secondary">Game Details</a>
           </div>
         </div>
         <div class="featured-image">
           <img src="images/wrfm/wrfm_03.png" alt="WRFM Radio After Hours artwork with a typewriter by candlelight" class="featured-cover" loading="lazy">
+        </div>
+        <div class="wrfm-inline-player" id="wrfmInlinePlayer" hidden>
+          <div class="wrfm-inline-header">
+            <span><strong>WRFM 97.1 is on air.</strong> Press “Tune In” in the station below to start listening.</span>
+            <button type="button" class="wrfm-inline-close" id="wrfmInlineClose" aria-label="Close the inline WRFM player">Close</button>
+          </div>
+          <iframe
+            class="wrfm-inline-frame"
+            id="wrfmInlineFrame"
+            title="WRFM synchronized live radio player"
+            data-src="https://brok3nby-design.github.io/wrfm/"
+            allow="autoplay; fullscreen"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
         </div>
       </div>
     </section>
@@ -908,6 +979,54 @@
     createDots();
     showSlide();
     startAutoSlide();
+
+    const wrfmPlayer = document.getElementById('wrfmInlinePlayer');
+    const wrfmFrame = document.getElementById('wrfmInlineFrame');
+    const wrfmClose = document.getElementById('wrfmInlineClose');
+    const wrfmListenButtons = document.querySelectorAll('[data-wrfm-listen]');
+
+    function setWrfmExpanded(expanded) {
+      wrfmListenButtons.forEach((button) => {
+        button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+    }
+
+    function openWrfmPlayer() {
+      if (!wrfmPlayer || !wrfmFrame) return;
+
+      if (!music.paused) {
+        music.pause();
+        musicPlaying = false;
+        if (musicBtn) {
+          musicBtn.textContent = 'MUSIC: OFF';
+          musicBtn.classList.remove('playing');
+        }
+        visualizer.style.display = 'none';
+        localStorage.setItem('bbd_music_playing', '0');
+      }
+
+      if (!wrfmFrame.src) {
+        wrfmFrame.src = wrfmFrame.dataset.src;
+      }
+
+      wrfmPlayer.hidden = false;
+      setWrfmExpanded(true);
+      wrfmPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeWrfmPlayer() {
+      if (!wrfmPlayer) return;
+      wrfmPlayer.hidden = true;
+      setWrfmExpanded(false);
+    }
+
+    wrfmListenButtons.forEach((button) => {
+      button.addEventListener('click', openWrfmPlayer);
+    });
+
+    if (wrfmClose) {
+      wrfmClose.addEventListener('click', closeWrfmPlayer);
+    }
   </script>
 
   <!-- Trailer Modal -->
