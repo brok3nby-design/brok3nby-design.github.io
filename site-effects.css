@@ -3,8 +3,7 @@
   --b3d-fx-bg: var(--bg, #0b0b0b);
 }
 
-.b3d-particle-canvas,
-.b3d-crt-layer {
+.b3d-particle-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -14,62 +13,6 @@
 
 .b3d-particle-canvas {
   z-index: 850;
-}
-
-.b3d-crt-layer {
-  z-index: 2147480000;
-  display: none;
-  overflow: hidden;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, .025) 0,
-      rgba(255, 255, 255, .025) 1px,
-      rgba(0, 0, 0, .035) 1px,
-      rgba(0, 0, 0, .035) 3px
-    ),
-    radial-gradient(circle at 50% 48%, transparent 68%, rgba(0, 0, 0, .14) 100%);
-  box-shadow: inset 0 0 90px rgba(0, 255, 159, .025);
-  opacity: .72;
-}
-
-.b3d-crt-on .b3d-crt-layer {
-  display: block;
-  animation: b3d-crt-flicker 8s steps(1, end) infinite;
-}
-
-.b3d-crt-on body {
-  text-shadow: .018em 0 rgba(255, 60, 80, .12), -.018em 0 rgba(0, 229, 255, .1);
-}
-
-.b3d-crt-toggle {
-  position: fixed;
-  left: 18px;
-  bottom: 18px;
-  z-index: 2147481000;
-  padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--b3d-fx-accent) 58%, #222);
-  border-radius: 4px;
-  background: rgba(8, 8, 8, .82);
-  color: #aaa;
-  font: 1rem/1 'VT323', 'Courier New', monospace;
-  letter-spacing: .08em;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, .65), inset 0 0 12px rgba(255, 255, 255, .025);
-  transition: color .18s ease, border-color .18s ease, box-shadow .18s ease;
-}
-
-.b3d-crt-toggle:hover,
-.b3d-crt-toggle[aria-pressed="true"] {
-  color: var(--b3d-fx-accent);
-  border-color: var(--b3d-fx-accent);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--b3d-fx-accent) 24%, transparent);
-}
-
-.b3d-crt-toggle:focus-visible {
-  outline: 2px solid var(--b3d-fx-accent);
-  outline-offset: 3px;
 }
 
 .b3d-glitch {
@@ -453,12 +396,6 @@ footer.b3d-ambient-footer {
   to { transform: translateY(calc(100vh + 60px)) rotate(360deg); }
 }
 
-@keyframes b3d-crt-flicker {
-  0%, 18%, 20%, 52%, 54%, 100% { opacity: .72; }
-  19% { opacity: .66; }
-  53% { opacity: .76; }
-}
-
 @keyframes b3d-glitch-red {
   0% { transform: translate(0); }
   25% { transform: translate(-3px, 1px); }
@@ -476,12 +413,6 @@ footer.b3d-ambient-footer {
 }
 
 @media (max-width: 600px) {
-  .b3d-crt-toggle {
-    left: 10px;
-    bottom: 10px;
-    padding: 7px 10px;
-  }
-
   .b3d-achievement-stack {
     top: 64px;
     right: 10px;
@@ -497,7 +428,6 @@ footer.b3d-ambient-footer {
     display: none !important;
   }
 
-  .b3d-crt-on .b3d-crt-layer,
   .b3d-glitch.is-glitching::before,
   .b3d-glitch.is-glitching::after,
   .b3d-achievement::after,
