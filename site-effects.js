@@ -491,30 +491,39 @@
   }
 
   function addCartridgeCards() {
-    if (reducedMotion.matches) return;
+    const cartridgeSound = new Audio('sounds/cartridge.mp3');
+    cartridgeSound.preload = 'auto';
+    cartridgeSound.volume = .8;
+
     document.querySelectorAll('.project-card').forEach(card => {
       card.classList.add('b3d-cartridge');
 
-      card.addEventListener('pointermove', event => {
-        if (event.pointerType === 'touch') return;
-        const rect = card.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - .5;
-        const y = (event.clientY - rect.top) / rect.height - .5;
-        card.style.setProperty('--b3d-tilt-x', `${(-y * 6).toFixed(2)}deg`);
-        card.style.setProperty('--b3d-tilt-y', `${(x * 7).toFixed(2)}deg`);
-      });
+      if (!reducedMotion.matches) {
+        card.addEventListener('pointermove', event => {
+          if (event.pointerType === 'touch') return;
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - .5;
+          const y = (event.clientY - rect.top) / rect.height - .5;
+          card.style.setProperty('--b3d-tilt-x', `${(-y * 6).toFixed(2)}deg`);
+          card.style.setProperty('--b3d-tilt-y', `${(x * 7).toFixed(2)}deg`);
+        });
 
-      card.addEventListener('pointerleave', () => {
-        card.style.removeProperty('--b3d-tilt-x');
-        card.style.removeProperty('--b3d-tilt-y');
-      });
+        card.addEventListener('pointerleave', () => {
+          card.style.removeProperty('--b3d-tilt-x');
+          card.style.removeProperty('--b3d-tilt-y');
+        });
+      }
 
       const link = card.querySelector('a[href$=".html"]');
       if (!link) return;
       link.addEventListener('click', event => {
         if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
-        card.classList.add('is-inserting');
+        if (!reducedMotion.matches) card.classList.add('is-inserting');
+        try {
+          cartridgeSound.currentTime = 0;
+          cartridgeSound.play().catch(() => {});
+        } catch (error) {}
         link.textContent = 'INSERTING…';
         if (window.B3DAchievements) {
           window.B3DAchievements.unlock('cartridge', 'BLOW ON IT FIRST', 'Inserted a suspiciously browser-shaped cartridge.');
