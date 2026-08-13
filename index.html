@@ -60,6 +60,8 @@
       outline-offset: 4px;
     }
   </style>
+  <link rel="stylesheet" href="site-effects.css">
+  <script src="site-effects.js" defer></script>
 </head>
 <body>
 
@@ -75,7 +77,11 @@
 
   <script>
     function enterSite() {
-      window.location.href = "home.html";
+      if (window.B3DEffects) {
+        window.B3DEffects.navigate("home.html");
+      } else {
+        window.location.href = "home.html";
+      }
     }
   </script>
 
