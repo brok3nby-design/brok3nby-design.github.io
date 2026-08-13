@@ -85,7 +85,7 @@
 /* Visitor game stats */
 .b3d-player-stats {
   position: fixed;
-  top: 76px;
+  bottom: 14px;
   left: 14px;
   z-index: 2147481800;
   width: 238px;
@@ -97,6 +97,12 @@
   font: 1rem/1.15 'VT323', 'Courier New', monospace;
   box-shadow: 5px 5px 0 rgba(0, 0, 0, .5), inset 0 0 20px rgba(0, 255, 159, .035);
   backdrop-filter: blur(6px);
+}
+
+/* Retired legacy site-wide background music controls. */
+#musicBtn,
+.floating-music-btn {
+  display: none !important;
 }
 
 .b3d-player-stats-toggle {
@@ -520,7 +526,7 @@ footer.b3d-ambient-footer {
 
 @media (max-width: 600px) {
   .b3d-player-stats {
-    top: 64px;
+    bottom: 10px;
     left: 10px;
     width: 205px;
   }

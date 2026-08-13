@@ -302,6 +302,29 @@
     }
   }
 
+  function retireLegacyMusic() {
+    try {
+      localStorage.setItem('bbd_music_playing', '0');
+    } catch (error) {}
+
+    document.querySelectorAll('#musicBtn, .floating-music-btn').forEach(button => {
+      button.hidden = true;
+      button.setAttribute('aria-hidden', 'true');
+      button.setAttribute('tabindex', '-1');
+    });
+
+    document.querySelectorAll('audio#bgMusic').forEach(audio => {
+      const stop = () => {
+        if (!audio.paused) audio.pause();
+      };
+      audio.pause();
+      audio.muted = true;
+      audio.loop = false;
+      audio.preload = 'none';
+      audio.addEventListener('play', stop);
+    });
+  }
+
   function addAchievements() {
     const stack = document.createElement('div');
     stack.className = 'b3d-achievement-stack';
@@ -502,6 +525,7 @@
   }
 
   ready(() => {
+    retireLegacyMusic();
     addAchievements();
     addPlayerStats();
     addParticles();
