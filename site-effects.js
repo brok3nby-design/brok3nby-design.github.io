@@ -12,42 +12,6 @@
     }
   }
 
-  function addCrtMode() {
-    const layer = document.createElement('div');
-    layer.className = 'b3d-crt-layer';
-    layer.setAttribute('aria-hidden', 'true');
-
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'b3d-crt-toggle';
-
-    let enabled = false;
-    try {
-      enabled = localStorage.getItem('b3d_crt_mode') === '1';
-    } catch (error) {}
-
-    function render() {
-      root.classList.toggle('b3d-crt-on', enabled);
-      button.setAttribute('aria-pressed', String(enabled));
-      button.textContent = `CRT MODE: ${enabled ? 'ON' : 'OFF'}`;
-      button.setAttribute('aria-label', `${enabled ? 'Disable' : 'Enable'} CRT display mode`);
-    }
-
-    button.addEventListener('click', () => {
-      enabled = !enabled;
-      render();
-      if (enabled && window.B3DAchievements) {
-        window.B3DAchievements.unlock('crt', 'PHOSPHOR FAN', 'Enabled CRT mode. Your warranty is now void.');
-      }
-      try {
-        localStorage.setItem('b3d_crt_mode', enabled ? '1' : '0');
-      } catch (error) {}
-    });
-
-    document.body.append(layer, button);
-    render();
-  }
-
   function addParticles() {
     if (reducedMotion.matches || !window.HTMLCanvasElement) return;
 
@@ -414,7 +378,6 @@
 
   ready(() => {
     addAchievements();
-    addCrtMode();
     addParticles();
     addGlitches();
     addAmbientSecrets();
