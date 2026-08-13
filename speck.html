@@ -10,7 +10,8 @@
   <meta property="og:title" content="Speck | Brok3n by Design">
   <meta property="og:description" content="A mysterious persistent shared-world adventure about building a life in a place shaped by everyone.">
   <meta property="og:url" content="https://brok3nbydesign.com/speck.html">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/speck/speck_01.png">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
@@ -80,47 +81,14 @@
         linear-gradient(145deg, #101713, #16130d 55%, #0d0d0d);
       isolation: isolate;
     }
-    .hero-visual::before,
-    .hero-visual::after {
-      content: '';
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border: 1px solid rgba(255,209,102,.19);
-      border-radius: 50%;
-      animation: drift 12s linear infinite;
-    }
-    .hero-visual::after {
-      width: 410px;
-      height: 410px;
-      border-color: rgba(0,255,159,.1);
-      animation-duration: 20s;
-      animation-direction: reverse;
-    }
-    .hero-mark {
+    .hero-logo {
       position: relative;
       z-index: 1;
-    }
-    .hero-mark strong {
       display: block;
-      font-family: 'VT323', monospace;
-      font-size: clamp(5rem, 13vw, 9rem);
-      line-height: .8;
-      color: var(--speck);
-      letter-spacing: .08em;
-      text-shadow: 0 0 34px rgba(255,209,102,.25);
-    }
-    .hero-mark span {
-      display: block;
-      margin-top: 24px;
-      color: #bcb39d;
-      font-family: 'VT323', monospace;
-      font-size: 1.15rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-    @keyframes drift {
-      to { transform: rotate(360deg); }
+      width: min(780px, 92%);
+      max-height: 310px;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.45));
     }
     .status {
       display: inline-block;
@@ -218,6 +186,89 @@
       margin: 0;
       color: #bbb;
     }
+    .media-frame {
+      overflow: hidden;
+      border: 1px solid #443d2b;
+      border-radius: 12px;
+      background: #050505;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+    .media-frame video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #050505;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .gallery-item {
+      appearance: none;
+      width: 100%;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #111;
+      cursor: zoom-in;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .gallery-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--speck);
+    }
+    .gallery-item img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .gallery-item-square img {
+      object-fit: contain;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 70px;
+      border: 0;
+      background: rgba(0,0,0,.94);
+    }
+    .lightbox.open {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.7);
+    }
+    .lightbox-close,
+    .lightbox-nav {
+      position: absolute;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      font-size: 2.5rem;
+    }
+    .lightbox-close {
+      top: 12px;
+      right: 22px;
+    }
+    .lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 18px;
+    }
+    .lightbox-prev { left: 4px; }
+    .lightbox-next { right: 4px; }
     .development,
     .roadmap {
       padding: 25px;
@@ -261,11 +312,11 @@
       .hero h1 {
         font-size: 3rem;
       }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .hero-visual::before,
-      .hero-visual::after {
-        animation: none;
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      .lightbox {
+        padding: 56px 12px 20px;
       }
     }
   </style>
@@ -279,11 +330,8 @@
 
   <main class="container">
     <section class="hero">
-      <div class="hero-visual" aria-label="Speck project artwork">
-        <div class="hero-mark">
-          <strong>SPECK</strong>
-          <span>A shared world is taking shape</span>
-        </div>
+      <div class="hero-visual">
+        <img class="hero-logo" src="images/speck/logo.png" alt="Speck — a shared world is taking shape">
       </div>
 
       <div class="status-group" aria-label="Project status: In Development and Flow">
@@ -335,6 +383,32 @@
       </div>
     </section>
 
+    <section class="section" aria-labelledby="trailer-heading">
+      <h2 id="trailer-heading">Trailer</h2>
+      <div class="media-frame">
+        <video controls preload="metadata" poster="images/speck/speck_01.png">
+          <source src="videos/Speck_Trailer_01b.mp4" type="video/mp4">
+          Your browser does not support HTML video. <a href="videos/Speck_Trailer_01b.mp4">Download the Speck trailer</a>.
+        </video>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="gallery-heading">
+      <h2 id="gallery-heading">Gallery</h2>
+      <div class="gallery-grid" id="speck-gallery">
+        <button class="gallery-item" type="button"><img src="images/speck/speck_01.png" alt="Speck gameplay screenshot 1" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_02.png" alt="Speck gameplay screenshot 2" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_03.png" alt="Speck gameplay screenshot 3" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_04.png" alt="Speck gameplay screenshot 4" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_05.png" alt="Speck gameplay screenshot 5" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_06.png" alt="Speck gameplay screenshot 6" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_08.png" alt="Speck gameplay screenshot 8" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_09.png" alt="Speck gameplay screenshot 9" loading="lazy"></button>
+        <button class="gallery-item" type="button"><img src="images/speck/speck_10.png" alt="Speck gameplay screenshot 10" loading="lazy"></button>
+        <button class="gallery-item gallery-item-square" type="button"><img src="images/speck/speck_11.png" alt="Speck gameplay screenshot 11" loading="lazy"></button>
+      </div>
+    </section>
+
     <section class="section">
       <h2>Latest Development</h2>
       <div class="development"><strong>August 2026</strong> — The core shared-world prototype is playable locally, with exploration, persistent homes, gathering, inventory, progression, and crafting now working together.</div>
@@ -358,6 +432,61 @@
     <p>Follow development on <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">X</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
   </footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+    <button class="lightbox-close" type="button" aria-label="Close screenshot viewer">&times;</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous screenshot">&#10094;</button>
+    <img src="" alt="">
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next screenshot">&#10095;</button>
+  </div>
+
+  <script>
+    (() => {
+      const gallery = document.getElementById('speck-gallery');
+      const lightbox = document.getElementById('lightbox');
+      if (!gallery || !lightbox) return;
+
+      const images = [...gallery.querySelectorAll('img')];
+      const display = lightbox.querySelector('img');
+      const closeButton = lightbox.querySelector('.lightbox-close');
+      let current = 0;
+
+      function show(index) {
+        current = (index + images.length) % images.length;
+        display.src = images[current].src;
+        display.alt = images[current].alt;
+      }
+
+      function open(index) {
+        show(index);
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        closeButton.focus();
+      }
+
+      function close() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+        images[current].closest('button').focus();
+      }
+
+      images.forEach((image, index) => {
+        image.closest('button').addEventListener('click', () => open(index));
+      });
+      closeButton.addEventListener('click', close);
+      lightbox.querySelector('.lightbox-prev').addEventListener('click', () => show(current - 1));
+      lightbox.querySelector('.lightbox-next').addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', event => {
+        if (event.target === lightbox) close();
+      });
+      document.addEventListener('keydown', event => {
+        if (!lightbox.classList.contains('open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+      });
+    })();
+  </script>
 
 </body>
 </html>
