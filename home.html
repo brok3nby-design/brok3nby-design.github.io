@@ -1091,25 +1091,31 @@
     function openWrfmPlayer() {
       if (!wrfmPlayer || !wrfmFrame) return;
 
-      if (!music.paused) {
-        music.pause();
-        musicPlaying = false;
-        if (musicBtn) {
-          musicBtn.textContent = 'MUSIC: OFF';
-          musicBtn.classList.remove('playing');
-        }
-        visualizer.style.display = 'none';
-        localStorage.setItem('bbd_music_playing', '0');
+      // Reveal and initialize the live station first so unrelated audio
+      // cleanup can never prevent the player from opening.
+      if (!wrfmFrame.hasAttribute('src')) {
+        wrfmFrame.setAttribute('src', wrfmFrame.dataset.src);
       }
-
-      if (!wrfmFrame.src) {
-        wrfmFrame.src = wrfmFrame.dataset.src;
-      }
-
       wrfmPlayer.hidden = false;
       if (wrfmReopen) wrfmReopen.hidden = true;
       setWrfmExpanded(true);
-      wrfmPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      try {
+        if (music && !music.paused) {
+          music.pause();
+          musicPlaying = false;
+          if (musicBtn) {
+            musicBtn.textContent = 'MUSIC: OFF';
+            musicBtn.classList.remove('playing');
+          }
+          if (visualizer) visualizer.style.display = 'none';
+          localStorage.setItem('bbd_music_playing', '0');
+        }
+      } catch (error) {}
+
+      requestAnimationFrame(() => {
+        wrfmPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
 
     function closeWrfmPlayer() {
