@@ -210,60 +210,10 @@
     });
   }
 
-  function addPageTransitions() {
-    if (reducedMotion.matches) return;
-
-    const layer = document.createElement('div');
-    layer.className = 'b3d-transition-layer is-active is-arriving';
-    layer.setAttribute('aria-hidden', 'true');
-
-    for (let index = 0; index < 96; index += 1) {
-      const pixel = document.createElement('i');
-      pixel.className = 'b3d-transition-pixel';
-      pixel.style.setProperty('--b3d-delay', `${Math.random() * .14}s`);
-      layer.appendChild(pixel);
-    }
-    document.body.appendChild(layer);
-    document.body.classList.add('b3d-arriving');
-    window.setTimeout(() => {
-      document.body.classList.remove('b3d-arriving');
-      layer.classList.remove('is-active', 'is-arriving');
-    }, 620);
-
-    let navigating = false;
-    function navigate(url) {
-      if (navigating) return;
-      navigating = true;
-      layer.querySelectorAll('.b3d-transition-pixel').forEach(pixel => {
-        pixel.style.setProperty('--b3d-delay', `${Math.random() * .1}s`);
-      });
-      layer.className = 'b3d-transition-layer is-active is-leaving';
-      document.body.classList.add('b3d-leaving');
-      window.setTimeout(() => window.location.assign(url), 390);
-    }
-
-    window.B3DEffects = Object.assign(window.B3DEffects || {}, { navigate });
-    document.addEventListener('click', event => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const link = event.target.closest('a[href]');
-      if (!link || link.target || link.hasAttribute('download')) return;
-      const raw = link.getAttribute('href');
-      if (!raw || raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:') || raw.startsWith('javascript:')) return;
-
-      const url = new URL(link.href, window.location.href);
-      if (url.origin !== window.location.origin || url.pathname === window.location.pathname && url.hash) return;
-      if (!url.pathname.endsWith('.html') && !url.pathname.endsWith('/')) return;
-
-      event.preventDefault();
-      navigate(url.href);
-    });
-  }
-
   ready(() => {
     addCrtMode();
     addParticles();
     addGlitches();
     addTooltips();
-    addPageTransitions();
   });
 })();
