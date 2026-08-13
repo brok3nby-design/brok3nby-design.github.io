@@ -139,6 +139,320 @@
   visibility: visible;
 }
 
+/* Achievement system */
+.b3d-achievement-stack {
+  position: fixed;
+  top: 76px;
+  right: 18px;
+  z-index: 2147482500;
+  display: grid;
+  width: min(360px, calc(100vw - 28px));
+  gap: 10px;
+  pointer-events: none;
+}
+
+.b3d-achievement {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 16px 14px 54px;
+  border: 1px solid #ffd166;
+  border-radius: 5px;
+  background: rgba(9, 10, 9, .96);
+  color: #eee;
+  font: 1rem/1.25 'VT323', 'Courier New', monospace;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, .62), 0 0 22px rgba(255, 209, 102, .12);
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity .22s steps(3, end), transform .22s steps(3, end);
+}
+
+.b3d-achievement::before {
+  content: '★';
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  color: #ffd166;
+  font-size: 1.75rem;
+  transform: translateY(-50%);
+  text-shadow: 0 0 13px rgba(255, 209, 102, .5);
+}
+
+.b3d-achievement::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #ffd166;
+  transform-origin: left;
+  animation: b3d-achievement-timer 3.8s linear forwards;
+}
+
+.b3d-achievement.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.b3d-achievement-label {
+  display: block;
+  margin-bottom: 2px;
+  color: #ffd166;
+  font-size: .78rem;
+  letter-spacing: .14em;
+}
+
+.b3d-achievement-title {
+  display: block;
+  color: #fff;
+  font-size: 1.25rem;
+  letter-spacing: .04em;
+}
+
+.b3d-achievement-copy {
+  display: block;
+  margin-top: 3px;
+  color: #aaa;
+  font-size: .94rem;
+}
+
+/* Ambient footer secrets */
+footer.b3d-ambient-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.b3d-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.b3d-firefly {
+  position: absolute;
+  left: var(--x);
+  bottom: var(--y);
+  width: 3px;
+  height: 3px;
+  background: #d8ff8c;
+  box-shadow: 0 0 8px 2px rgba(216, 255, 140, .52);
+  opacity: 0;
+  animation: b3d-firefly-drift var(--duration) ease-in-out var(--delay) infinite;
+}
+
+.b3d-footer-bot,
+.b3d-secret-door {
+  position: absolute;
+  z-index: 3;
+  border: 0;
+  cursor: pointer;
+}
+
+.b3d-footer-bot {
+  left: -34px;
+  bottom: 8px;
+  width: 22px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  color: #8b958f;
+  animation: b3d-bot-walk 30s linear 5s infinite;
+}
+
+.b3d-footer-bot::before {
+  content: '• •';
+  display: block;
+  width: 18px;
+  height: 14px;
+  border: 2px solid currentColor;
+  background: #111;
+  color: var(--b3d-fx-accent);
+  font: 9px/8px monospace;
+  letter-spacing: 1px;
+  box-shadow: inset 0 -3px #323a36;
+}
+
+.b3d-footer-bot::after {
+  content: '┘ └';
+  display: block;
+  margin-top: -1px;
+  color: #8b958f;
+  font: 10px/8px monospace;
+  white-space: pre;
+}
+
+.b3d-footer-bot:hover,
+.b3d-footer-bot:focus-visible {
+  color: #fff;
+  filter: drop-shadow(0 0 5px var(--b3d-fx-accent));
+  animation-play-state: paused;
+  outline: none;
+}
+
+.b3d-secret-door {
+  right: 9px;
+  bottom: 7px;
+  width: 13px;
+  height: 21px;
+  padding: 0;
+  border: 1px solid #242424;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  background: #101010;
+  box-shadow: inset -3px 0 #080808;
+  opacity: .38;
+}
+
+.b3d-secret-door::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: 10px;
+  width: 2px;
+  height: 2px;
+  background: #777;
+}
+
+.b3d-secret-door:hover,
+.b3d-secret-door:focus-visible,
+.b3d-secret-door.is-open {
+  border-color: var(--b3d-fx-accent);
+  background: rgba(0, 255, 159, .1);
+  box-shadow: 0 0 16px rgba(0, 255, 159, .3), inset 6px 0 8px rgba(0, 255, 159, .1);
+  opacity: 1;
+  outline: none;
+}
+
+/* Game cartridge project cards */
+.projects-grid {
+  perspective: 1000px;
+}
+
+.project-card.b3d-cartridge {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  border-width: 2px;
+  border-radius: 14px 14px 9px 9px;
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, .17), 0 7px 18px rgba(0, 0, 0, .22);
+  transition: transform .16s ease-out, border-color .2s ease, box-shadow .2s ease;
+}
+
+.project-card.b3d-cartridge::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 68px;
+  height: 10px;
+  border: 2px solid var(--border, #333);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: var(--bg, #0b0b0b);
+  transform: translateX(-50%) translateZ(8px);
+}
+
+.project-card.b3d-cartridge::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 3px;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #9c7b2b 0 6px, transparent 6px 11px);
+  opacity: .48;
+}
+
+.project-card.b3d-cartridge:hover {
+  border-color: var(--b3d-fx-accent);
+  transform: perspective(850px) rotateX(var(--b3d-tilt-x, 0deg)) rotateY(var(--b3d-tilt-y, 0deg)) translateY(-5px);
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, .17), 0 16px 34px rgba(0, 255, 159, .12);
+}
+
+.project-card.b3d-cartridge.is-inserting {
+  z-index: 5;
+  pointer-events: none;
+  animation: b3d-insert-cartridge .52s steps(7, end) both;
+}
+
+.project-card.b3d-cartridge.is-inserting .btn {
+  color: var(--b3d-fx-accent);
+  border-color: var(--b3d-fx-accent);
+}
+
+/* Ridiculous Konami reward */
+.b3d-chaos-banner {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 2147482400;
+  padding: 14px 22px;
+  border: 2px solid #fff;
+  background: #111;
+  color: #fff;
+  font: clamp(1.4rem, 4vw, 3rem)/1 'VT323', monospace;
+  text-align: center;
+  letter-spacing: .08em;
+  box-shadow: 8px 8px 0 #ff4057, -8px -8px 0 #00e5ff;
+  transform: translate(-50%, -50%) rotate(-2deg);
+  animation: b3d-chaos-banner .7s steps(5, end) both;
+  pointer-events: none;
+}
+
+.b3d-chaos-mode body {
+  animation: b3d-debug-disco 2.8s steps(8, end) infinite;
+}
+
+.b3d-chaos-bot {
+  position: fixed;
+  top: -35px;
+  z-index: 2147481500;
+  color: var(--b3d-fx-accent);
+  font: 24px monospace;
+  text-shadow: 0 0 9px currentColor;
+  pointer-events: none;
+  animation: b3d-bot-rain 3.5s linear var(--delay) infinite;
+}
+
+@keyframes b3d-achievement-timer {
+  to { transform: scaleX(0); }
+}
+
+@keyframes b3d-firefly-drift {
+  0%, 100% { opacity: 0; transform: translate(0, 7px); }
+  30%, 70% { opacity: .8; }
+  50% { opacity: .32; transform: translate(22px, -18px); }
+}
+
+@keyframes b3d-bot-walk {
+  0%, 14% { transform: translateX(0); }
+  72%, 100% { transform: translateX(calc(100vw + 55px)); }
+}
+
+@keyframes b3d-insert-cartridge {
+  0% { transform: translateY(-5px) scale(1); filter: brightness(1); }
+  45% { transform: translateY(14px) scale(.98); filter: brightness(1.4); }
+  75% { transform: translateY(24px) scale(.95); filter: brightness(.65); }
+  100% { transform: translateY(34px) scale(.92); filter: brightness(0); opacity: .15; }
+}
+
+@keyframes b3d-chaos-banner {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(8deg); }
+  65% { opacity: 1; transform: translate(-50%, -50%) scale(1.08) rotate(-3deg); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+}
+
+@keyframes b3d-debug-disco {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(72deg); }
+}
+
+@keyframes b3d-bot-rain {
+  to { transform: translateY(calc(100vh + 60px)) rotate(360deg); }
+}
+
 @keyframes b3d-crt-flicker {
   0%, 18%, 20%, 52%, 54%, 100% { opacity: .72; }
   19% { opacity: .66; }
@@ -167,6 +481,15 @@
     bottom: 10px;
     padding: 7px 10px;
   }
+
+  .b3d-achievement-stack {
+    top: 64px;
+    right: 10px;
+  }
+
+  .project-card.b3d-cartridge:hover {
+    transform: translateY(-3px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -176,7 +499,18 @@
 
   .b3d-crt-on .b3d-crt-layer,
   .b3d-glitch.is-glitching::before,
-  .b3d-glitch.is-glitching::after {
+  .b3d-glitch.is-glitching::after,
+  .b3d-achievement::after,
+  .b3d-firefly,
+  .b3d-footer-bot,
+  .project-card.b3d-cartridge.is-inserting,
+  .b3d-chaos-mode body,
+  .b3d-chaos-banner,
+  .b3d-chaos-bot {
     animation: none !important;
+  }
+
+  .project-card.b3d-cartridge:hover {
+    transform: none;
   }
 }

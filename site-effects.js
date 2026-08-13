@@ -36,6 +36,9 @@
     button.addEventListener('click', () => {
       enabled = !enabled;
       render();
+      if (enabled && window.B3DAchievements) {
+        window.B3DAchievements.unlock('crt', 'PHOSPHOR FAN', 'Enabled CRT mode. Your warranty is now void.');
+      }
       try {
         localStorage.setItem('b3d_crt_mode', enabled ? '1' : '0');
       } catch (error) {}
@@ -210,10 +213,213 @@
     });
   }
 
+  function addAchievements() {
+    const stack = document.createElement('div');
+    stack.className = 'b3d-achievement-stack';
+    stack.setAttribute('aria-live', 'polite');
+    stack.setAttribute('aria-label', 'Achievements');
+    document.body.appendChild(stack);
+    const unlocked = new Set();
+
+    function hasUnlocked(key) {
+      if (unlocked.has(key)) return true;
+      try {
+        return sessionStorage.getItem(`b3d_achievement_${key}`) === '1';
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function remember(key) {
+      unlocked.add(key);
+      try {
+        sessionStorage.setItem(`b3d_achievement_${key}`, '1');
+      } catch (error) {}
+    }
+
+    function unlock(key, title, copy) {
+      if (hasUnlocked(key)) return false;
+      remember(key);
+
+      const popup = document.createElement('div');
+      popup.className = 'b3d-achievement';
+      popup.innerHTML = `
+        <span class="b3d-achievement-label">ACHIEVEMENT UNLOCKED</span>
+        <strong class="b3d-achievement-title"></strong>
+        <span class="b3d-achievement-copy"></span>
+      `;
+      popup.querySelector('.b3d-achievement-title').textContent = title;
+      popup.querySelector('.b3d-achievement-copy').textContent = copy;
+      stack.appendChild(popup);
+      requestAnimationFrame(() => popup.classList.add('is-visible'));
+      window.setTimeout(() => {
+        popup.classList.remove('is-visible');
+        window.setTimeout(() => popup.remove(), 260);
+      }, 3800);
+      return true;
+    }
+
+    window.B3DAchievements = { unlock };
+
+    if (/about\.html$/i.test(window.location.pathname)) {
+      window.setTimeout(() => unlock('about', 'CURIOUS HUMAN', 'Found the About page.'), 650);
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const available = document.documentElement.scrollHeight - window.innerHeight;
+        if (available > 0 && window.scrollY / available > .78) {
+          unlock('scrolled', 'SCROLLED TOO FAR', 'There was nothing down here. Until now.');
+        }
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  function addAmbientSecrets() {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+    footer.classList.add('b3d-ambient-footer');
+
+    const hour = new Date().getHours();
+    if (!reducedMotion.matches && (hour >= 18 || hour < 6)) {
+      const fireflies = document.createElement('div');
+      fireflies.className = 'b3d-fireflies';
+      fireflies.setAttribute('aria-hidden', 'true');
+      for (let index = 0; index < 7; index += 1) {
+        const firefly = document.createElement('i');
+        firefly.className = 'b3d-firefly';
+        firefly.style.setProperty('--x', `${8 + Math.random() * 82}%`);
+        firefly.style.setProperty('--y', `${12 + Math.random() * 65}%`);
+        firefly.style.setProperty('--delay', `${Math.random() * -8}s`);
+        firefly.style.setProperty('--duration', `${5 + Math.random() * 5}s`);
+        fireflies.appendChild(firefly);
+      }
+      footer.prepend(fireflies);
+    }
+
+    const bot = document.createElement('button');
+    bot.type = 'button';
+    bot.className = 'b3d-footer-bot';
+    bot.setAttribute('aria-label', 'A tiny wandering robot');
+    bot.dataset.tooltip = 'A tiny robot. It seems busy.';
+    bot.addEventListener('click', () => {
+      bot.style.animationPlayState = 'paused';
+      bot.setAttribute('aria-label', 'A happy tiny wandering robot');
+      if (window.B3DAchievements) {
+        window.B3DAchievements.unlock('robot', 'ROBOT WHISPERER', 'Interrupted a very important patrol.');
+      }
+      window.setTimeout(() => { bot.style.animationPlayState = ''; }, 2200);
+    });
+    footer.appendChild(bot);
+
+    if (/home\.html$/i.test(window.location.pathname)) {
+      const door = document.createElement('button');
+      door.type = 'button';
+      door.className = 'b3d-secret-door';
+      door.setAttribute('aria-label', 'A suspiciously tiny door');
+      door.dataset.tooltip = 'This was definitely not here before.';
+      door.addEventListener('click', () => {
+        door.classList.toggle('is-open');
+        if (window.B3DAchievements) {
+          window.B3DAchievements.unlock('door', 'DOOR? WHAT DOOR?', 'Opened something too small to enter.');
+        }
+      });
+      footer.appendChild(door);
+    }
+  }
+
+  function addKonamiSecret() {
+    const sequence = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+    let position = 0;
+    let active = false;
+    let bots = [];
+
+    function toggleChaos() {
+      active = !active;
+      root.classList.toggle('b3d-chaos-mode', active);
+
+      if (active) {
+        const banner = document.createElement('div');
+        banner.className = 'b3d-chaos-banner';
+        banner.textContent = 'FORBIDDEN DEBUG DISCO';
+        document.body.appendChild(banner);
+        window.setTimeout(() => banner.remove(), 2300);
+
+        bots = Array.from({ length: 12 }, (_, index) => {
+          const bot = document.createElement('i');
+          bot.className = 'b3d-chaos-bot';
+          bot.textContent = index % 2 ? '▣' : '◆';
+          bot.style.left = `${3 + Math.random() * 94}%`;
+          bot.style.setProperty('--delay', `${Math.random() * -3.5}s`);
+          document.body.appendChild(bot);
+          return bot;
+        });
+        if (window.B3DAchievements) {
+          window.B3DAchievements.unlock('konami', 'ABSOLUTELY NORMAL WEBSITE', 'Activated the forbidden debug disco. Repeat the code to escape.');
+        }
+      } else {
+        bots.forEach(bot => bot.remove());
+        bots = [];
+      }
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.target instanceof HTMLElement && event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+      const key = event.key.toLowerCase();
+      position = key === sequence[position] ? position + 1 : (key === sequence[0] ? 1 : 0);
+      if (position === sequence.length) {
+        position = 0;
+        toggleChaos();
+      }
+    });
+  }
+
+  function addCartridgeCards() {
+    if (reducedMotion.matches) return;
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.classList.add('b3d-cartridge');
+
+      card.addEventListener('pointermove', event => {
+        if (event.pointerType === 'touch') return;
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - .5;
+        const y = (event.clientY - rect.top) / rect.height - .5;
+        card.style.setProperty('--b3d-tilt-x', `${(-y * 6).toFixed(2)}deg`);
+        card.style.setProperty('--b3d-tilt-y', `${(x * 7).toFixed(2)}deg`);
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.removeProperty('--b3d-tilt-x');
+        card.style.removeProperty('--b3d-tilt-y');
+      });
+
+      const link = card.querySelector('a[href$=".html"]');
+      if (!link) return;
+      link.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        card.classList.add('is-inserting');
+        link.textContent = 'INSERTING…';
+        if (window.B3DAchievements) {
+          window.B3DAchievements.unlock('cartridge', 'BLOW ON IT FIRST', 'Inserted a suspiciously browser-shaped cartridge.');
+        }
+        window.setTimeout(() => window.location.assign(link.href), 540);
+      });
+    });
+  }
+
   ready(() => {
+    addAchievements();
     addCrtMode();
     addParticles();
     addGlitches();
+    addAmbientSecrets();
     addTooltips();
+    addKonamiSecret();
+    addCartridgeCards();
   });
 })();
