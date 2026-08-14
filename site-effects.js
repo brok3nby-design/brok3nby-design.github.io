@@ -177,131 +177,6 @@
     });
   }
 
-  function addPlayerStats() {
-    const areaNames = {
-      'index.html': 'Boot Screen',
-      'home.html': 'Studio Hub',
-      'about.html': 'About Archive',
-      'pocket-wilds.html': 'Pocket Wilds',
-      'pocket-wilds-changelog.html': 'Wilds Logbook',
-      'wrfm.html': 'WRFM Station',
-      'speck.html': 'Speck',
-      'doqi.html': 'DOQI',
-      'lumina-dice.html': 'Lumina Dice',
-      'labyrinth-fate.html': 'Labyrinth Fate',
-      'juicebox.html': 'Juicebox',
-      'macabre-dolls.html': 'Macabre Dolls',
-      'cyoa.html': 'CYOA',
-      'subscribed.html': 'Secret Mailing Room'
-    };
-    const totalAreas = Object.keys(areaNames).length;
-
-    function read(storage, key, fallback) {
-      try {
-        const value = storage.getItem(key);
-        return value === null ? fallback : value;
-      } catch (error) {
-        return fallback;
-      }
-    }
-
-    function write(storage, key, value) {
-      try {
-        storage.setItem(key, value);
-      } catch (error) {}
-    }
-
-    let playerId = Number.parseInt(read(localStorage, 'b3d_player_id', ''), 10);
-    if (!Number.isInteger(playerId) || playerId < 10000 || playerId > 99999) {
-      const random = new Uint32Array(1);
-      if (window.crypto && window.crypto.getRandomValues) {
-        window.crypto.getRandomValues(random);
-        playerId = 10000 + random[0] % 90000;
-      } else {
-        playerId = 10000 + Math.floor(Math.random() * 90000);
-      }
-      write(localStorage, 'b3d_player_id', String(playerId));
-    }
-
-    let sessionStarted = Number.parseInt(read(sessionStorage, 'b3d_session_started', ''), 10);
-    if (!Number.isFinite(sessionStarted) || sessionStarted <= 0 || sessionStarted > Date.now()) {
-      sessionStarted = Date.now();
-      write(sessionStorage, 'b3d_session_started', String(sessionStarted));
-    }
-
-    let discovered = [];
-    try {
-      const parsed = JSON.parse(read(localStorage, 'b3d_areas_discovered', '[]'));
-      if (Array.isArray(parsed)) discovered = parsed.filter(area => areaNames[area]);
-    } catch (error) {}
-
-    const pathParts = window.location.pathname.split('/').filter(Boolean);
-    let currentArea = pathParts[pathParts.length - 1] || 'index.html';
-    if (!currentArea.includes('.')) currentArea = 'index.html';
-    if (areaNames[currentArea] && !discovered.includes(currentArea)) {
-      discovered.push(currentArea);
-      write(localStorage, 'b3d_areas_discovered', JSON.stringify(discovered));
-    }
-
-    const hud = document.createElement('aside');
-    hud.className = 'b3d-player-stats';
-    hud.setAttribute('aria-label', 'Visitor game statistics');
-    hud.innerHTML = `
-      <button class="b3d-player-stats-toggle" type="button" aria-expanded="true">
-        <span>PLAYER #${String(playerId).padStart(5, '0')}</span>
-      </button>
-      <div class="b3d-player-stats-body">
-        <div class="b3d-stat-row">
-          <span class="b3d-stat-label">SESSION TIME</span>
-          <strong class="b3d-stat-value" data-b3d-session>00:00</strong>
-        </div>
-        <div class="b3d-stat-row">
-          <span class="b3d-stat-label">AREAS DISCOVERED</span>
-          <strong class="b3d-stat-value">${discovered.length} / ${totalAreas}</strong>
-          <span class="b3d-area-meter" aria-hidden="true"><span></span></span>
-        </div>
-        <div class="b3d-stat-row">
-          <span class="b3d-stat-label">CURRENT AREA</span>
-          <strong class="b3d-stat-value">${areaNames[currentArea] || 'Unknown'}</strong>
-        </div>
-        <p class="b3d-player-stats-note">LOCAL SAVE · THIS BROWSER</p>
-      </div>
-    `;
-    hud.style.setProperty('--b3d-area-progress', `${Math.min(100, discovered.length / totalAreas * 100)}%`);
-
-    const toggle = hud.querySelector('.b3d-player-stats-toggle');
-    const storedCollapsed = read(localStorage, 'b3d_stats_collapsed', '');
-    const collapsed = storedCollapsed === '1' || (storedCollapsed === '' && window.matchMedia('(max-width: 600px)').matches);
-    hud.classList.toggle('is-collapsed', collapsed);
-    toggle.setAttribute('aria-expanded', String(!collapsed));
-    toggle.addEventListener('click', () => {
-      const willCollapse = !hud.classList.contains('is-collapsed');
-      hud.classList.toggle('is-collapsed', willCollapse);
-      toggle.setAttribute('aria-expanded', String(!willCollapse));
-      write(localStorage, 'b3d_stats_collapsed', willCollapse ? '1' : '0');
-    });
-
-    document.body.appendChild(hud);
-    const timer = hud.querySelector('[data-b3d-session]');
-    function updateTimer() {
-      const elapsed = Math.max(0, Math.floor((Date.now() - sessionStarted) / 1000));
-      const hours = Math.floor(elapsed / 3600);
-      const minutes = Math.floor(elapsed % 3600 / 60);
-      const seconds = elapsed % 60;
-      timer.textContent = hours > 0
-        ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-        : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-    updateTimer();
-    window.setInterval(updateTimer, 1000);
-
-    if (discovered.length >= 5 && window.B3DAchievements) {
-      window.setTimeout(() => {
-        window.B3DAchievements.unlock('explorer', 'MAP GETTING CROWDED', 'Discovered five areas of the studio.');
-      }, 850);
-    }
-  }
-
   function retireLegacyMusic() {
     try {
       localStorage.setItem('bbd_music_playing', '0');
@@ -536,7 +411,6 @@
   ready(() => {
     retireLegacyMusic();
     addAchievements();
-    addPlayerStats();
     addParticles();
     addGlitches();
     addAmbientSecrets();

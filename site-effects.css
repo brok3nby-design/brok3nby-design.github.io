@@ -82,116 +82,10 @@
   visibility: visible;
 }
 
-/* Visitor game stats */
-.b3d-player-stats {
-  position: fixed;
-  bottom: 14px;
-  left: 14px;
-  z-index: 2147481800;
-  width: 238px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--b3d-fx-accent) 62%, #333);
-  border-radius: 5px;
-  background: rgba(7, 10, 9, .94);
-  color: #d9e8e1;
-  font: 1rem/1.15 'VT323', 'Courier New', monospace;
-  box-shadow: 5px 5px 0 rgba(0, 0, 0, .5), inset 0 0 20px rgba(0, 255, 159, .035);
-  backdrop-filter: blur(6px);
-}
-
 /* Retired legacy site-wide background music controls. */
 #musicBtn,
 .floating-music-btn {
   display: none !important;
-}
-
-.b3d-player-stats-toggle {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 11px;
-  border: 0;
-  border-bottom: 1px solid #26322d;
-  background: rgba(0, 255, 159, .055);
-  color: var(--b3d-fx-accent);
-  font: inherit;
-  letter-spacing: .08em;
-  cursor: pointer;
-}
-
-.b3d-player-stats-toggle::after {
-  content: '−';
-  color: #819188;
-}
-
-.b3d-player-stats.is-collapsed .b3d-player-stats-toggle {
-  border-bottom-color: transparent;
-}
-
-.b3d-player-stats.is-collapsed .b3d-player-stats-toggle::after {
-  content: '+';
-}
-
-.b3d-player-stats-toggle:focus-visible {
-  outline: 2px solid var(--b3d-fx-accent);
-  outline-offset: -3px;
-}
-
-.b3d-player-stats-body {
-  display: grid;
-  gap: 7px;
-  padding: 10px 11px 11px;
-}
-
-.b3d-player-stats.is-collapsed .b3d-player-stats-body {
-  display: none;
-}
-
-.b3d-stat-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.b3d-stat-label {
-  color: #75837c;
-  font-size: .82rem;
-  letter-spacing: .09em;
-}
-
-.b3d-stat-value {
-  color: #f1fff8;
-  font-size: 1.08rem;
-  letter-spacing: .04em;
-  text-align: right;
-}
-
-.b3d-area-meter {
-  grid-column: 1 / -1;
-  height: 3px;
-  overflow: hidden;
-  margin-top: -2px;
-  background: #1c2521;
-}
-
-.b3d-area-meter span {
-  display: block;
-  width: var(--b3d-area-progress, 0%);
-  height: 100%;
-  background: var(--b3d-fx-accent);
-  box-shadow: 0 0 7px var(--b3d-fx-accent);
-  transition: width .35s steps(6, end);
-}
-
-.b3d-player-stats-note {
-  margin: 1px 0 0;
-  color: #536059;
-  font-size: .7rem;
-  letter-spacing: .04em;
-  text-align: right;
 }
 
 /* Achievement system */
@@ -525,12 +419,6 @@ footer.b3d-ambient-footer {
 }
 
 @media (max-width: 600px) {
-  .b3d-player-stats {
-    bottom: 10px;
-    left: 10px;
-    width: 205px;
-  }
-
   .b3d-achievement-stack {
     top: 64px;
     right: 10px;
