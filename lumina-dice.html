@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Dice | Brok3n by Design</title>
-  <meta name="description" content="Lumina Dice — a prismatic dice roguelike. Roll living crystal prisms, refract their light, and form radiant constellations to shatter escalating Echoes.">
+  <title>Glass &amp; Fortune | Brok3n by Design</title>
+  <meta name="description" content="Glass &amp; Fortune — a roguelike game of loaded fate. Bend the roll, build the hand, and cheat fate.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Lumina Dice | Brok3n by Design">
-  <meta property="og:description" content="A prismatic dice roguelike. Roll living crystal prisms, refract their light, and form radiant constellations.">
+  <meta property="og:title" content="Glass &amp; Fortune | Brok3n by Design">
+  <meta property="og:description" content="A roguelike game of loaded fate. Bend the roll, build the hand, and cheat fate.">
   <meta property="og:url" content="https://brok3nbydesign.com/lumina-dice.html">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/dice/glass-01.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -63,7 +64,7 @@
       .container {
         padding: 0 16px;
       }
-      .hero-placeholder {
+      .hero .hero-logo-wrap {
         height: 240px;
       }
     }
@@ -76,10 +77,10 @@
       padding: 60px 0 40px;
       text-align: center;
     }
-    .hero-placeholder {
+    .hero-logo-wrap {
       position: relative;
       overflow: hidden;
-      background: #1a1a1a;
+      background: radial-gradient(circle at 50% 50%, rgba(197, 146, 70, .13), transparent 58%), linear-gradient(145deg, #15120f, #090909 72%);
       border: 1px solid var(--border);
       border-radius: 12px;
       height: 320px;
@@ -87,43 +88,95 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 12px;
     }
-    .hero-placeholder .glyph {
-      font-family: 'VT323', monospace;
-      font-size: 4.5rem;
-      color: var(--accent);
-      opacity: 0.4;
-      text-shadow: 0 0 30px var(--accent);
-      letter-spacing: 6px;
-      animation: pulseGlow 3.5s ease-in-out infinite;
-    }
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.35; text-shadow: 0 0 20px var(--accent); }
-      50% { opacity: 0.7; text-shadow: 0 0 40px var(--accent); }
-    }
-    .hero-placeholder .label {
-      font-family: 'VT323', monospace;
-      font-size: 1.3rem;
-      color: var(--muted);
-      letter-spacing: 3px;
+    .hero-logo {
+      display: block;
+      width: min(92%, 820px);
+      max-height: 88%;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, .65));
     }
     .hero h1 {
       font-size: 3.5rem;
       margin: 0 0 8px;
       color: var(--accent);
     }
+    .status-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 auto 20px;
+    }
     .status {
-      display: block;
-      width: fit-content;
-      background: #3a7bd5;
+      display: inline-block;
       color: white;
       padding: 4px 16px;
       border-radius: 20px;
       font-weight: 600;
-      margin: 0 auto 20px;
       letter-spacing: 1px;
+      font-size: .88rem;
+      text-transform: uppercase;
+    }
+    .status-dev { background: #3a7bd5; }
+    .status-flow { background: #b06f16; color: #fff8e8; }
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .screenshot {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+      min-height: 240px;
+    }
+    .screenshot button {
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: zoom-in;
+    }
+    .screenshot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      max-height: 460px;
+      object-fit: cover;
+      transition: transform .25s ease, opacity .25s ease;
+    }
+    .screenshot button:hover img { transform: scale(1.015); opacity: .92; }
+    .screenshot-lightbox {
+      width: min(94vw, 1500px);
+      max-height: 92vh;
+      padding: 0;
+      border: 1px solid #5b4a31;
+      border-radius: 12px;
+      background: #080808;
+      overflow: hidden;
+    }
+    .screenshot-lightbox::backdrop { background: rgba(0, 0, 0, .88); backdrop-filter: blur(5px); }
+    .screenshot-lightbox img { display: block; width: 100%; max-height: 92vh; object-fit: contain; }
+    .lightbox-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid #8d744f;
+      border-radius: 50%;
+      background: rgba(10, 10, 10, .86);
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    @media (max-width: 720px) { .screenshots-grid { grid-template-columns: 1fr; } }
     }
     .hero p {
       max-width: 620px;
@@ -223,26 +276,28 @@
 
   <div class="container">
     <div class="hero">
-      <div class="hero-placeholder">
-        <div class="glyph">◈◇◈</div>
-        <div class="label">PRISMATIC DICE</div>
+      <div class="hero-logo-wrap">
+        <img class="hero-logo" src="images/dice/glass-05.png" alt="Glass &amp; Fortune logo with red and blue glass dice">
       </div>
 
-      <h1>LUMINA DICE</h1>
-      <div class="status">IN DEVELOPMENT</div>
-      <p>A prismatic dice roguelike. Roll living crystal prisms, refract their light, and form radiant constellations to shatter escalating Echoes.</p>
+      <h1>GLASS &amp; FORTUNE</h1>
+      <div class="status-group" aria-label="Project statuses">
+        <div class="status status-dev">In Development</div>
+        <div class="status status-flow">Flow</div>
+      </div>
+      <p>A roguelike game of loaded fate. Bend the roll. Build the hand. Cheat fate.</p>
       <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-primary">Follow Development</a>
     </div>
 
     <div class="section">
       <h2>Overview</h2>
       <p>
-        Lumina Dice is a fast, luminous roguelike built around five crystal prisms.
-        Each run challenges you to score against rising Echoes by forming powerful light constellations.
-        Twist numbers, shift colors, and spend refraction charges to reshape your hand before submitting.
+        Glass &amp; Fortune is a dark tabletop roguelike built around five mutable glass dice.
+        Build scoring hands across a series of Readings, then bend each roll with limited actions before you cast it.
+        Every fortune asks how far you are willing to push your luck.
       </p>
       <p style="margin-top: 18px; color: #aaa;">
-        Survive all five Echoes. Absorb Aspects. Spend Shards. Push your high score.
+        Bend the roll. Build the hand. Cheat fate.
       </p>
     </div>
 
@@ -250,24 +305,24 @@
       <h2>Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <h3>Living Prisms</h3>
-          <p>Five crystal dice with both number and color. Select, twist, shift, or fully refract them using limited charges.</p>
+          <h3>Glass Dice</h3>
+          <p>Five dice carry a number, a colour, and a favour. Choose carefully before you turn, tint, or recast.</p>
         </div>
         <div class="feature-card">
-          <h3>Constellations</h3>
-          <p>Score classic and unique light patterns — from simple pairs to Spectrum, Fivefold, and the rare Nova.</p>
+          <h3>Loaded Hands</h3>
+          <p>Build pairs, figures, spectrums, and stranger combinations, then cast the hand when the odds feel right.</p>
         </div>
         <div class="feature-card">
-          <h3>Echoes</h3>
-          <p>Five escalating challenges. Clear the target score before your submissions run out.</p>
+          <h3>Readings</h3>
+          <p>Each Reading changes the table rules and raises the score you must reach before your casts run out.</p>
         </div>
         <div class="feature-card">
-          <h3>Aspects</h3>
-          <p>After each Echo, absorb a powerful Aspect that permanently changes how future hands score.</p>
+          <h3>Fortunes</h3>
+          <p>Collect powerful effects that reshape how future hands score and how you approach the table.</p>
         </div>
         <div class="feature-card">
-          <h3>Shard Shop</h3>
-          <p>Spend earned Shards on lasting upgrades: more charges, extra submissions, and bigger scoring chips.</p>
+          <h3>Shards</h3>
+          <p>Earn shards as your fortune unfolds and spend them to improve your chances in later Readings.</p>
         </div>
         <div class="feature-card">
           <h3>Save &amp; Resume</h3>
@@ -277,9 +332,29 @@
     </div>
 
     <div class="section">
+      <h2>Screenshots</h2>
+      <div class="screenshots-grid" id="screenshotsGrid">
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-01.png" aria-label="Open Glass &amp; Fortune title screen"><img src="images/dice/glass-01.png" alt="Glass &amp; Fortune title screen" loading="lazy"></button></figure>
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-02.png" aria-label="Open character artwork of Morrow"><img src="images/dice/glass-02.png" alt="Morrow, a plague-doctor cat character from Glass &amp; Fortune" loading="lazy"></button></figure>
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-03.png" aria-label="Open Glass &amp; Fortune table artwork"><img src="images/dice/glass-03.png" alt="Morrow and Talley seated at the Glass &amp; Fortune table" loading="lazy"></button></figure>
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-04.png" aria-label="Open gameplay screenshot"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay showing a Twin Pair hand" loading="lazy"></button></figure>
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-06.png" aria-label="Open gameplay screenshot with Morrow"><img src="images/dice/glass-06.png" alt="Glass &amp; Fortune gameplay with Morrow at the table" loading="lazy"></button></figure>
+        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-07.png" aria-label="Open character artwork of Talley"><img src="images/dice/glass-07.png" alt="Talley, the mechanical mouse character from Glass &amp; Fortune" loading="lazy"></button></figure>
+        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-08.png" aria-label="Open Glass &amp; Fortune screenshot 8"><img src="images/dice/glass-08.png" alt="Glass &amp; Fortune screenshot 8" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
+        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-09.png" aria-label="Open Glass &amp; Fortune screenshot 9"><img src="images/dice/glass-09.png" alt="Glass &amp; Fortune screenshot 9" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
+        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-10.png" aria-label="Open Glass &amp; Fortune screenshot 10"><img src="images/dice/glass-10.png" alt="Glass &amp; Fortune screenshot 10" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
+      </div>
+    </div>
+
+    <dialog class="screenshot-lightbox" id="screenshotLightbox" aria-label="Expanded screenshot">
+      <button type="button" class="lightbox-close" aria-label="Close screenshot">×</button>
+      <img id="lightboxImage" src="" alt="">
+    </dialog>
+
+    <div class="section">
       <h2>Latest Development</h2>
       <div class="changelog">
-        <div class="changelog-item"><strong>August 2026</strong> — Core loop, Aspects, shop, and save system fully playable. Visual and audio polish in progress.</div>
+        <div class="changelog-item"><strong>August 2026</strong> — Lumina Dice became Glass &amp; Fortune, with a new world, cast, visual identity, and expanded presentation.</div>
       </div>
     </div>
 
@@ -287,8 +362,8 @@
       <h2>Roadmap</h2>
       <div class="roadmap">
         <div>✓ Core dice &amp; scoring system</div>
-        <div>✓ Echoes &amp; run structure</div>
-        <div>✓ Aspects &amp; Shard shop</div>
+        <div>✓ Readings &amp; run structure</div>
+        <div>✓ Fortunes &amp; Shards</div>
         <div>✓ Save / resume</div>
         <div>◐ Visual polish &amp; particles</div>
         <div>◐ Audio &amp; juice</div>
@@ -314,6 +389,25 @@
     .floating-music-btn.playing { color:var(--accent); }
   </style>
   <script>
+    (function(){
+      const dialog = document.getElementById('screenshotLightbox');
+      const fullImage = document.getElementById('lightboxImage');
+      document.querySelectorAll('.screenshot img').forEach((img) => {
+        img.addEventListener('error', () => { img.closest('.screenshot').hidden = true; });
+      });
+      document.querySelectorAll('[data-screenshot]').forEach((button) => {
+        button.addEventListener('click', () => {
+          fullImage.src = button.dataset.screenshot;
+          fullImage.alt = button.querySelector('img').alt;
+          dialog.showModal();
+        });
+      });
+      dialog.querySelector('.lightbox-close').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    })();
+
     (function(){
       const music = document.getElementById('bgMusic');
       const btn = document.getElementById('musicBtn');
