@@ -119,64 +119,84 @@
       text-transform: uppercase;
     }
     .status-dev { background: #3a7bd5; }
-    .status-flow { background: #b06f16; color: #fff8e8; }
-    .screenshots-grid {
+    .status-flow { background: #3a7bd5; }
+    /* Gallery — matches the other project pages */
+    .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
     }
-    .screenshot {
-      margin: 0;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .gallery-item {
+      background: #222;
+      border-radius: 8px;
       overflow: hidden;
-      background: var(--card);
-      min-height: 240px;
+      border: 1px solid #333;
+      transition: transform .3s ease, border-color .3s ease;
+      position: relative;
+      min-height: 180px;
     }
-    .screenshot button {
-      display: block;
+    .gallery-item:hover {
+      transform: scale(1.03);
+      border-color: var(--accent);
+    }
+    .gallery-item img {
       width: 100%;
       height: 100%;
-      padding: 0;
-      border: 0;
-      background: transparent;
+      object-fit: contain;
+      display: block;
+      background: #1a1a1a;
       cursor: zoom-in;
     }
-    .screenshot img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: 240px;
-      max-height: 460px;
-      object-fit: cover;
-      transition: transform .25s ease, opacity .25s ease;
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.93);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      cursor: zoom-out;
     }
-    .screenshot button:hover img { transform: scale(1.015); opacity: .92; }
-    .screenshot-lightbox {
-      width: min(94vw, 1500px);
-      max-height: 92vh;
-      padding: 0;
-      border: 1px solid #5b4a31;
-      border-radius: 12px;
-      background: #080808;
-      overflow: hidden;
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 95%;
+      max-height: 92%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+      cursor: default;
     }
-    .screenshot-lightbox::backdrop { background: rgba(0, 0, 0, .88); backdrop-filter: blur(5px); }
-    .screenshot-lightbox img { display: block; width: 100%; max-height: 92vh; object-fit: contain; }
     .lightbox-close {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 42px;
-      height: 42px;
-      border: 1px solid #8d744f;
-      border-radius: 50%;
-      background: rgba(10, 10, 10, .86);
+      top: 14px;
+      right: 24px;
       color: #fff;
-      font-size: 1.4rem;
+      font-size: 2.6rem;
+      line-height: 1;
       cursor: pointer;
+      font-family: sans-serif;
+      opacity: .85;
     }
-    @media (max-width: 720px) { .screenshots-grid { grid-template-columns: 1fr; } }
+    .lightbox-close:hover { opacity: 1; color: var(--accent); }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 2.6rem;
+      cursor: pointer;
+      padding: 14px 20px;
+      user-select: none;
+      opacity: .7;
+      font-family: sans-serif;
+    }
+    .lightbox-nav:hover { opacity: 1; color: var(--accent); }
+    .lightbox-prev { left: 4px; }
+    .lightbox-next { right: 4px; }
+    @media (max-width: 600px) {
+      .lightbox-nav { font-size: 2rem; padding: 10px 14px; }
+    }
     }
     .hero p {
       max-width: 620px;
@@ -332,24 +352,26 @@
     </div>
 
     <div class="section">
-      <h2>Screenshots</h2>
-      <div class="screenshots-grid" id="screenshotsGrid">
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-01.png" aria-label="Open Glass &amp; Fortune title screen"><img src="images/dice/glass-01.png" alt="Glass &amp; Fortune title screen" loading="lazy"></button></figure>
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-02.png" aria-label="Open character artwork of Morrow"><img src="images/dice/glass-02.png" alt="Morrow, a plague-doctor cat character from Glass &amp; Fortune" loading="lazy"></button></figure>
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-03.png" aria-label="Open Glass &amp; Fortune table artwork"><img src="images/dice/glass-03.png" alt="Morrow and Talley seated at the Glass &amp; Fortune table" loading="lazy"></button></figure>
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-04.png" aria-label="Open gameplay screenshot"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay showing a Twin Pair hand" loading="lazy"></button></figure>
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-06.png" aria-label="Open gameplay screenshot with Morrow"><img src="images/dice/glass-06.png" alt="Glass &amp; Fortune gameplay with Morrow at the table" loading="lazy"></button></figure>
-        <figure class="screenshot"><button type="button" data-screenshot="images/dice/glass-07.png" aria-label="Open character artwork of Talley"><img src="images/dice/glass-07.png" alt="Talley, the mechanical mouse character from Glass &amp; Fortune" loading="lazy"></button></figure>
-        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-08.png" aria-label="Open Glass &amp; Fortune screenshot 8"><img src="images/dice/glass-08.png" alt="Glass &amp; Fortune screenshot 8" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
-        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-09.png" aria-label="Open Glass &amp; Fortune screenshot 9"><img src="images/dice/glass-09.png" alt="Glass &amp; Fortune screenshot 9" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
-        <figure class="screenshot" hidden><button type="button" data-screenshot="images/dice/glass-10.png" aria-label="Open Glass &amp; Fortune screenshot 10"><img src="images/dice/glass-10.png" alt="Glass &amp; Fortune screenshot 10" loading="lazy" onload="this.closest('.screenshot').hidden = false"></button></figure>
+      <h2>Gallery</h2>
+      <div class="gallery-grid" id="glass-gallery">
+        <div class="gallery-item"><img src="images/dice/glass-01.png" alt="Glass &amp; Fortune title screen" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-02.png" alt="Morrow, a plague-doctor cat character from Glass &amp; Fortune" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-03.png" alt="Morrow and Talley seated at the Glass &amp; Fortune table" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay showing a Twin Pair hand" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-06.png" alt="Glass &amp; Fortune gameplay with Morrow at the table" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-07.png" alt="Talley, the mechanical mouse character from Glass &amp; Fortune" loading="lazy"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-08.png" alt="Glass &amp; Fortune screenshot 8" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-09.png" alt="Glass &amp; Fortune screenshot 9" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-10.png" alt="Glass &amp; Fortune screenshot 10" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
       </div>
     </div>
 
-    <dialog class="screenshot-lightbox" id="screenshotLightbox" aria-label="Expanded screenshot">
-      <button type="button" class="lightbox-close" aria-label="Close screenshot">×</button>
-      <img id="lightboxImage" src="" alt="">
-    </dialog>
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+      <span class="lightbox-close" id="lbClose" aria-label="Close screenshot viewer">&times;</span>
+      <span class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous screenshot">&#10094;</span>
+      <img id="lbImg" src="" alt="">
+      <span class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next screenshot">&#10095;</span>
+    </div>
 
     <div class="section">
       <h2>Latest Development</h2>
@@ -390,21 +412,43 @@
   </style>
   <script>
     (function(){
-      const dialog = document.getElementById('screenshotLightbox');
-      const fullImage = document.getElementById('lightboxImage');
-      document.querySelectorAll('.screenshot img').forEach((img) => {
-        img.addEventListener('error', () => { img.closest('.screenshot').hidden = true; });
+      const grid = document.getElementById('glass-gallery');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lbImg');
+      if (!grid || !lightbox) return;
+
+      let index = 0;
+      const visibleImages = () => [...grid.querySelectorAll('.gallery-item:not([hidden]) img')];
+
+      function show(nextIndex) {
+        const images = visibleImages();
+        index = (nextIndex + images.length) % images.length;
+        lightboxImage.src = images[index].src;
+        lightboxImage.alt = images[index].alt;
+      }
+      function open(nextIndex) {
+        show(nextIndex);
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      grid.querySelectorAll('img').forEach((image) => {
+        image.addEventListener('error', () => { image.closest('.gallery-item').hidden = true; });
+        image.addEventListener('click', () => open(visibleImages().indexOf(image)));
       });
-      document.querySelectorAll('[data-screenshot]').forEach((button) => {
-        button.addEventListener('click', () => {
-          fullImage.src = button.dataset.screenshot;
-          fullImage.alt = button.querySelector('img').alt;
-          dialog.showModal();
-        });
-      });
-      dialog.querySelector('.lightbox-close').addEventListener('click', () => dialog.close());
-      dialog.addEventListener('click', (event) => {
-        if (event.target === dialog) dialog.close();
+      document.getElementById('lbClose').addEventListener('click', close);
+      document.getElementById('lbPrev').addEventListener('click', event => { event.stopPropagation(); show(index - 1); });
+      document.getElementById('lbNext').addEventListener('click', event => { event.stopPropagation(); show(index + 1); });
+      lightbox.addEventListener('click', event => { if (event.target === lightbox) close(); });
+      document.addEventListener('keydown', event => {
+        if (!lightbox.classList.contains('open')) return;
+        if (event.key === 'Escape') close();
+        else if (event.key === 'ArrowLeft') show(index - 1);
+        else if (event.key === 'ArrowRight') show(index + 1);
       });
     })();
 
