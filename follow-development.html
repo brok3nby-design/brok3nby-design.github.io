@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow Development | Brok3n by Design</title>
+  <meta name="description" content="Choose how to follow Brok3n by Design: join the Field Notes newsletter, follow on X, or check back for more community channels.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Follow Development | Brok3n by Design">
+  <meta property="og:description" content="Field notes, project updates, new builds, and strange experiments from Brok3n by Design.">
+  <meta property="og:url" content="https://brok3nbydesign.com/follow-development.html">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #00ff9f;
+      --border: #2f2f2f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    h1, h2, h3 { font-family: 'VT323', monospace; }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      background: #111;
+    }
+    nav a { color: var(--text); text-decoration: none; }
+    nav .brand {
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 1.7rem;
+      text-shadow: 0 0 12px var(--accent);
+    }
+    .container { width: min(100% - 40px, 1000px); margin: 0 auto; }
+    .hero { padding: 76px 0 52px; text-align: center; }
+    .eyebrow {
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 8px 0 12px;
+      color: var(--accent);
+      font-size: clamp(3.3rem, 8vw, 5.6rem);
+      line-height: .95;
+      text-shadow: 0 0 24px rgba(0, 255, 159, .2);
+    }
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #ccc;
+      font-size: 1.15rem;
+    }
+    .follow-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+    .follow-card {
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .follow-card h2 {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 2rem;
+    }
+    .follow-card p { margin: 0 0 22px; color: #ccc; }
+    .channel-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 42px;
+      margin-bottom: 18px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      color: var(--accent);
+      background: #0e0e0e;
+      font-family: 'VT323', monospace;
+      font-size: 1.65rem;
+    }
+    .newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .newsletter-form input[type="email"] {
+      flex: 1 1 250px;
+      min-width: 0;
+      padding: 13px 15px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      outline: none;
+      background: #0f0f0f;
+      color: var(--text);
+      font: inherit;
+    }
+    .newsletter-form input[type="email"]:focus { border-color: var(--accent); }
+    .newsletter-fine { margin: 12px 0 0 !important; color: #777 !important; font-size: .85rem; }
+    .btn {
+      display: inline-block;
+      padding: 13px 24px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #000;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .btn:hover { background: #00cc7a; transform: translateY(-1px); }
+    .x-card { display: flex; flex-direction: column; }
+    .x-card .btn { margin-top: auto; text-align: center; }
+    .future-card {
+      margin-bottom: 80px;
+      padding: 25px 28px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: rgba(21, 21, 21, .58);
+    }
+    .future-card h2 { margin: 0 0 6px; color: #ccc; font-size: 1.7rem; }
+    .future-card p { margin: 0; color: var(--muted); }
+    .future-slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .future-slot {
+      min-height: 8px;
+      border-radius: 999px;
+      background: #242424;
+    }
+    footer {
+      padding: 42px 20px 28px;
+      border-top: 1px solid var(--border);
+      background: #111;
+      text-align: center;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+    @media (max-width: 720px) {
+      nav { padding: 14px 18px; }
+      .container { width: min(100% - 32px, 1000px); }
+      .hero { padding: 55px 0 38px; }
+      .follow-grid { grid-template-columns: 1fr; }
+      .follow-card { padding: 24px; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-effects.css">
+  <script src="site-effects.js" defer></script>
+</head>
+<body>
+  <nav>
+    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
+    <a href="home.html">← Back to Home</a>
+  </nav>
+
+  <main class="container">
+    <header class="hero">
+      <div class="eyebrow">Stay in the loop</div>
+      <h1>FOLLOW DEVELOPMENT</h1>
+      <p>Choose the kind of updates you want. Get occasional studio notes by email, follow the day-to-day work on X, or check back as more channels open.</p>
+    </header>
+
+    <section class="follow-grid" aria-label="Ways to follow Brok3n by Design">
+      <article class="follow-card">
+        <div class="channel-label" aria-hidden="true">✉</div>
+        <h2>Join the Field Notes</h2>
+        <p>Playable games, works in progress, new builds, demos, and the occasional broken little experiment—sent straight to your inbox.</p>
+        <form action="https://buttondown.com/api/emails/embed-subscribe/brok3nbydesign" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.com/brok3nbydesign','popupwindow')" class="newsletter-form">
+          <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" required>
+          <button type="submit" class="btn">Subscribe</button>
+        </form>
+        <p class="newsletter-fine">No spam. Unsubscribe anytime.</p>
+      </article>
+
+      <article class="follow-card x-card">
+        <div class="channel-label" aria-hidden="true">X</div>
+        <h2>Follow on X</h2>
+        <p>Short updates, screenshots, experiments, and whatever is currently taking shape.</p>
+        <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn">@brok3nbydesign ↗</a>
+      </article>
+    </section>
+
+    <section class="future-card">
+      <h2>More ways to follow are coming</h2>
+      <p>This space is ready for future socials, community spaces, storefronts, devlogs, or anywhere else the studio ends up.</p>
+      <div class="future-slots" aria-hidden="true">
+        <span class="future-slot"></span>
+        <span class="future-slot"></span>
+        <span class="future-slot"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="home.html">Brok3n by Design</a> · Creating games that shouldn't work... but somehow do.</p>
+    <p style="margin-top:24px; color:#666;">© 2026 Brok3n by Design</p>
+  </footer>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="sounds/site_music_1.ogg" type="audio/ogg">
+    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
+  </audio>
+  <button class="floating-music-btn" id="musicBtn" aria-label="Toggle background music">&#9834; MUSIC: OFF</button>
+  <style>
+    .floating-music-btn { position:fixed; bottom:20px; right:20px; z-index:900; background:rgba(17,17,17,.85); color:var(--text); border:1px solid var(--accent); border-radius:999px; padding:10px 18px; font-family:'VT323',monospace; font-size:1.15rem; letter-spacing:1px; cursor:pointer; backdrop-filter:blur(6px); transition:all .2s ease; }
+    .floating-music-btn:hover { color:var(--accent); box-shadow:0 0 14px rgba(0,255,159,.35); }
+    .floating-music-btn.playing { color:var(--accent); }
+  </style>
+  <script>
+    (function(){
+      const music = document.getElementById('bgMusic');
+      const btn = document.getElementById('musicBtn');
+      if (!music) return;
+      const P = 'bbd_music_playing', T = 'bbd_music_time';
+      const savedTime = parseFloat(localStorage.getItem(T) || '0');
+      function on(){ btn.textContent = '♪ MUSIC: ON'; btn.classList.add('playing'); }
+      function off(){ btn.textContent = '♪ MUSIC: OFF'; btn.classList.remove('playing'); }
+      function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
+      if (music.readyState >= 1) restoreTime();
+      else music.addEventListener('loadedmetadata', restoreTime);
+      music.addEventListener('timeupdate', () => { if (!music.paused) localStorage.setItem(T, music.currentTime); });
+      function persist(){ if (!music.paused) localStorage.setItem(T, music.currentTime); }
+      window.addEventListener('pagehide', persist);
+      window.addEventListener('beforeunload', persist);
+      function start(){ return music.play().then(() => { on(); localStorage.setItem(P, '1'); }); }
+      btn.addEventListener('click', () => {
+        if (music.paused) start().catch(() => {});
+        else { music.pause(); off(); localStorage.setItem(P, '0'); }
+      });
+      if (localStorage.getItem(P) === '1') {
+        start().catch(() => {
+          const resume = () => { start().finally(() => {
+            document.removeEventListener('pointerdown', resume);
+            document.removeEventListener('keydown', resume);
+          }); };
+          document.addEventListener('pointerdown', resume);
+          document.addEventListener('keydown', resume);
+        });
+      } else { off(); }
+    })();
+  </script>
+</body>
+</html>
