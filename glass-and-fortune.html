@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glass &amp; Fortune | Brok3n by Design</title>
+  <meta name="description" content="Glass &amp; Fortune — a roguelike game of loaded fate. Five glass dice, 24 named hands, twelve Readings, and a masked cat who narrates every cast. Bend the roll, build the hand, and cheat fate.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Glass &amp; Fortune | Brok3n by Design">
+  <meta property="og:description" content="Five glass dice, 24 named hands, twelve Readings, and a masked cat keeping the table. Bend the roll, build the hand, and cheat fate.">
+  <meta property="og:url" content="https://brok3nbydesign.com/glass-and-fortune.html">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/dice/glass-01.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@brok3nbydesign">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #00ff9f;
+      --border: #2f2f2f;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      font-family: 'VT323', monospace;
+    }
+    nav {
+      background: #111;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    nav .brand {
+      font-family: 'VT323', monospace;
+      font-size: 1.7rem;
+      color: var(--accent);
+      text-shadow: 0 0 12px var(--accent);
+    }
+    @media (max-width: 600px) {
+      nav {
+        padding: 14px 18px;
+      }
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+      .container {
+        padding: 0 16px;
+      }
+      .hero .hero-logo-wrap {
+        height: 240px;
+      }
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+    .hero-logo-wrap {
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, rgba(197, 146, 70, .13), transparent 58%), linear-gradient(145deg, #15120f, #090909 72%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      height: 320px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-logo {
+      display: block;
+      width: min(92%, 820px);
+      max-height: 88%;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, .65));
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      margin: 0 0 8px;
+      color: var(--accent);
+    }
+    .status-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 auto 20px;
+    }
+    .status {
+      display: inline-block;
+      color: white;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      font-size: .88rem;
+      text-transform: uppercase;
+    }
+    .status-dev { background: #3a7bd5; }
+    .status-flow {
+      background: #00e5ff;
+      color: #000;
+    }
+    /* Gallery — matches the other project pages */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .gallery-item {
+      background: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #333;
+      transition: transform .3s ease, border-color .3s ease;
+      position: relative;
+      min-height: 180px;
+    }
+    .gallery-item:hover {
+      transform: scale(1.03);
+      border-color: var(--accent);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #1a1a1a;
+      cursor: zoom-in;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.93);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 95%;
+      max-height: 92%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 14px;
+      right: 24px;
+      color: #fff;
+      font-size: 2.6rem;
+      line-height: 1;
+      cursor: pointer;
+      font-family: sans-serif;
+      opacity: .85;
+    }
+    .lightbox-close:hover { opacity: 1; color: var(--accent); }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 2.6rem;
+      cursor: pointer;
+      padding: 14px 20px;
+      user-select: none;
+      opacity: .7;
+      font-family: sans-serif;
+    }
+    .lightbox-nav:hover { opacity: 1; color: var(--accent); }
+    .lightbox-prev { left: 4px; }
+    .lightbox-next { right: 4px; }
+    @media (max-width: 600px) {
+      .lightbox-nav { font-size: 2rem; padding: 10px 14px; }
+    }
+    }
+    .hero p {
+      max-width: 620px;
+      margin: 0 auto 30px;
+      color: #ccc;
+      font-size: 1.15rem;
+    }
+    .btn {
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .3s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #00cc7a;
+    }
+    .section {
+      margin-bottom: 80px;
+    }
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .feature-card h3 {
+      color: var(--accent);
+      margin: 0 0 12px;
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+    }
+    .feature-card p {
+      margin: 0;
+      color: #ccc;
+      font-size: 0.98rem;
+    }
+    .changelog,
+    .roadmap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 25px;
+    }
+    .changelog-item,
+    .roadmap div {
+      margin-bottom: 10px;
+      color: #ccc;
+    }
+    .roadmap div:last-child {
+      margin-bottom: 0;
+    }
+    .status-alpha {
+      background: #b07cc6;
+      color: #100810;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+    .btn-ghost {
+      display: inline-block;
+      padding: 14px 28px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color .2s ease, color .2s ease;
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ---- Build status board ---- */
+    .statusboard,
+    .statusboard * {
+      box-sizing: border-box;
+    }
+    .statusboard-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .statusboard-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #101010;
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: .06em;
+    }
+    .statusboard-note {
+      margin: 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+    .stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .76rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .status-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .status-col {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .status-col h3 {
+      margin: 0 0 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.75rem;
+    }
+    .status-col.built {
+      border-color: rgba(0, 255, 159, .28);
+    }
+    .status-col.built h3 {
+      color: var(--accent);
+    }
+    .status-col.left h3 {
+      color: #d6d6d6;
+    }
+    .status-col .col-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-col h4 {
+      margin: 22px 0 8px;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .status-col h4:first-of-type {
+      margin-top: 0;
+    }
+    .status-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .status-list li {
+      position: relative;
+      padding: 5px 0 5px 26px;
+      color: #c4c4c4;
+    }
+    .status-list li::before {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+    }
+    .status-col.built .status-list li::before {
+      content: '✓';
+      color: var(--accent);
+    }
+    .status-col.left .status-list li::before {
+      content: '○';
+      color: #6f6f6f;
+    }
+    .status-col.built .status-list li.wip::before,
+    .status-col.left .status-list li.wip::before {
+      content: '◐';
+      color: #ffcc00;
+    }
+    .status-list li strong {
+      color: #ededed;
+      font-weight: 600;
+    }
+    .status-held {
+      margin-top: 18px;
+      padding: 24px 26px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: rgba(21, 21, 21, .55);
+    }
+    .status-held h3 {
+      margin: 0 0 4px;
+      color: #cfcfcf;
+      font-family: 'VT323', monospace;
+      font-size: 1.6rem;
+    }
+    .status-held .col-note {
+      margin: 0 0 14px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-held .status-list li::before {
+      content: '—';
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      .status-cols {
+        grid-template-columns: 1fr;
+      }
+      .status-col,
+      .status-held {
+        padding: 20px;
+      }
+    }
+
+    footer {
+      background: #111;
+      padding: 50px 20px 30px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
+  </style>
+  <link rel="stylesheet" href="site-effects.css">
+  <script src="site-effects.js" defer></script>
+</head>
+<body>
+
+  <nav>
+    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
+    <a href="home.html">← Back to Home</a>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-logo-wrap">
+        <img class="hero-logo" src="images/dice/glass-05.png" alt="Glass &amp; Fortune logo with red and blue glass dice">
+      </div>
+
+      <h1>GLASS &amp; FORTUNE</h1>
+      <div class="status-group" aria-label="Project statuses">
+        <div class="status status-dev">In Development</div>
+        <div class="status status-alpha">Alpha 0.11.0</div>
+        <div class="status status-flow">Flow</div>
+      </div>
+      <p>A roguelike game of loaded fate. Bend the roll. Build the hand. Cheat fate.</p>
+      <div class="hero-actions">
+        <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
+        <a href="#build-status" class="btn btn-ghost">What&rsquo;s Built &amp; What&rsquo;s Left</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Glass &amp; Fortune is a dark tabletop roguelike built around five mutable glass dice.
+        Every die carries a number <em>and</em> a colour, and both of them score. Build a hand across
+        twelve Readings, bend the roll with limited actions before you commit it, and cast when the
+        odds feel right &mdash; or one cast too late.
+      </p>
+      <p style="margin-top: 18px;">
+        You are not rolling and hoping. <strong>TURN</strong> raises a number, <strong>TINT</strong>
+        changes a colour, <strong>RECAST</strong> rerolls both, and each one spends Favour on a single
+        die you choose. The question a fortune keeps asking is not what you rolled. It is how much
+        you are willing to spend arguing with it.
+      </p>
+      <p style="margin-top: 18px;">
+        Keeping the table is <strong>Morrow</strong>, a masked black cat who narrates every cast and
+        has opinions about most of them. Doing the arithmetic out loud is <strong>Tally</strong>, a
+        clockwork mouse who reads your figures back to you in one of four voices.
+      </p>
+      <p style="margin-top: 18px; color: #aaa;">
+        Bend the roll. Build the hand. Cheat fate.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Five Glass Dice</h3>
+          <p>Six colours &mdash; Garnet, Cobalt, Jade, Amber, Violet and Sea Glass &mdash; each with its own value and its own symbol, so colour is never the only thing telling you what you are holding.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Bend the Roll</h3>
+          <p>TURN raises a number. TINT changes a colour. RECAST rerolls both. Each spends Favour, and each acts on one die you pick &mdash; so every bend is a small argument with fate that you have to pay for.</p>
+        </div>
+        <div class="feature-card">
+          <h3>24 Named Hands</h3>
+          <p>From Poor Omen to Perfect Fortune. Numbers score and colours score, and combined hands mean gaining a colour pattern never wipes out the number pattern underneath it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Twelve Readings</h3>
+          <p>Targets climbing from 80 to 8,200, and a different table rule at every one &mdash; The Crossroads, The Mirror Market, The Midnight Bell, Broken Constellation, The Last Light.</p>
+        </div>
+        <div class="feature-card">
+          <h3>18 Charms, 9 Curios</h3>
+          <p>Every one with its own artwork, effect and stack limit. Cards glow when they affect the hand in front of you and show you the exact live bonus, then pulse when it commits.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Morrow, Keeper of the Table</h3>
+          <p>A masked black cat in four poses, with recorded narration, speech captions, and a commentary toggle for when you would rather he kept his thoughts to himself.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Tally, the Clockwork Mouse</h3>
+          <p>Reads your live figures aloud through system speech, in one of four character voices &mdash; Clockwork Clerk, Bright Countermouse, Brass Automaton, or the plain system voice &mdash; at a pace you set.</p>
+        </div>
+        <div class="feature-card">
+          <h3>162 Recorded Voice Lines</h3>
+          <p>One for every named hand, plus cast reactions, idle remarks, menu greetings, achievement reactions, secret reveals and leaderboard opinions &mdash; with restraint logic so they never talk over anything that matters.</p>
+        </div>
+        <div class="feature-card">
+          <h3>The Hall of Fortunes</h3>
+          <p>A worldwide top-100 board, live now. Ties break by who got there first, and the whole game plays in full without ever submitting a thing.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Built Not to Be Cheated</h3>
+          <p>Short-lived signed submission tokens, client-signed payloads, replay protection and rate limiting. Addresses are hashed and never stored raw, and &ldquo;remove my entry&rdquo; means it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Morrow Vets Your Name</h3>
+          <p>He decides what goes on the board &mdash; and he has recorded opinions about the ones he turns down.</p>
+        </div>
+        <div class="feature-card">
+          <h3>43 Achievements, 10 Secrets</h3>
+          <p>Five categories, from Common to Legendary. Every Easter egg has its own Morrow recording and a cryptic hint in the ledger, and 24 stats track quietly in the background with no account needed.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Taught Properly</h3>
+          <p>A five-panel illustrated lesson, then a guided hand that walks you through selecting, bending and casting &mdash; and patiently nudges you back when you wander off-script.</p>
+        </div>
+        <div class="feature-card">
+          <h3>The Glass Tally</h3>
+          <p>Etched counters travel from your cast into the Reading meter while the score climbs, an engraved seal marks the multiplier, and a &ldquo;Reading Fulfilled&rdquo; stamp lands on a target you have met.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Turn It All Down</h3>
+          <p>Reduced motion honoured by the dice, particles, menu, video and score tally. Five independent volume channels. And every sound effect has a synthesised fallback if its file never loads.</p>
+        </div>
+        <div class="feature-card">
+          <h3>One File, No Dependencies</h3>
+          <p>The entire game &mdash; rules, art pipeline, audio, leaderboard client &mdash; is a single HTML file. No build step, no bundler, nothing to install.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Gallery</h2>
+      <div class="gallery-grid" id="glass-gallery">
+        <div class="gallery-item"><img src="images/dice/glass-01.png" alt="Glass &amp; Fortune title screen" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-02.png" alt="Morrow, a plague-doctor cat character from Glass &amp; Fortune" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-03.png" alt="Morrow and Talley seated at the Glass &amp; Fortune table" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay showing a Twin Pair hand" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-06.png" alt="Glass &amp; Fortune gameplay with Morrow at the table" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-07.png" alt="Talley, the mechanical mouse character from Glass &amp; Fortune" loading="lazy"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-08.png" alt="Glass &amp; Fortune screenshot 8" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-09.png" alt="Glass &amp; Fortune screenshot 9" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
+        <div class="gallery-item" hidden><img src="images/dice/glass-10.png" alt="Glass &amp; Fortune screenshot 10" loading="lazy" onload="this.closest('.gallery-item').hidden = false"></div>
+      </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+      <span class="lightbox-close" id="lbClose" aria-label="Close screenshot viewer">&times;</span>
+      <span class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous screenshot">&#10094;</span>
+      <img id="lbImg" src="" alt="">
+      <span class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next screenshot">&#10095;</span>
+    </div>
+
+    <div class="section">
+      <h2>Latest Development</h2>
+      <div class="changelog">
+        <div class="changelog-item">
+          <p style="margin:0 0 12px;"><strong>Alpha 0.11.0 &mdash; &ldquo;The Glass Runs On&rdquo;, 23 August 2026.</strong> Glass &amp; Fortune is a content-complete alpha. It plays end to end with no console errors, and the worldwide Hall of Fortunes is live in production.</p>
+          <p style="margin:0 0 12px;">This build shipped <strong>Share Fortune</strong> on the victory and game-over screens, and the leaderboard came out of testing and onto real infrastructure &mdash; signed submissions, replay protection, hashed addresses and a 123-test suite covering signing, ranking, renaming, erasure and the audit trail. All 123 pass.</p>
+          <p style="margin:0;">Earlier in the year the project was called Lumina Dice. It now has a new name, a new world, a full cast, twelve Readings instead of five, and 162 recorded voice lines.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section statusboard" id="build-status">
+      <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
+
+      <div class="statusboard-head">
+        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
+        <p class="statusboard-note">A content-complete alpha. What is left is almost entirely <em>shipping</em> work &mdash; getting it hosted, and getting it light enough to load &mdash; rather than gameplay.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><b>24</b><span>Named hands</span></div>
+        <div class="stat"><b>12</b><span>Readings</span></div>
+        <div class="stat"><b>27</b><span>Charms &amp; curios</span></div>
+        <div class="stat"><b>43</b><span>Achievements</span></div>
+        <div class="stat"><b>162</b><span>Voice lines</span></div>
+        <div class="stat"><b>20</b><span>Music tracks</span></div>
+      </div>
+
+      <div class="status-cols">
+        <div class="status-col built">
+          <h3>Built and playable</h3>
+          <p class="col-note">The game runs start to finish, with no missing assets and no console errors.</p>
+
+          <h4>The table</h4>
+          <ul class="status-list">
+            <li>Five-die glass engine across six colours, each with its own value and colourblind-readable symbol</li>
+            <li>24 named hands, fully scored, ranked and narrated &mdash; number hands, colour hands, combined and apex</li>
+            <li>The bending system: TURN, TINT and RECAST, each spending Favour on one chosen die</li>
+            <li>Twelve Readings with targets from 80 to 8,200, and a unique table rule at every one</li>
+            <li>Chips &times; multiplier scoring with live hand preview, the exact formula shown, and a full 24-hand rank ledger</li>
+            <li>Final-cast safety &mdash; persistent warning, highlighted counter, distinct button state and a second confirmation</li>
+            <li>One-click dice sorting by number or Tint order, with selection preserved and no effect on the hand</li>
+            <li>Save and resume, with a spoken welcome-back line when you return</li>
+          </ul>
+
+          <h4>Progression</h4>
+          <ul class="status-list">
+            <li>18 Charms, each with unique artwork, effect text and a stack limit</li>
+            <li>9 Curios, all with working mechanics</li>
+            <li>A Shard economy earned per Reading and spent in the Curio Cabinet</li>
+            <li>A living card shelf &mdash; duplicates stacked with a count, cards glowing and showing their live bonus when they apply</li>
+            <li>Full-size card viewer for everything you have collected</li>
+            <li>Charm reward screens offering three choices, four with the Spyglass, prioritising Charms you have not seen</li>
+          </ul>
+
+          <h4>Characters and narration</h4>
+          <ul class="status-list">
+            <li>Morrow in four poses, with recorded narration, captions and an optional-commentary setting</li>
+            <li>Tally reading live figures through system speech, in four voices at an adjustable pace</li>
+            <li>162 recorded voice lines &mdash; hand announcements, cast reactions, idle remarks, menu greetings, achievement reactions, secret reveals and leaderboard opinions</li>
+            <li>Playback restraint logic, so character lines never crowd important narration</li>
+          </ul>
+
+          <h4>Achievements and secrets</h4>
+          <ul class="status-list">
+            <li>43 permanent achievements across five categories, from Common to Legendary</li>
+            <li>A horizontal achievement ledger with filters, progress bars and unlock dates</li>
+            <li>10 hidden Easter eggs, each with its own Morrow recording and cryptic hint &mdash; all ten verified wired to working triggers</li>
+            <li>24 tracked stats, stored locally, designed to survive balance changes &mdash; no account required</li>
+          </ul>
+
+          <h4>The Hall of Fortunes</h4>
+          <ul class="status-list">
+            <li>A worldwide top-100 board, live in production and verified healthy</li>
+            <li>Sequential ranking, ties broken by earliest submission, country display</li>
+            <li>Anti-cheat: signed submission tokens, client-signed payloads, nonce replay protection and rate limiting</li>
+            <li>Addresses hashed with a server-side salt, never stored raw, with a full audit trail</li>
+            <li>Rename your entry, or erase it entirely &mdash; and the game plays in full without ever submitting</li>
+            <li>Offline resilience &mdash; a fortune that cannot reach the Hall is queued and sent when the connection returns</li>
+            <li>A 123-test suite covering signing, ranking, renaming, erasure, rate limiting and the audit trail. All passing.</li>
+          </ul>
+
+          <h4>Tutorial</h4>
+          <ul class="status-list">
+            <li>A five-panel illustrated lesson with narration and animated example hands</li>
+            <li>A guided interactive hand covering selection, TURN, TINT and casting, with correction nudges</li>
+            <li>Downloadable illustrated guides &mdash; all 24 hands with exact ranks, a how-to-play sheet and an achievement poster</li>
+          </ul>
+
+          <h4>Audio and presentation</h4>
+          <ul class="status-list">
+            <li>20 music tracks across seven scenes, rotating between fortunes but staying put when a saved one resumes</li>
+            <li>38 sound effects in five families, each with a procedural synthesis fallback if the file fails to load</li>
+            <li>Table room-tone ambience on its own channel, and five independent volume controls</li>
+            <li>An animated parlour menu with an illustrated reduced-motion fallback</li>
+            <li>27 handmade parlour props in random rotation across the table and menu</li>
+            <li>The Glass Tally &mdash; etched counters travelling into the Reading meter, an engraved multiplier seal, a &ldquo;Reading Fulfilled&rdquo; stamp</li>
+            <li>Reduced motion honoured by dice, particles, menu, video and score tally</li>
+            <li>Responsive across eight breakpoints, from a 470px phone to desktop</li>
+          </ul>
+
+          <h4>Shell</h4>
+          <ul class="status-list">
+            <li>A full in-game Updates screen with the version history from Alpha 0.8.0 onward</li>
+            <li>Handbook covering rules, hands and terminology</li>
+            <li>Legal &amp; Privacy screen covering saved data, leaderboard transmission, hashing and erasure rights</li>
+            <li>Share Fortune on the victory and game-over screens, using the native share sheet with a clipboard fallback</li>
+            <li>A settings screen with five volume sliders, four Tally voices, speaking pace and reduced motion</li>
+            <li>The whole game in one HTML file &mdash; no build step, no bundler, no runtime dependencies</li>
+          </ul>
+        </div>
+
+        <div class="status-col left">
+          <h3>Still to come</h3>
+          <p class="col-note">Almost none of this is gameplay. It is the work between a finished alpha and something you can click a link and play.</p>
+
+          <h4>Before anyone can play it</h4>
+          <ul class="status-list">
+            <li class="wip"><strong>The background video has to come down.</strong> The play-table loop is far too heavy to serve over a normal connection, and re-encoding it for the web is the single thing standing between this game and being hostable.</li>
+            <li><strong>Pick a host and put it up.</strong> There is no public build yet &mdash; which also means Share Fortune has no real link to share.</li>
+            <li><strong>Social metadata</strong> &mdash; description, Open Graph and card tags, theme colour and touch icon, so a shared fortune renders a preview instead of a bare URL. The poster art is already drawn.</li>
+          </ul>
+
+          <h4>Polish</h4>
+          <ul class="status-list">
+            <li>Tally&rsquo;s speaking animation is a single-frame swap. The two-frame counting motion is specified and the second frame is already drawn &mdash; it just is not being played.</li>
+            <li>The trailer and five shorts are written and fully shot-listed, down to timings. Nothing has been filmed.</li>
+          </ul>
+
+          <h4>Accessibility worth a pass</h4>
+          <ul class="status-list">
+            <li>Pinch-zoom is currently blocked by the viewport setting</li>
+            <li>No in-game &ldquo;erase everything&rdquo; control &mdash; achievements, stats and preferences can only be cleared through site data, which is unkind</li>
+            <li>Captions are always on. That is the right default, but it should still be a choice.</li>
+          </ul>
+
+          <h4>Before a storefront</h4>
+          <ul class="status-list">
+            <li>A proper legal review of the privacy notice against whatever storefront it lands on. The text is thorough, but nobody qualified has read it.</li>
+            <li>Balance validation against real play data. The twelve-Reading curve, Shard economy and Curio pricing were tuned by hand and have never met a crowd &mdash; and with no entries on the board yet, there is nothing to tune against.</li>
+          </ul>
+
+          <h4>Deliberate, for now</h4>
+          <ul class="status-list">
+            <li><strong>One language.</strong> The voice structure anticipates more, but there is no selector and no string table yet. A structural decision to revisit, not a defect.</li>
+            <li><strong>Readings V&ndash;XII have no recorded introduction.</strong> They use Tally&rsquo;s live voice instead, by design &mdash; the deeper you go, the more the table stops announcing itself.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Choose how to <a href="follow-development.html">follow development</a></p>
+    <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
+  </footer>
+
+  <!-- Site-wide background music (continues across pages) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="sounds/site_music_1.ogg" type="audio/ogg">
+    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
+  </audio>
+  <button class="floating-music-btn" id="musicBtn" aria-label="Toggle background music">&#9834; MUSIC: OFF</button>
+  <style>
+    .floating-music-btn { position:fixed; bottom:20px; right:20px; z-index:900; background:rgba(17,17,17,.85); color:var(--text); border:1px solid var(--accent); border-radius:999px; padding:10px 18px; font-family:'VT323',monospace; font-size:1.15rem; letter-spacing:1px; cursor:pointer; backdrop-filter:blur(6px); transition:all .2s ease; }
+    .floating-music-btn:hover { color:var(--accent); box-shadow:0 0 14px rgba(0,255,159,.35); }
+    .floating-music-btn.playing { color:var(--accent); }
+  </style>
+  <script>
+    (function(){
+      const grid = document.getElementById('glass-gallery');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lbImg');
+      if (!grid || !lightbox) return;
+
+      let index = 0;
+      const visibleImages = () => [...grid.querySelectorAll('.gallery-item:not([hidden]) img')];
+
+      function show(nextIndex) {
+        const images = visibleImages();
+        index = (nextIndex + images.length) % images.length;
+        lightboxImage.src = images[index].src;
+        lightboxImage.alt = images[index].alt;
+      }
+      function open(nextIndex) {
+        show(nextIndex);
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      grid.querySelectorAll('img').forEach((image) => {
+        image.addEventListener('error', () => { image.closest('.gallery-item').hidden = true; });
+        image.addEventListener('click', () => open(visibleImages().indexOf(image)));
+      });
+      document.getElementById('lbClose').addEventListener('click', close);
+      document.getElementById('lbPrev').addEventListener('click', event => { event.stopPropagation(); show(index - 1); });
+      document.getElementById('lbNext').addEventListener('click', event => { event.stopPropagation(); show(index + 1); });
+      lightbox.addEventListener('click', event => { if (event.target === lightbox) close(); });
+      document.addEventListener('keydown', event => {
+        if (!lightbox.classList.contains('open')) return;
+        if (event.key === 'Escape') close();
+        else if (event.key === 'ArrowLeft') show(index - 1);
+        else if (event.key === 'ArrowRight') show(index + 1);
+      });
+    })();
+
+    (function(){
+      const music = document.getElementById('bgMusic');
+      const btn = document.getElementById('musicBtn');
+      if (!music) return;
+      const P = 'bbd_music_playing', T = 'bbd_music_time';
+      const savedTime = parseFloat(localStorage.getItem(T) || '0');
+      function on(){ btn.textContent = '♪ MUSIC: ON'; btn.classList.add('playing'); }
+      function off(){ btn.textContent = '♪ MUSIC: OFF'; btn.classList.remove('playing'); }
+      function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
+      if (music.readyState >= 1) restoreTime();
+      else music.addEventListener('loadedmetadata', restoreTime);
+      music.addEventListener('timeupdate', () => { if (!music.paused) localStorage.setItem(T, music.currentTime); });
+      function persist(){ if (!music.paused) localStorage.setItem(T, music.currentTime); }
+      window.addEventListener('pagehide', persist);
+      window.addEventListener('beforeunload', persist);
+      function start(){ return music.play().then(() => { on(); localStorage.setItem(P, '1'); }); }
+      btn.addEventListener('click', () => {
+        if (music.paused) start().catch(() => {});
+        else { music.pause(); off(); localStorage.setItem(P, '0'); }
+      });
+      if (localStorage.getItem(P) === '1') {
+        start().catch(() => {
+          const resume = () => { start().finally(() => {
+            document.removeEventListener('pointerdown', resume);
+            document.removeEventListener('keydown', resume);
+          }); };
+          document.addEventListener('pointerdown', resume);
+          document.addEventListener('keydown', resume);
+        });
+      } else { off(); }
+    })();
+  </script>
+
+</body>
+</html>
