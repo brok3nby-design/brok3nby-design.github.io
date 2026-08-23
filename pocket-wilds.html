@@ -4,17 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pocket Wilds | Brok3n by Design</title>
-  <meta name="description" content="Pocket Wilds — a complete GBC-style action RPG. Explore a living pixel world, slay five lair bosses, forge weapons, and chase the shattered crown. Play free in your browser.">
+  <meta name="description" content="Pocket Wilds — a complete GBC-style action RPG. Explore five biomes in real time, then fight five lair bosses in a dice-pool battle system where every pip is damage. Forge weapons, bank a fortune, and chase the shattered crown. Play free in your browser.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Pocket Wilds | Brok3n by Design">
-  <meta property="og:description" content="A complete GBC-style action RPG. Slay beasts, forge weapons, and chase the shattered crown. Play free in your browser.">
+  <meta property="og:description" content="A complete GBC-style action RPG. Real-time exploration, dice-pool boss battles, and a shattered crown to chase. Play free in your browser.">
   <meta property="og:url" content="https://brok3nbydesign.com/pocket-wilds.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/pocket-wilds-1.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
     :root {
       --bg: #0b0b0b;
       --card: #151515;
@@ -383,6 +386,176 @@
       background: #333;
       color: #888;
     }
+
+    /* ---- Build status board ---- */
+    .statusboard,
+    .statusboard * {
+      box-sizing: border-box;
+    }
+    .statusboard-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .statusboard-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #101010;
+      color: var(--gold);
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: .06em;
+    }
+    .statusboard-note {
+      margin: 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      color: var(--gold);
+      font-family: 'VT323', monospace;
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+    .stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .76rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .status-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .status-col {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .status-col h3 {
+      margin: 0 0 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.75rem;
+    }
+    .status-col.built {
+      border-color: rgba(0, 255, 159, .28);
+    }
+    .status-col.built h3 {
+      color: var(--accent);
+    }
+    .status-col.left h3 {
+      color: #d6d6d6;
+    }
+    .status-col .col-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-col h4 {
+      margin: 22px 0 8px;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .status-col h4:first-of-type {
+      margin-top: 0;
+    }
+    .status-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .status-list li {
+      position: relative;
+      padding: 5px 0 5px 26px;
+      color: #c4c4c4;
+    }
+    .status-list li::before {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+    }
+    .status-col.built .status-list li::before {
+      content: '✓';
+      color: var(--accent);
+    }
+    .status-col.left .status-list li::before {
+      content: '○';
+      color: #6f6f6f;
+    }
+    .status-col.built .status-list li.wip::before,
+    .status-col.left .status-list li.wip::before {
+      content: '◐';
+      color: #ffcc00;
+    }
+    .status-list li strong {
+      color: #ededed;
+      font-weight: 600;
+    }
+    .status-held {
+      margin-top: 18px;
+      padding: 24px 26px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: rgba(21, 21, 21, .55);
+    }
+    .status-held h3 {
+      margin: 0 0 4px;
+      color: #cfcfcf;
+      font-family: 'VT323', monospace;
+      font-size: 1.6rem;
+    }
+    .status-held .col-note {
+      margin: 0 0 14px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-held .status-list li::before {
+      content: '—';
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      .status-cols {
+        grid-template-columns: 1fr;
+      }
+      .status-col,
+      .status-held {
+        padding: 20px;
+      }
+    }
+
     /* Footer */
     footer {
       background: #111;
@@ -488,13 +661,15 @@
       </div>
 
       <h1>Pocket Wilds</h1>
-      <div class="status">OPEN BETA • v1.0</div>
+      <div class="status">PLAYABLE NOW • CONTENT-COMPLETE</div>
       <p class="genre">GBC-Style Action RPG • Pixel Art • Single Player</p>
 
       <p><strong>The crown is shattered. The wilds remember.</strong></p>
+      <p style="color:#bbb; font-size:1rem; max-width:640px; margin:0 auto 26px;">Forge a hero, cross five biomes, beat five bosses, claim the crown, reach an ending &mdash; all of it is in and playable, start to finish.</p>
 
       <div class="hero-buttons">
         <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" class="btn btn-primary">▶ PLAY THE GAME</a>
+        <a href="#build-status" class="btn btn-secondary">What&rsquo;s Built &amp; What&rsquo;s Left</a>
         <a href="pocket-wilds-changelog.html" class="btn btn-secondary">View Update Log</a>
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow on X</a>
       </div>
@@ -520,9 +695,11 @@
       </p>
       <p style="max-width: 780px; font-size: 1.15rem; color: #ccc; line-height: 1.75; margin-top: 16px;">
         <strong>Pocket Wilds</strong> is a complete, self-contained GBC-style action RPG built in a single HTML file.
-        Explore a living pixel world that grows crueler the farther you roam. Slay beasts to earn <strong>Lair Keys</strong>,
-        then descend into tense turn-based boss battles beneath each conquered lair. Forge your weapon stronger,
-        collect relics and gear, choose from four distinct classes, and chase the shattered crown.
+        Explore a living pixel world that grows crueler the farther you roam. Earn each biome&rsquo;s <strong>Lair Key</strong>
+        through its horde, beast and camp trials, then descend into a boss fight that is not a menu but a
+        <strong>dice pool</strong> &mdash; throw your class&rsquo;s fistful, hold and reroll, and spend every die on striking,
+        guarding or recovering while the boss telegraphs its next move through a visible stance.
+        Forge your weapon stronger, bank a fortune in the Vault, and chase the shattered crown to one of several endings.
       </p>
     </div>
 
@@ -532,47 +709,79 @@
       <div class="features-grid">
         <div class="feature-card">
           <h3>Real-time Exploration</h3>
-          <p>Classic top-down action with smooth movement, pixel-perfect collision, and a living world across five distinct biomes.</p>
+          <p>Classic top-down action across an endless procedural world of five concentric biomes &mdash; Meadowlands, Verdant Wilds, Howling Fringe, Ashen Reaches and the Forgotten Expanse. Smooth movement, dodge, block, knockback, i-frames and hitstop.</p>
         </div>
         <div class="feature-card">
-          <h3>Turn-based Boss Battles</h3>
-          <p>Face five memorable lair bosses in tense, dice-influenced turn-based combat with dodging, items, and high stakes.</p>
+          <h3>The Dice Battle System</h3>
+          <p>Every boss fight is a dice pool, and each class throws its own fistful. Every pip is a fixed slice of weapon power, so each extra die adds its full face value &mdash; there is no damage ceiling.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Hold, Reroll, Allocate</h3>
+          <p>After the throw, hold what you like and reroll the rest once. Then spend each landed die on STRIKE, GUARD or FOCUS. Natural 1s crack &mdash; but the thresholds scale with pool size, so collecting dice makes you <em>more</em> reliable, not less.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Boss Stances</h3>
+          <p>Every boss ends its turn in a stance that promises its next move. WINDING UP is the heavy blow &mdash; dodge it or gamble into it. GUARDING halves your blows. CHANNELLING breaks on a hard hit. EXPOSED is never chosen, only earned.</p>
+        </div>
+        <div class="feature-card">
+          <h3>The Dice Bag</h3>
+          <p>A leather pouch on your kit. Every die you throw, named and sourced, your roll range and average, a working shake that throws them for real, and nine stones to cut your dice from &mdash; bone, ember, verdant, tide, royal, obsidian, frost, rose and gold.</p>
+        </div>
+        <div class="feature-card">
+          <h3>16 Monster Species</h3>
+          <p>Each with its own movement personality &mdash; surge, dart, circle, charge, sidle, weave, grind, swoop &mdash; plus telegraphed melee and charged ranged shots. Elite and champion variants wear what happened to them: scars, spikes, glowing cracks, orbiting motes.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Four Legendary Wanderers</h3>
+          <p>The Gilded Slime, Starfang, Voidmaw and the Bone Emperor. Each drawn from scratch, each with its own roaming nature, reveal, taunt and rewards. Plus five named quarries found through beast-tracking.</p>
         </div>
         <div class="feature-card">
           <h3>Four Unique Classes</h3>
-          <p>Knight, Lancer, Mystic, and the unlockable Shade — each with distinct weapons, playstyles, and class abilities.</p>
+          <p>Knight, Lancer, Mystic and the unlockable Shade &mdash; each with its own weapon, special ability on cooldown, and its own dice pool. The knight throws 2d12+2d8; the mystic throws 2d20.</p>
         </div>
         <div class="feature-card">
-          <h3>Weapon Forging</h3>
-          <p>Collect weapon shards at campfires and from chests to upgrade your sword, spear, or wand up to level 6.</p>
+          <h3>Levelling to 100</h3>
+          <p>XP, six attributes and point-buy creation. Milestone level-ups deal you three cards, always including at least one boon &mdash; 53 boons and 6 class abilities per class, every one with painted card art.</p>
         </div>
         <div class="feature-card">
-          <h3>Relics &amp; Gear System</h3>
-          <p>Discover and equip helms, armor, legwear, and charms with quality tiers. Some are powerful relics.</p>
+          <h3>Grand Delves</h3>
+          <p>Twelve-room dungeons with locked boss vaults, jailers, levers, cracked walls, tablets and a great chest. Trapped chests and ancient shrines call for graded d20 checks against your own attributes.</p>
         </div>
         <div class="feature-card">
-          <h3>Achievements &amp; Codex</h3>
-          <p>Track your progress with 40+ achievements, a living bestiary, treasure catalog, and hidden lore stones.</p>
+          <h3>The Homestead &amp; the Vault</h3>
+          <p>You wake at home and walk out through your own gate, past a forge, a workbench and decorations you bought and placed. Bank gold and gems into a clickable, jingling hoard that survives death and new games.</p>
         </div>
         <div class="feature-card">
-          <h3>Daily Wilds + Leaderboards</h3>
-          <p>Challenge yourself with a new seeded run every day and compete on the global Hall of Legends.</p>
+          <h3>Camps, Not Menus</h3>
+          <p>A fireside scene. The folk speak first and unprompted, your hero portrait listens opposite them, blinking bubbles track what is left to do, and the camp folk stand at their fire as painted figures out in the world.</p>
         </div>
         <div class="feature-card">
-          <h3>Fully Self-Contained</h3>
-          <p>One HTML file. No install, no dependencies. Works offline. Save &amp; continue supported.</p>
+          <h3>The Greed Arc</h3>
+          <p>Camp folk react to your wealth. The Vault whispers. And once your fortune is large enough, the Hollow Crown offers to match it coin for coin &mdash; leading to more than one ending.</p>
         </div>
         <div class="feature-card">
-          <h3>Full Mobile Support</h3>
-          <p>Play on phones and tablets with responsive layouts and dedicated on-screen touch controls.</p>
+          <h3>Weapon Forging &amp; Gear</h3>
+          <p>Collect shards to upgrade your sword, spear or wand up to level 6 &mdash; forge level grants a bonus die all the way to a d20. Helms, armor, legwear and charms come in quality tiers, and your best piece grants a die of its own.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Achievements, Codex &amp; Daily Wilds</h3>
+          <p>40+ achievements, a living bestiary, a treasure catalog, a trophy hall, ten lore stones, a new seeded run every day, and a global leaderboard.</p>
         </div>
         <div class="feature-card">
           <h3>Cinematic Storytelling</h3>
-          <p>Hand-crafted cinematic sequences bring the game’s key story moments and endings to life.</p>
+          <p>46 painted story panels carry the boss reveals, the key ceremonies and every ending. Backed by 18 music tracks, 107 sound effects and 128 voice lines.</p>
         </div>
         <div class="feature-card">
-          <h3>Polished Item Artwork</h3>
-          <p>High-quality visual renders for the game’s weapons, armor, equipment, and collectible gear.</p>
+          <h3>Crystal-clear Text</h3>
+          <p>All in-game text renders on a native-resolution overlay, so words stay sharp while the world keeps its pixel scale.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Full Mobile Support</h3>
+          <p>Touch joystick, action buttons, an interact button, a rotate gate, and layouts that hold together right down to 667&times;375.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Fully Self-Contained</h3>
+          <p>One HTML file. No install, no dependencies, works offline. Save and continue, pause menu, fullscreen, display scaling, CRT filter and autosave.</p>
         </div>
       </div>
     </div>
@@ -656,36 +865,114 @@
       <h2>Latest Development</h2>
       <div class="changelog">
         <div class="changelog-item">
-          <h4>Build 8-AUG-EF — August 8, 2026</h4>
-          <p>All in-game text now renders at the display’s true resolution for sharper readability, and menus use a cleaner modern typeface.</p>
+          <h4>Build 21-AUG-EJ — August 2026</h4>
+          <p><strong>Pocket Wilds is content-complete.</strong> You can forge a hero, cross all five biomes, clear every trial, beat all five lair bosses, claim the crown and reach an ending &mdash; without hitting a placeholder that stops you.</p>
+          <p style="margin-top:12px;">Everything still on the to-do list is <strong>art replacing a working fallback</strong>, not missing functionality: painted hero sprite sheets, creature stance portraits, and scenery for the outer four biomes. Any art that has not landed yet quietly falls back to the built-in figure or tile, so the game plays exactly the same either way.</p>
           <a href="pocket-wilds-changelog.html" class="btn btn-secondary" style="margin-top: 16px;">View Full Update Log</a>
         </div>
       </div>
     </div>
 
-    <!-- What's Next -->
-    <div class="section">
-      <h2>What’s Next</h2>
-      <div class="roadmap">
-        <div class="milestone pending">
-          <div class="check">○</div>
-          <div>Original Isometric Art Pass — Creating 8-direction sprites for all four heroes, plus unique textures and sprites for the overworld.</div>
+    <!-- Build Status -->
+    <div class="section statusboard" id="build-status">
+      <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
+
+      <div class="statusboard-head">
+        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
+        <p class="statusboard-note">The game is finished and playable end to end. Everything in the right-hand column has a working fallback in the build today &mdash; none of it stops you finishing the game.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><b>5</b><span>Biomes</span></div>
+        <div class="stat"><b>16</b><span>Monster species</span></div>
+        <div class="stat"><b>4</b><span>Classes</span></div>
+        <div class="stat"><b>100</b><span>Level cap</span></div>
+        <div class="stat"><b>46</b><span>Story panels</span></div>
+        <div class="stat"><b>40+</b><span>Achievements</span></div>
+      </div>
+
+      <div class="status-cols">
+        <div class="status-col built">
+          <h3>Built and playable</h3>
+          <p class="col-note">All of it is in the live build right now.</p>
+
+          <h4>The core loop</h4>
+          <ul class="status-list">
+            <li>Endless procedural world across five concentric biomes, chunk-cached and seeded</li>
+            <li>Real-time overworld combat: three weapons at levels 1&ndash;6, a class special on cooldown, dodge, block, knockback, i-frames, hitstop, screen shake</li>
+            <li>16 monster species, each with its own movement personality, plus elite and champion variants</li>
+            <li>Four legendary wanderers and five named quarries found through beast-tracking</li>
+            <li>Levelling to 100 with six attributes, point-buy creation and milestone card draws</li>
+            <li>53 boons and 6 class abilities per class, every one with painted card art</li>
+          </ul>
+
+          <h4>The dice battle system</h4>
+          <ul class="status-list">
+            <li>Per-class dice pools, with every pip a fixed slice of weapon power</li>
+            <li>Bonus dice from forge level, best gear, relics and your first three boon dice &mdash; each labelled by source</li>
+            <li>Cracked dice on natural 1s, with thresholds that scale with pool size</li>
+            <li>Hold and reroll once, by mouse, touch or keyboard</li>
+            <li>Allocation across STRIKE, GUARD and FOCUS, with momentum and UNLEASH</li>
+            <li>Five boss stances that telegraph the next move, plus SHATTER knocking your biggest die out of the fight</li>
+            <li>The Dice Bag: every die named and sourced, your range and average, a working shake, and nine stones to cut them from</li>
+            <li>Graded d20 exploration checks on trapped delve chests and ancient shrines</li>
+          </ul>
+
+          <h4>World and progression</h4>
+          <ul class="status-list">
+            <li>The homestead: vault, forge, workbench, signpost, how-to board and placeable decorations</li>
+            <li>The Vault &mdash; a clickable, jingling hoard that survives death and new games, with wealth tiers and gem trophies</li>
+            <li>Treasure economy, a peddler who buys and sells, and fast travel between camps</li>
+            <li>Camps as fireside scenes where the folk speak first and unprompted</li>
+            <li>Horde, beast and camp trials gating each biome&rsquo;s lair key &mdash; and the key can no longer be lost</li>
+            <li>Grand Delves: 12-room dungeons with locked boss vaults, jailers, levers, cracked walls and a great chest</li>
+            <li>The greed arc, the Hollow Crown&rsquo;s offer, and multiple endings</li>
+            <li>Daily Wilds, free roam, leaderboard, 40+ achievements, codex, trophy hall, bestiary and ten lore stones</li>
+          </ul>
+
+          <h4>Presentation</h4>
+          <ul class="status-list">
+            <li>Crystal-clear text on a native-resolution overlay, over a world that keeps its pixel scale</li>
+            <li>Painted art pipeline: hand-drawn heroes, per-species monster figures, painted boss portraits with per-stance swaps, and y-sorted world scenery</li>
+            <li>Ground tile variation &mdash; any tile accepts up to six looks, scattered tile by tile</li>
+            <li>18 music tracks, 107 sound effects, 128 voice lines, 51 NPC lines, 60 vault lines, three-channel volume</li>
+            <li>46 painted cutscene panels for boss reveals, key ceremonies and endings</li>
+            <li>Full mobile support down to 667&times;375, with touch joystick and a rotate gate</li>
+            <li>Save and continue, pause menu, fullscreen, display scaling, CRT filter, autosave</li>
+          </ul>
         </div>
-        <div class="milestone pending">
-          <div class="check">○</div>
-          <div>Additional Legendary Wanderers</div>
-        </div>
-        <div class="milestone pending">
-          <div class="check">○</div>
-          <div>New Biomes &amp; Content Updates</div>
-        </div>
-        <div class="milestone pending">
-          <div class="check">○</div>
-          <div>Desktop Version / Downloadable</div>
-        </div>
-        <div class="milestone pending">
-          <div class="check">○</div>
-          <div>Potential Steam / itch.io Release</div>
+
+        <div class="status-col left">
+          <h3>Still to come</h3>
+          <p class="col-note">Ordered by how much each one changes what you actually see. Every item below currently falls back to something that works.</p>
+
+          <h4>The art pass</h4>
+          <ul class="status-list">
+            <li class="wip"><strong>Painted hero sprite packs &mdash; 2 of 24 sheets.</strong> Eight heroes (four classes, male and female) &times; three sequences each. Any hero without a pack quietly uses the baked pixel figure.</li>
+            <li><strong>Block animations</strong> &mdash; the third sequence, plus the small engine change to load it. Until then, blocking shows the painted idle and a ward shimmer.</li>
+            <li class="wip"><strong>Creature stance art &mdash; 7 of 14 creatures.</strong> Three named quarries and all four legendary wanderers still fall back to their base portrait, so battles read fine, the creatures just don&rsquo;t <em>act</em> their stances.</li>
+            <li class="wip"><strong>World art &mdash; 1 of 5 biomes painted.</strong> Only the Meadowlands has its own trees, rocks, bushes, flowers and wonders. The outer four still use the built-in vector scenery, and need their own ground colours: dark forest floor, moor heath, black ash, packed snow.</li>
+            <li class="wip"><strong>Camp folk &mdash; 2 of 10.</strong> Brand and Old Maren stand at the Meadowlands fire; eight more to draw, two poses each.</li>
+            <li><strong>Homestead yard art</strong> &mdash; the yard is still pixel placeholders. The Vault art is already done.</li>
+          </ul>
+
+          <h4>Sound</h4>
+          <ul class="status-list">
+            <li>More ambient tracks &mdash; there is only one today, and each biome deserves its own air</li>
+          </ul>
+
+          <h4>Nice to have</h4>
+          <ul class="status-list">
+            <li>Optional per-creature hit and attack battle variants &mdash; supported by the engine, not yet drawn</li>
+          </ul>
+
+          <h4>Beyond the art pass</h4>
+          <ul class="status-list">
+            <li>More legendary wanderers</li>
+            <li>New biomes and content updates</li>
+            <li>A desktop / downloadable version</li>
+            <li>A possible Steam or itch.io release</li>
+          </ul>
         </div>
       </div>
     </div>

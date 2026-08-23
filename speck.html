@@ -4,17 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Speck | Brok3n by Design</title>
-  <meta name="description" content="Speck is a persistent shared-world adventure about exploration, gathering, crafting, home-building, and finding your place alongside everyone else.">
+  <meta name="description" content="Speck is a persistent shared-world adventure: an earth-scale map, caves four floors deep, a studio for designing everything you own, helpers who work while you sleep, and roughly 550 towns with people living in them.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Speck | Brok3n by Design">
-  <meta property="og:description" content="A mysterious persistent shared-world adventure about building a life in a place shaped by everyone.">
+  <meta property="og:description" content="An earth-scale shared world. Explore it, dig under it, design everything you own, and build a home that stays on the map.">
   <meta property="og:url" content="https://brok3nbydesign.com/speck.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/speck/speck_01.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
     :root {
       --bg: #0b0b0b;
       --card: #151515;
@@ -148,6 +151,22 @@
     .btn:hover {
       background: #ffe099;
       transform: translateY(-2px);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+    .btn-ghost {
+      border: 2px solid #444;
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-ghost:hover {
+      border-color: var(--speck);
+      background: transparent;
+      color: var(--speck);
     }
     .section {
       margin-bottom: 80px;
@@ -286,6 +305,176 @@
     .roadmap div:last-child {
       margin-bottom: 0;
     }
+
+    /* ---- Build status board ---- */
+    .statusboard,
+    .statusboard * {
+      box-sizing: border-box;
+    }
+    .statusboard-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .statusboard-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #101010;
+      color: var(--speck);
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: .06em;
+    }
+    .statusboard-note {
+      margin: 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      color: var(--speck);
+      font-family: 'VT323', monospace;
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+    .stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .76rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .status-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .status-col {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .status-col h3 {
+      margin: 0 0 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.75rem;
+    }
+    .status-col.built {
+      border-color: rgba(0, 255, 159, .28);
+    }
+    .status-col.built h3 {
+      color: var(--accent);
+    }
+    .status-col.left h3 {
+      color: #d6d6d6;
+    }
+    .status-col .col-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-col h4 {
+      margin: 22px 0 8px;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .status-col h4:first-of-type {
+      margin-top: 0;
+    }
+    .status-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .status-list li {
+      position: relative;
+      padding: 5px 0 5px 26px;
+      color: #c4c4c4;
+    }
+    .status-list li::before {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+    }
+    .status-col.built .status-list li::before {
+      content: '✓';
+      color: var(--accent);
+    }
+    .status-col.left .status-list li::before {
+      content: '○';
+      color: #6f6f6f;
+    }
+    .status-col.built .status-list li.wip::before,
+    .status-col.left .status-list li.wip::before {
+      content: '◐';
+      color: #ffcc00;
+    }
+    .status-list li strong {
+      color: #ededed;
+      font-weight: 600;
+    }
+    .status-held {
+      margin-top: 18px;
+      padding: 24px 26px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: rgba(21, 21, 21, .55);
+    }
+    .status-held h3 {
+      margin: 0 0 4px;
+      color: #cfcfcf;
+      font-family: 'VT323', monospace;
+      font-size: 1.6rem;
+    }
+    .status-held .col-note {
+      margin: 0 0 14px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-held .status-list li::before {
+      content: '—';
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      .status-cols {
+        grid-template-columns: 1fr;
+      }
+      .status-col,
+      .status-held {
+        padding: 20px;
+      }
+    }
+
     footer {
       padding: 50px 20px 30px;
       border-top: 1px solid var(--border);
@@ -345,8 +534,11 @@
         <div class="status status-flow">FLOW</div>
       </div>
       <p class="genre">Persistent Shared World • Exploration • Crafting • Building</p>
-      <p>A mysterious online adventure about exploring a vast living place, building somewhere to call your own, and discovering what emerges when everyone leaves a mark on the same world.</p>
-      <a href="follow-development.html" class="btn">Follow Development</a>
+      <p>You are one pixel in a world 72,000 of them across. Walk it, dig under it, design every object you own, and build a home that stays on the map after you log off.</p>
+      <div class="hero-actions">
+        <a href="follow-development.html" class="btn">Follow Development</a>
+        <a href="#build-status" class="btn btn-ghost">What&rsquo;s Built &amp; What&rsquo;s Left</a>
+      </div>
     </section>
 
     <section class="section" aria-labelledby="trailer-heading">
@@ -363,8 +555,9 @@
       <h2>Overview</h2>
       <div class="overview">
         <p class="promise">Start small. Find your place. Build something that lasts.</p>
-        <p>Speck brings exploration, gathering, crafting, progression, and social discovery into one persistent world. Set out across unfamiliar country, collect what you need, improve your tools, and create a home that remains part of the landscape for others to encounter.</p>
-        <p>The world is being designed to feel intimate up close and enormous beyond the horizon—somewhere that can grow from solitary journeys into neighborhoods, trading routes, towns, and shared stories.</p>
+        <p>Speck is one shared, persistent world. You occupy a single pixel on a map about 72,000 cells wide — roughly an hour at a run from one coast to the other — across nine biomes, oceans, island chains and mountain belts. Press a key at your own front door and you are inside a full interior.</p>
+        <p>Gather, craft, cook, plant a garden, hire hands, take a boat out, cut a cave open and keep the shape you left it in. Fight with a bow that shows you its own accuracy, or take a spear down four floors to something the game openly tells you it does not expect you to beat alone.</p>
+        <p>Two rules run underneath all of it. <strong>Derive, don’t store</strong> — terrain, towns, caves, creature voices, music and the people walking the streets are all worked out from a seed and a clock, so two machines agree without sending a byte. And <strong>distance is the difficulty</strong> — the further from anyone you go, the better the material, the busier the wild, the sharper its eyes, and the harder it is to simply walk away.</p>
       </div>
     </section>
 
@@ -373,27 +566,51 @@
       <div class="features-grid">
         <article class="feature-card">
           <h3>One Shared World</h3>
-          <p>Explore alongside other players in a persistent place where meaningful changes survive and become part of its history.</p>
+          <p>Everyone is in the same place at the same time. A bridge you build, a sign you leave, a house you raise &mdash; they stay there for whoever walks past next.</p>
         </article>
         <article class="feature-card">
-          <h3>Explore &amp; Discover</h3>
-          <p>Cross varied terrain, chart unfamiliar regions, discover settlements, and find reasons to venture beyond the known map.</p>
+          <h3>A World You Can Cross</h3>
+          <p>72,000 cells coast to coast. Nine biomes with their own colour, footing and resources, and rivers with fordable gaps. A minimap that follows you, and an atlas that zooms from planet down to street.</p>
         </article>
         <article class="feature-card">
-          <h3>Gather &amp; Craft</h3>
-          <p>Harvest resources, earn experience, craft stronger tools, manage equipment, and turn exploration into lasting progress.</p>
+          <h3>Down Into the Dark</h3>
+          <p>Caves up to four floors deep, always fully connected, the rock climbing a grade every floor. You see to the edge of your light. Mine through a wall and the shape you cut is still there tomorrow &mdash; and a chamber you carve is a room you can furnish.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Speck Studio</h3>
+          <p>One editor for everything: portraits, furniture, decor, building parts, emblems, props, fences. 176 templates across 10 categories, plus patterns, stamps and your own palettes. Repaint a chair however you like &mdash; it is still a chair.</p>
         </article>
         <article class="feature-card">
           <h3>A Place of Your Own</h3>
-          <p>Establish a home, shape its interior, and gradually expand what you are able to build and protect.</p>
+          <p>A plot with a yard, a garden and a fence outside, and a full interior inside. Save any rectangle as a blueprint and stamp it again anywhere. Lock your front door, and hand a key to someone standing there.</p>
         </article>
         <article class="feature-card">
-          <h3>Make It Personal</h3>
-          <p>Choose how you present yourself and express your style freely, without making identity another grind.</p>
+          <h3>Hands to Help</h3>
+          <p>Hire helpers across nine trades &mdash; forage, woodcut, mine, fish, hunt, scout, farm, keep and guard. They work while you are logged out, and potter about the yard while they do it.</p>
         </article>
         <article class="feature-card">
-          <h3>Social Discovery</h3>
-          <p>Meet other travelers, chat, leave messages, visit what others have built, and watch communities emerge naturally.</p>
+          <h3>Aimed, Not Automatic</h3>
+          <p>A drawn bow puts a ring on what you are pointing at, and the arrow lands somewhere inside it. Stand still and your hand settles; loose too fast and it throws wide. Spears go through more than one thing. Wind-ups can be stepped out of.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Bosses, and the Deep</h3>
+          <p>Turn-based arenas with three phases, a ward that shaves each blow, and rage if you take too long. Four boss lineages &mdash; three found by distance, one waiting at the bottom of a four-floor cave behind a lantern. That last one is not soloable, on purpose.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Towns With People In Them</h3>
+          <p>Around 550 towns, all enterable, 14 building kinds each with a real interior. 1,650 residents wander their own street and have somewhere to be at dusk. Every town has a trading post, a waystone, and a fighting ring with a purse.</p>
+        </article>
+        <article class="feature-card">
+          <h3>The Far Country Pays</h3>
+          <p>Material grade climbs with distance, with depth, and with how far into a wood you push. Local prices follow local scarcity &mdash; a town in stone country pays for wood. The long haul is the economy.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Nothing Is Recorded</h3>
+          <p>Every sound in the game is synthesised &mdash; there is not a single audio file in the project. All 100 species have a voice derived from what they are, and every world has its own tune.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Look At Anything</h3>
+          <p>Right-click is &ldquo;look at&rdquo;. Items, creatures, other specks, signs, props, helpers, towns and buildings all open a close-up. The bestiary reads the same drop table the server rolls, so it cannot drift.</p>
         </article>
       </div>
     </section>
@@ -415,21 +632,197 @@
 
     <section class="section">
       <h2>Latest Development</h2>
-      <div class="development"><strong>August 2026</strong> — The core shared-world prototype is playable locally, with exploration, persistent homes, gathering, inventory, progression, and crafting now working together.</div>
-    </section>
-
-    <section class="section">
-      <h2>Roadmap</h2>
-      <div class="roadmap">
-        <div>✓ Persistent multiplayer foundation</div>
-        <div>✓ Exploration, homes &amp; interiors</div>
-        <div>✓ Gathering, inventory &amp; crafting</div>
-        <div>◐ Expanded building &amp; territory</div>
-        <div>○ Trading, helpers &amp; growing settlements</div>
-        <div>○ Wildlife, caves &amp; cooperative events</div>
-        <div>○ Public playtest</div>
+      <div class="development">
+        <p style="margin:0 0 12px;"><strong>August 2026</strong> &mdash; Speck is a full game running end to end in private development. The world, the studio, the homestead, the helpers, combat, bosses, towns, the economy and the nine-chapter story are all in and playable together, and the whole story is walked start to finish by an automated test on every build.</p>
+        <p style="margin:0 0 12px;">Recent passes added <strong>marrowstone</strong> at the bottom of the material ladder, the <strong>deep boss</strong> four floors down, hireable <strong>hands with spears</strong> who change who a boss walks toward, <strong>terrain sculpting</strong> with named landmarks, a <strong>67-piece prop set</strong> with a scatter brush, and 1,650 town residents who cost the network nothing &mdash; both machines work out where each of them is standing from the same clock.</p>
+        <p style="margin:0;">What is not done is the part that needs a crowd. Speck is deliberately being built solo until the world is worth inviting people into. The public server comes after that, not before.</p>
       </div>
     </section>
+
+    <section class="section statusboard" id="build-status" aria-labelledby="build-status-heading">
+      <h2 id="build-status-heading">What&rsquo;s Built &amp; What&rsquo;s Left</h2>
+
+      <div class="statusboard-head">
+        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
+        <p class="statusboard-note">An honest, complete list. Everything on the right is <em>not built yet</em> rather than broken &mdash; and a few of them are being held back on purpose, with reasons.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><b>72,000</b><span>Cells across</span></div>
+        <div class="stat"><b>9</b><span>Biomes</span></div>
+        <div class="stat"><b>~550</b><span>Towns</span></div>
+        <div class="stat"><b>100</b><span>Species</span></div>
+        <div class="stat"><b>176</b><span>Studio templates</span></div>
+        <div class="stat"><b>300</b><span>Levels</span></div>
+      </div>
+
+      <div class="status-cols">
+        <div class="status-col built">
+          <h3>Built and playable</h3>
+          <p class="col-note">All of this works right now, in one world, together.</p>
+
+          <h4>The world</h4>
+          <ul class="status-list">
+            <li>One shared persistent world on an authoritative server</li>
+            <li>Earth-scale geography, 72,000 cells across, computed identically on both machines</li>
+            <li>9 biomes with their own footing and resource nodes</li>
+            <li>Caves up to four floors deep, always connected, richer the lower you go</li>
+            <li>Real darkness, torches and lanterns, and placed torches that stay lit</li>
+            <li>Digging that keeps the shape you left &mdash; and carved chambers you can furnish</li>
+            <li>Day and night on a 20-minute clock, with crossfading exteriors</li>
+            <li>A minimap that follows you, and an atlas from planet down to street level</li>
+          </ul>
+
+          <h4>Getting about</h4>
+          <ul class="status-list">
+            <li>Waystones between towns, and one you can raise in your own yard</li>
+            <li>Rafts for the coast and skiffs for the open ocean</li>
+            <li>Bridges built a plank at a time &mdash; permanent, and shared</li>
+            <li>Climbing irons for steep ground</li>
+          </ul>
+
+          <h4>Gathering and crafting</h4>
+          <ul class="status-list">
+            <li>Material grade keyed to biome, distance, depth, and how deep into a wood you go</li>
+            <li>Tool tiers: flint, iron, basalt, obsidian, and marrowstone from the deep</li>
+            <li>Four bows on a tightening accuracy ladder, plus craftable, recoverable arrows</li>
+            <li>87 items, 30 crafting recipes, 5 cooked dishes, 4 crops</li>
+            <li>Ground items that stack, are picked up by walking over them, and rot after five minutes</li>
+          </ul>
+
+          <h4>Speck Studio</h4>
+          <ul class="status-list">
+            <li>176 templates in 10 categories &mdash; one editor for every object in the game</li>
+            <li>Pencil, fill, eyedropper, colour-replace, mirror, undo, recolour and mutate</li>
+            <li>Tileable patterns, transparent stamps, and saved custom palettes</li>
+            <li>Building customisation: 4 silhouettes, 15 parts, 7 facade slots, emblems and accents</li>
+            <li>Blueprints up to 24&times;24, saved together with the designs they point at</li>
+            <li>Style sets &mdash; name a look once, then apply it across your buildings</li>
+          </ul>
+
+          <h4>Somewhere to live</h4>
+          <ul class="status-list">
+            <li>A plot outside and a full interior in, both growing with your level</li>
+            <li>Gardens with four crops, watering, and tended beds that yield more</li>
+            <li>Fences and paths that work out their own corners</li>
+            <li>9 helper trades that keep working while you are logged out</li>
+            <li>Outposts, storage chests, and a crafting bench and hearth at home</li>
+            <li>A lockable front door, and keys you can hand out &mdash; or take back</li>
+          </ul>
+
+          <h4>Fighting</h4>
+          <ul class="status-list">
+            <li>Aimed combat with a visible accuracy circle that steadies as you stand still</li>
+            <li>Hunt mode: number everything nearby and lock one target</li>
+            <li>Spears that hit through a line; wind-up telegraphs you can step out of</li>
+            <li>Turn-based boss arenas with phases, wards and a rage clock</li>
+            <li>Four boss lineages, including one four floors down that is not soloable</li>
+            <li>Hireable hands with spears, who change who the boss walks toward</li>
+            <li>A 12-rung fighting ring in every town, with a purse</li>
+            <li>Armour across 7 slots, packs and herds, and taming</li>
+          </ul>
+
+          <h4>The country itself</h4>
+          <ul class="status-list">
+            <li>Wildness as a scalar &mdash; busier, sharper-eyed and harder to leave the further out you go</li>
+            <li>Local prices, shelves you can stock, and commissions</li>
+            <li>Terrain sculpting, and landmarks you can name</li>
+            <li>67 props from a generator, plus a scatter brush that clumps like a real place</li>
+            <li>16 findable relics, worth the same everywhere</li>
+          </ul>
+
+          <h4>People and story</h4>
+          <ul class="status-list">
+            <li>~550 towns, all enterable, 14 building kinds with real interiors</li>
+            <li>Kingsreach, the seat, with a keep and the people in it</li>
+            <li>1,650 residents wandering their own street, with somewhere to be at dusk</li>
+            <li>8 NPC roles with portraits, names and role-flavoured dialogue</li>
+            <li>Quests, fetch jobs, and elder deliveries routed through the waystone network</li>
+            <li>The full nine-chapter story &mdash; 43 steps, walked end to end every build</li>
+            <li>A 15-step guide for the first hour, and a journal</li>
+            <li>Signs anyone can read, a character sheet, and a 100-species bestiary</li>
+            <li>300 levels and 9 settlement stages</li>
+          </ul>
+
+          <h4>Sound</h4>
+          <ul class="status-list">
+            <li>Every sound synthesised &mdash; no audio files anywhere in the project</li>
+            <li>A voice per creature, derived from what that creature is</li>
+            <li>A tune per world, thinning and changing mode with where you stand</li>
+          </ul>
+        </div>
+
+        <div class="status-col left">
+          <h3>Still to come</h3>
+          <p class="col-note">Grouped by what is actually in the way, not by how badly I want it.</p>
+
+          <h4>Next turns of the screw</h4>
+          <ul class="status-list">
+            <li>A market seller standing at their stall at noon</li>
+            <li>Roads with people actually walking between towns</li>
+            <li>Fighting the deep <em>in the dark</em>, so a lantern buys sight and not just entry</li>
+            <li>A wide sweep for the axe, and iron-tipped arrows beside the iron tools</li>
+            <li>Dropping items from your pack</li>
+            <li>A build job for helpers, working through a queued blueprint</li>
+            <li>Boat speed, so the ocean feels like a crossing rather than a long field</li>
+            <li>A stable &mdash; tamed creatures that breed, carry, and get better at things</li>
+            <li>Asks that could only be given at the seat: sent <em>at</em> something, not <em>for</em> something</li>
+            <li>A holding&rsquo;s card that shows the helpers and the garden behind the gate</li>
+            <li>Sculpt brush: a line tool, elevation, and a real undo history</li>
+            <li>A way to share a close-up card outside the game</li>
+            <li>Studio leftovers: bedding as its own layer, re-patterning a placed object, rotating a blueprint before stamping</li>
+          </ul>
+
+          <h4>Waiting on other players</h4>
+          <ul class="status-list">
+            <li>Visiting &mdash; other people&rsquo;s trading posts, homes, signs and messages</li>
+            <li>Player-to-player trade</li>
+            <li>Shared waystones, and a settlement stone serving everyone who lives there</li>
+            <li>Keys with grades &mdash; &ldquo;come in, but don&rsquo;t touch&rdquo;</li>
+            <li>Shared call-outs when two players are fighting the same thing</li>
+            <li>Cooperative events &mdash; clear a hazard, raise a shared landmark</li>
+            <li>Chunked world streaming &mdash; the switch that makes &ldquo;massive&rdquo; real</li>
+            <li>Accounts, and a real database behind the save files</li>
+          </ul>
+
+          <h4>Behaviour that does not exist yet</h4>
+          <ul class="status-list">
+            <li>Nothing out in the far country hunts differently to a garden animal. No ambush, no circling, nothing waiting at the edge of your light &mdash; the wild gets busier and sharper out there, but not <em>cleverer</em>.</li>
+          </ul>
+
+          <h4>The long tail</h4>
+          <ul class="status-list">
+            <li>Territory claim &mdash; a flag protecting a radius, so nobody builds over your home</li>
+            <li>Scaling from home to outpost to town to castle, with shared walls</li>
+            <li>Stage images, so a grown garden really does show from the world map</li>
+            <li>More crafting tiers, beds, lamps and decorative furniture</li>
+            <li>Recruiting people out of towns &mdash; quests paying reputation as well as gold</li>
+            <li>Authored places dropped into the seeded world, like a mountain hollowed into a maze</li>
+            <li>Rivers, roads and territory borders, using the same trick the fences use</li>
+            <li>A spinning globe, projecting the atlas onto a sphere</li>
+          </ul>
+
+          <h4>Getting it online</h4>
+          <ul class="status-list">
+            <li class="wip">Parked on purpose. The world is being built solo until it is worth inviting people into &mdash; and it is already one process on one port, so putting it up is a small job whenever that day comes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="status-held">
+        <h3>Held back on purpose</h3>
+        <p class="col-note">These are not oversights. Each one is a decision, and here is the reasoning.</p>
+        <ul class="status-list">
+          <li><strong>Hunger and stamina</strong> &mdash; food exists now, so it is worth considering, and worth being careful about. It is the classic way to turn a pleasure into a chore.</li>
+          <li><strong>Prices that move with stock</strong> &mdash; the next turn of the local-prices screw, but it wants real players actually trading before the curve is worth fitting.</li>
+          <li><strong>Auto-attack in hunt mode</strong> &mdash; the lock is there to take the aiming off you, not the deciding.</li>
+          <li><strong>The deep boss staying optional</strong> &mdash; the one fight in the game that is not soloable. That is a statement, not an oversight.</li>
+          <li><strong>Restricting fast travel</strong> &mdash; rejected outright. The world is mostly water and waystones are load-bearing, so taking cheap travel away strands people rather than challenging them. Distance is made to <em>pay</em> instead.</li>
+          <li><strong>Locks stopping at the front door</strong> &mdash; the chest, the bench and the waystone stay open to anyone who gets through the gate. That is right while the only door is the house&rsquo;s, and worth revisiting the day a settlement has more than one.</li>
+        </ul>
+      </div>
+    </section>
+
   </main>
 
   <footer>
