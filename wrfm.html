@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WRFM Radio — After Hours | Brok3n by Design</title>
-  <meta name="description" content="WRFM Radio is a synchronized live station: every listener hears the same song at the same time. Tune in with Vera Lang, climb the listener leaderboard, and unlock 50+ achievements.">
+  <meta name="description" content="WRFM Radio is a synchronized live station: every listener hears the same song at the same second. Two channels, 61 songs, 25 fictional bands, a sharp-tongued host in Vera Lang, a listener leaderboard and 50+ achievements. Free in your browser.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="WRFM Radio — After Hours | Brok3n by Design">
@@ -388,6 +388,176 @@
       border-radius: 10px;
       padding: 25px;
     }
+
+    /* ---- Build status board ---- */
+    .statusboard,
+    .statusboard * {
+      box-sizing: border-box;
+    }
+    .statusboard-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .statusboard-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #101010;
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: .06em;
+    }
+    .statusboard-note {
+      margin: 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 2.1rem;
+      line-height: 1;
+    }
+    .stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .76rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .status-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .status-col {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .status-col h3 {
+      margin: 0 0 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.75rem;
+    }
+    .status-col.built {
+      border-color: rgba(0, 255, 159, .28);
+    }
+    .status-col.built h3 {
+      color: var(--accent);
+    }
+    .status-col.left h3 {
+      color: #d6d6d6;
+    }
+    .status-col .col-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-col h4 {
+      margin: 22px 0 8px;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .status-col h4:first-of-type {
+      margin-top: 0;
+    }
+    .status-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .status-list li {
+      position: relative;
+      padding: 5px 0 5px 26px;
+      color: #c4c4c4;
+    }
+    .status-list li::before {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+    }
+    .status-col.built .status-list li::before {
+      content: '✓';
+      color: var(--accent);
+    }
+    .status-col.left .status-list li::before {
+      content: '○';
+      color: #6f6f6f;
+    }
+    .status-col.built .status-list li.wip::before,
+    .status-col.left .status-list li.wip::before {
+      content: '◐';
+      color: #ffcc00;
+    }
+    .status-list li strong {
+      color: #ededed;
+      font-weight: 600;
+    }
+    .status-held {
+      margin-top: 18px;
+      padding: 24px 26px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: rgba(21, 21, 21, .55);
+    }
+    .status-held h3 {
+      margin: 0 0 4px;
+      color: #cfcfcf;
+      font-family: 'VT323', monospace;
+      font-size: 1.6rem;
+    }
+    .status-held .col-note {
+      margin: 0 0 14px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+    .status-held .status-list li::before {
+      content: '—';
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      .status-cols {
+        grid-template-columns: 1fr;
+      }
+      .status-col,
+      .status-held {
+        padding: 20px;
+      }
+    }
+
     footer {
       background: #111;
       padding: 50px 20px 30px;
@@ -428,10 +598,11 @@
       <h1>WRFM Radio Station</h1>
       <div class="status">● LIVE NOW · PLAYABLE</div>
       <p class="genre">Synchronized Live Radio • Interactive Fiction • Achievement Hunter</p>
-      <p>One station. One shared timeline. Everyone listening hears the same song at the same moment.</p>
+      <p>One station. One shared timeline. Everyone listening hears the same song at the same moment &mdash; with no server deciding it, just the clock.</p>
       <div class="hero-actions">
         <a href="#live-station" class="btn btn-primary">● TUNE IN LIVE</a>
         <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-secondary">Open Full Screen</a>
+        <a href="#build-status" class="btn btn-secondary">What&rsquo;s Built &amp; What&rsquo;s Left</a>
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow Updates</a>
       </div>
     </div>
@@ -459,19 +630,51 @@
       <div class="features-grid">
         <div class="feature-card">
           <h3>One Shared Broadcast</h3>
-          <p>Every listener hears the same song at the same time, wherever they tune in from.</p>
+          <p>Every listener hears the same song at the same second, wherever they tune in from. There is no server picking tracks &mdash; the schedule is worked out from the clock, using the exact duration of all 267 audio files.</p>
         </div>
         <div class="feature-card">
-          <h3>Listener Leaderboard</h3>
-          <p>Make your listening count and see how you rank against the station’s most dedicated regulars.</p>
+          <h3>Two Live Channels</h3>
+          <p><strong>97.1 LIVE</strong> runs to the station clock. <strong>AFTER DARK</strong> is the late-night feed, on demand. Both are synced, and After Dark is a genuinely different programme, not a shuffle.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Join Mid-Song</h3>
+          <p>Arrive whenever you like and you drop straight into the moment everyone else is hearing. Twenty-second drift correction keeps you there, and the station resyncs itself after your phone puts the tab to sleep.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Skip, or Go Live</h3>
+          <p>Skipping drops you into your own personal shuffle. <strong>GO LIVE</strong> puts you back on the broadcast with everybody else.</p>
         </div>
         <div class="feature-card">
           <h3>Hosted by Vera Lang</h3>
-          <p>A fully voiced, sharp-tongued host with plenty to say between songs.</p>
+          <p>A fully voiced, sharp-tongued host with plenty to say between songs &mdash; 105 chatter clips, caller segments and late-night lore, rebalanced so daytime listeners hear them too.</p>
+        </div>
+        <div class="feature-card">
+          <h3>61 Songs, 25 Bands</h3>
+          <p>Every band has a full dossier, and every track has real per-artist credits. All 61 songs are verified, properly licensed library music &mdash; the whole catalogue was content-hash matched against its originals.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Built for Your Phone</h3>
+          <p>A separate portrait UI with bottom tabs and thumb-sized transport &mdash; not a squashed desktop page. Installs to your home screen, plays in the background, and puts art, title and controls on your lock screen.</p>
+        </div>
+        <div class="feature-card">
+          <h3>The Full Station on Desktop</h3>
+          <p>FM dial, spinning vinyl, visualizer, three-band EQ, sleep timer, mini player, retro clock and a station log.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Listener Leaderboard</h3>
+          <p>Minutes are clocked server-side, so they cannot be faked. Make your listening count and see how you rank against the station&rsquo;s most dedicated regulars.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Sign the Guest Book</h3>
+          <p>Leave a note for everyone who tunes in after you, and see how many people are listening right now.</p>
+        </div>
+        <div class="feature-card">
+          <h3>The Wall of Shame</h3>
+          <p>A profanity filter that catches leetspeak, stretched letters and evasive spellings while sparing real names &mdash; and then posts the censored attempt alongside the roast it earned.</p>
         </div>
         <div class="feature-card">
           <h3>50+ Achievements</h3>
-          <p>Hidden goals and ridiculous listener challenges.</p>
+          <p>Hidden goals and ridiculous listener challenges, plus a Field Guide and a secret phone you can call in on.</p>
         </div>
       </div>
     </div>
@@ -492,21 +695,110 @@
     <div class="section">
       <h2>Latest Development</h2>
       <div class="changelog">
-        <div class="changelog-item"><strong>August 2026</strong> — WRFM is now a synchronized live station with a listener leaderboard. Everyone tunes into the same broadcast timeline.</div>
+        <div class="changelog-item">
+          <p style="margin:0 0 12px;"><strong>August 2026</strong> &mdash; WRFM is live, complete and running. Two synchronized channels, 61 songs, 25 bands, 105 chatter clips and 22 commercials, all on one shared timeline that every listener shares to the second.</p>
+          <p style="margin:0 0 12px;">The most recent pass <strong>rebalanced the programming</strong>: time of day is now a preference rather than a lock, so daytime listeners went from zero caller and special clips per rota to nine, while nine hushed late-night pieces stayed true After Dark exclusives. The tutorial was reworked into a single card that never covers the thing it is pointing at.</p>
+          <p style="margin:0;">Everything still outstanding is <strong>optional artwork</strong> &mdash; band photos, member portraits and sponsor logos. The station falls back to gradients and placeholders wherever a picture has not landed yet, so nothing is broken while they arrive.</p>
+        </div>
       </div>
     </div>
 
-    <div class="section">
-      <h2>What’s Next</h2>
-      <div class="roadmap">
-        <div>✓ Public Playable Build</div>
-        <div>✓ Synchronized Live Broadcast</div>
-        <div>✓ Listener Leaderboard</div>
-        <div>✓ Core Radio System</div>
-        <div>◐ Host Personality &amp; Voice</div>
-        <div>◐ Achievement Tuning &amp; Secrets</div>
+    <div class="section statusboard" id="build-status">
+      <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
+
+      <div class="statusboard-head">
+        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
+        <p class="statusboard-note">The station is finished and on air. Everything left is optional artwork or a nice-to-have &mdash; WRFM degrades gracefully wherever a picture has not arrived yet.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><b>2</b><span>Live channels</span></div>
+        <div class="stat"><b>61</b><span>Songs</span></div>
+        <div class="stat"><b>25</b><span>Bands</span></div>
+        <div class="stat"><b>105</b><span>Chatter clips</span></div>
+        <div class="stat"><b>22</b><span>Commercials</span></div>
+        <div class="stat"><b>50+</b><span>Achievements</span></div>
+      </div>
+
+      <div class="status-cols">
+        <div class="status-col built">
+          <h3>Built and on air</h3>
+          <p class="col-note">All of it is live right now, at the link above.</p>
+
+          <h4>Live broadcast</h4>
+          <ul class="status-list">
+            <li>True synced live radio &mdash; every listener worldwide hears the same song at the same second</li>
+            <li>No server deciding anything: the schedule is derived from the clock using exact durations for all 267 audio files</li>
+            <li>Two channels &mdash; 97.1 LIVE on the station clock, and AFTER DARK as a genuinely different late-night programme</li>
+            <li>Rebalanced programming, so time of day is a preference rather than a lock</li>
+            <li>Mid-song join, 20-second drift correction, and wake-up resync after a phone suspends the tab</li>
+            <li>Skip to drop into personal shuffle; GO LIVE to rejoin the broadcast</li>
+            <li>A layered fallback chain so audio keeps playing even if a host goes down, with the critical assets bundled into the app itself</li>
+          </ul>
+
+          <h4>Platforms</h4>
+          <ul class="status-list">
+            <li>Desktop face: FM dial, vinyl, visualizer, three-band EQ, sleep timer, mini player, retro clock, station log</li>
+            <li>A separate mobile portrait UI with bottom tabs and thumb-sized transport &mdash; no control under 44px</li>
+            <li>A landscape guard, rather than falling through to the desktop layout on a rotated phone</li>
+            <li>Installable as a home-screen app, with an offline-capable core UI</li>
+            <li>Lock-screen media controls, and background audio that keeps going when the phone is locked</li>
+          </ul>
+
+          <h4>Community</h4>
+          <ul class="status-list">
+            <li>A station guest book anyone can sign, visible to every listener</li>
+            <li>A Top Listeners board with minutes clocked server-side, so they cannot be faked</li>
+            <li>A live listener count in the guest book header</li>
+            <li>A profanity filter that catches leetspeak, stretched letters and evasive spellings while sparing real names &mdash; running both in the browser for instant feedback and on the server so it cannot be bypassed</li>
+            <li>The Wall of Shame: censored rejected attempts, plus the roast each one earned</li>
+            <li>&ldquo;What should Vera call you?&rdquo; at tune-in, roast-filtered like everything else</li>
+            <li>A share sheet, with native sharing on phones</li>
+          </ul>
+
+          <h4>Content and credits</h4>
+          <ul class="status-list">
+            <li>61 songs, 25 bands with full dossiers, 105 chatter clips, 22 commercials</li>
+            <li>All 61 songs verified as properly licensed by content-hash matching every file against its original</li>
+            <li>A credits page with real per-track credits and accurate legal notices</li>
+            <li>Achievements, a Field Guide, and a secret phone you can call in on &mdash; After Dark included</li>
+            <li>A reworked tutorial: one centred card that never covers the highlight, with next, skip and close</li>
+          </ul>
+        </div>
+
+        <div class="status-col left">
+          <h3>Still to come</h3>
+          <p class="col-note">Nothing here blocks anything. The station already fills every gap with a gradient or a placeholder.</p>
+
+          <h4>Artwork &mdash; 177 optional images</h4>
+          <ul class="status-list">
+            <li>100 band promo and gallery images</li>
+            <li>34 sponsor logos for the commercials</li>
+            <li>28 member portraits &mdash; eight bands have none yet</li>
+            <li>13 band photos</li>
+            <li>A station background image</li>
+          </ul>
+
+          <h4>Sound</h4>
+          <ul class="status-list">
+            <li>Radio static for the FM dial drag</li>
+          </ul>
+
+          <h4>Ideas not started</h4>
+          <ul class="status-list">
+            <li>Per-band &ldquo;now playing&rdquo; backdrops, once the promo art exists</li>
+            <li>An &ldquo;up next&rdquo; strip on the live channels</li>
+            <li>Hourly station IDs returning as true top-of-the-hour events</li>
+          </ul>
+
+          <h4>Known issue</h4>
+          <ul class="status-list">
+            <li class="wip">The Violations log is not recording new entries at the moment. The fix is written and waiting to go live &mdash; the filter itself is working normally, so nothing gets through; it just isn&rsquo;t being posted to the wall.</li>
+          </ul>
+        </div>
       </div>
     </div>
+
   </div>
 
   <footer>
