@@ -633,7 +633,7 @@
       <a href="index.html">Watch Intro</a>
       <div class="wrfm-live-wrap">
         <button type="button" class="wrfm-live-link" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● 97.1 WRFM · LIVE</button>
-        <span class="wrfm-live-hint" aria-hidden="true"><strong>Listen without leaving</strong></span>
+        <span class="wrfm-live-hint" aria-hidden="true"><strong>Keeps playing between pages</strong></span>
       </div>
     </div>
   </nav>
@@ -644,7 +644,7 @@
     <p class="tagline">Strange games, dark humor, and experimental worlds from a one-person indie studio.</p>
     <div class="hero-buttons">
       <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Pocket Wilds</a>
-      <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen Here to WRFM</button>
+      <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen to WRFM</button>
       <a href="#current" class="btn btn-secondary">Explore the Lab</a>
     </div>
   </div>
@@ -690,7 +690,7 @@
             <span class="feature-tag">Vera Lang</span>
           </div>
           <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-            <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen Here</button>
+            <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen &amp; Keep Browsing</button>
             <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-secondary">Open Full Player ↗</a>
             <a href="wrfm.html" class="btn btn-secondary">Game Details</a>
           </div>
@@ -1086,6 +1086,9 @@
     const wrfmClose = document.getElementById('wrfmInlineClose');
     const wrfmReopen = document.getElementById('wrfmReopen');
     const wrfmListenButtons = document.querySelectorAll('[data-wrfm-listen]');
+    const wrfmStationUrl = wrfmFrame
+      ? wrfmFrame.dataset.src
+      : 'https://brok3nby-design.github.io/wrfm/';
 
     function setWrfmExpanded(expanded) {
       wrfmListenButtons.forEach((button) => {
@@ -1095,15 +1098,6 @@
 
     function openWrfmPlayer() {
       if (!wrfmPlayer || !wrfmFrame) return;
-
-      // Reveal and initialize the live station first so unrelated audio
-      // cleanup can never prevent the player from opening.
-      if (!wrfmFrame.hasAttribute('src')) {
-        wrfmFrame.setAttribute('src', wrfmFrame.dataset.src);
-      }
-      wrfmPlayer.hidden = false;
-      if (wrfmReopen) wrfmReopen.hidden = true;
-      setWrfmExpanded(true);
 
       try {
         if (music && !music.paused) {
@@ -1117,6 +1111,37 @@
           localStorage.setItem('bbd_music_playing', '0');
         }
       } catch (error) {}
+
+      // A separate named window is not destroyed when the visitor follows an
+      // internal link in this tab, so the station continues between pages.
+      const playerWindow = window.open(
+        '',
+        'wrfmPersistentPlayer',
+        'popup=yes,width=520,height=780,resizable=yes,scrollbars=yes'
+      );
+
+      if (playerWindow) {
+        try {
+          // A new player starts blank. An existing cross-origin player throws
+          // when inspected, which is fine: leave it untouched and keep playing.
+          if (playerWindow.location.href === 'about:blank') {
+            playerWindow.location.replace(wrfmStationUrl);
+          }
+        } catch (error) {}
+        try {
+          playerWindow.focus();
+        } catch (error) {}
+        setWrfmExpanded(false);
+        return;
+      }
+
+      // Fall back to the embedded player when a browser blocks popups.
+      if (!wrfmFrame.hasAttribute('src')) {
+        wrfmFrame.setAttribute('src', wrfmStationUrl);
+      }
+      wrfmPlayer.hidden = false;
+      if (wrfmReopen) wrfmReopen.hidden = true;
+      setWrfmExpanded(true);
 
       requestAnimationFrame(() => {
         wrfmPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
