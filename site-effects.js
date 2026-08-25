@@ -408,6 +408,28 @@
     });
   }
 
+  function addBackToTop() {
+    if (document.querySelector('.b3d-back-to-top')) return;
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'b3d-back-to-top';
+    button.setAttribute('aria-label', 'Back to top');
+    button.innerHTML = '<span aria-hidden="true">&#8593;</span><span>TOP</span>';
+
+    const updateVisibility = () => {
+      button.classList.toggle('is-visible', window.scrollY > 420);
+    };
+
+    button.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+    });
+
+    document.body.appendChild(button);
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+  }
+
   ready(() => {
     retireLegacyMusic();
     addAchievements();
@@ -417,5 +439,6 @@
     addTooltips();
     addKonamiSecret();
     addCartridgeCards();
+    addBackToTop();
   });
 })();

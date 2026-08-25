@@ -332,6 +332,70 @@ footer.b3d-ambient-footer {
 }
 
 /* Ridiculous Konami reward */
+.b3d-back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 76px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid var(--b3d-fx-accent, #00ff9f);
+  border-radius: 999px;
+  background: rgba(10, 10, 12, .9);
+  color: var(--b3d-fx-text, #eee);
+  font: 1rem/1 'VT323', monospace;
+  letter-spacing: .08em;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  backdrop-filter: blur(7px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .28);
+  transition: opacity .2s ease, transform .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.b3d-back-to-top > span:first-child {
+  font: 1.15rem/1 system-ui, sans-serif;
+}
+
+.b3d-back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.b3d-back-to-top:hover,
+.b3d-back-to-top:focus-visible {
+  color: var(--b3d-fx-accent, #00ff9f);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 35%, transparent);
+}
+
+.b3d-back-to-top:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.b3d-tldr {
+  max-width: 900px;
+  margin: 0 auto 36px;
+  padding: 18px 22px;
+  border: 1px solid color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 55%, transparent);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 7%, rgba(12, 12, 15, .92));
+  color: var(--b3d-fx-text, #ddd);
+  line-height: 1.6;
+}
+
+.b3d-tldr strong:first-child {
+  color: var(--b3d-fx-accent, #00ff9f);
+  font-family: 'VT323', monospace;
+  font-size: 1.2em;
+  letter-spacing: .06em;
+}
+
 .b3d-chaos-banner {
   position: fixed;
   left: 50%;
@@ -426,6 +490,17 @@ footer.b3d-ambient-footer {
 
   .project-card.b3d-cartridge:hover {
     transform: translateY(-3px);
+  }
+
+  .b3d-back-to-top {
+    right: 12px;
+    bottom: 72px;
+    padding: 9px 11px;
+  }
+
+  .b3d-tldr {
+    margin-bottom: 28px;
+    padding: 15px 17px;
   }
 }
 
