@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bid &amp; Buried | Brok3n by Design</title>
+  <meta name="description" content="Bid &amp; Buried is a pixel-art storage-auction treasure hunt about reading lockers, outbidding rivals, digging for valuables, and building a resale empire.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%23ffc857' text-anchor='middle'>B3</text></svg>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bid &amp; Buried | Brok3n by Design">
+  <meta property="og:description" content="Buy blind. Dig deep. Get rich. A pixel-art storage-auction treasure hunt.">
+  <meta property="og:url" content="https://brok3nbydesign.com/bid-and-buried.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@brok3nbydesign">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c0f;
+      --panel: #15171c;
+      --panel-2: #1c1f25;
+      --text: #f0eee7;
+      --muted: #aaa79e;
+      --accent: #ffc857;
+      --accent-2: #65d6ad;
+      --rust: #d66a3a;
+      --border: #34363c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% 0, rgba(255, 200, 87, .08), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 40px;
+      background: rgba(11, 12, 15, .92);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+    }
+    nav a { text-decoration: none; }
+    .brand {
+      color: var(--accent);
+      font: 1.8rem 'VT323', monospace;
+      letter-spacing: .04em;
+      text-shadow: 0 0 14px rgba(255, 200, 87, .35);
+    }
+    .back-link { color: var(--muted); font-weight: 600; }
+    .back-link:hover { color: var(--accent); }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .hero {
+      min-height: 660px;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 60px;
+      padding: 80px 0;
+    }
+    .kicker {
+      color: var(--accent-2);
+      font: 1.25rem 'VT323', monospace;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3 { font-family: 'VT323', monospace; line-height: 1; }
+    h1 {
+      margin: 12px 0 10px;
+      color: var(--accent);
+      font-size: clamp(4.2rem, 9vw, 7.8rem);
+      letter-spacing: -.025em;
+      text-shadow: 4px 4px 0 #502d20, 0 0 28px rgba(255, 200, 87, .18);
+    }
+    .tagline {
+      margin: 0 0 22px;
+      font: 1.75rem 'VT323', monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .hero-copy { max-width: 650px; color: #d0cdc4; font-size: 1.08rem; }
+    .status {
+      display: inline-block;
+      margin-top: 26px;
+      padding: 7px 15px;
+      color: #16130c;
+      background: var(--accent);
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .locker-scene {
+      position: relative;
+      min-height: 470px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(#1d2025 0 68%, #31291f 68%);
+      box-shadow: 0 28px 80px rgba(0,0,0,.45);
+    }
+    .locker-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 48px, rgba(255,255,255,.018) 49px 50px);
+    }
+    .locker {
+      position: absolute;
+      inset: 48px 55px 42px;
+      border: 12px solid #575b60;
+      border-top-color: #777b80;
+      background: #07090b;
+      box-shadow: inset 0 0 70px #000, 10px 12px 0 rgba(0,0,0,.28);
+    }
+    .locker::before, .locker::after {
+      content: '';
+      position: absolute;
+      top: -12px;
+      width: 30px;
+      height: calc(100% + 24px);
+      background: repeating-linear-gradient(0deg, #73777b 0 12px, #565a5d 13px 25px);
+    }
+    .locker::before { left: -42px; }
+    .locker::after { right: -42px; }
+    .loot { position: absolute; image-rendering: pixelated; filter: drop-shadow(5px 7px 0 rgba(0,0,0,.45)); }
+    .box { background: #9a5e2e; border: 5px solid #5a321a; }
+    .box.one { width: 100px; height: 76px; left: 20px; bottom: 16px; }
+    .box.two { width: 84px; height: 58px; right: 20px; bottom: 15px; background: #6c7d55; border-color: #39452d; }
+    .crate { width: 115px; height: 115px; left: 108px; bottom: 14px; background: #71431f; border: 7px solid #a86c34; }
+    .crate::before, .crate::after { content: ''; position: absolute; background: #a86c34; }
+    .crate::before { width: 100%; height: 9px; left: 0; top: 45px; transform: rotate(35deg); }
+    .crate::after { width: 100%; height: 9px; left: 0; top: 45px; transform: rotate(-35deg); }
+    .lamp { width: 55px; height: 46px; right: 53px; bottom: 70px; background: var(--accent); clip-path: polygon(25% 0,75% 0,100% 100%,0 100%); }
+    .lamp::after { content: ''; position: absolute; width: 7px; height: 62px; background: #6c5b3f; left: 24px; top: 42px; }
+    .safe { width: 72px; height: 80px; left: 35px; bottom: 86px; background: #4b5358; border: 6px solid #697278; }
+    .safe::before { content: ''; position: absolute; width: 25px; height: 25px; border: 5px solid #22282b; border-radius: 50%; left: 13px; top: 18px; }
+    .bid-card {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      padding: 9px 13px;
+      color: #17130b;
+      background: var(--accent);
+      border: 3px solid #fff1bc;
+      font: 1.45rem 'VT323', monospace;
+      transform: rotate(4deg);
+      box-shadow: 5px 5px 0 rgba(0,0,0,.35);
+    }
+    .tldr {
+      margin: 0 0 90px;
+      padding: 22px 25px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      color: #d6d2c8;
+    }
+    .tldr strong { color: var(--accent); }
+    .section { margin-bottom: 100px; }
+    .section h2 {
+      margin: 0 0 28px;
+      padding-bottom: 13px;
+      color: var(--accent);
+      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      border-bottom: 1px solid var(--border);
+    }
+    .loop {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .loop-step, .card {
+      background: linear-gradient(145deg, var(--panel-2), var(--panel));
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .loop-step { padding: 22px 17px; position: relative; }
+    .loop-step:not(:last-child)::after {
+      content: '›';
+      position: absolute;
+      right: -11px;
+      top: 34px;
+      z-index: 2;
+      color: var(--accent);
+      font: 2rem 'VT323', monospace;
+    }
+    .loop-number { color: var(--rust); font: 1.1rem 'VT323', monospace; }
+    .loop-step h3 { margin: 7px 0 10px; color: var(--accent); font-size: 1.65rem; }
+    .loop-step p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { padding: 25px; }
+    .card h3 { margin: 0 0 12px; color: var(--accent-2); font-size: 1.8rem; }
+    .card p { margin: 0; color: #bbb8af; }
+    .rivals { grid-template-columns: repeat(3, 1fr); }
+    .rival-icon { font: 3rem 'VT323', monospace; color: var(--rust); }
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .panel { padding: 28px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; }
+    .panel h3 { margin: 0 0 14px; color: var(--accent); font-size: 2rem; }
+    .panel ul { margin: 0; padding-left: 20px; color: #c1beb5; }
+    .panel li + li { margin-top: 8px; }
+    .roadmap li::marker { color: var(--accent-2); }
+    .working-title { color: var(--muted); font-size: .88rem; margin-top: 12px; }
+    footer {
+      padding: 50px 20px 35px;
+      text-align: center;
+      color: #77756f;
+      background: #090a0c;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); }
+    a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 35px; padding-top: 55px; }
+      .locker-scene { min-height: 430px; }
+      .loop { grid-template-columns: 1fr 1fr; }
+      .loop-step::after { display: none; }
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      nav { padding: 14px 18px; }
+      .container { width: min(100% - 28px, 1120px); }
+      .hero { min-height: auto; padding: 45px 0 65px; }
+      h1 { font-size: 4.4rem; }
+      .locker-scene { min-height: 350px; }
+      .locker { inset: 40px 43px 36px; }
+      .crate { width: 92px; height: 92px; left: 82px; }
+      .loop, .grid, .rivals, .details { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-effects.css">
+  <script src="site-effects.js" defer></script>
+</head>
+<body>
+  <nav>
+    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
+    <a href="home.html#current" class="back-link">← Back to Projects</a>
+  </nav>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="kicker">Pixel-art auction treasure hunt</div>
+        <h1>Bid &amp;<br>Buried</h1>
+        <p class="tagline">Buy blind. Dig deep. Get rich.</p>
+        <p class="hero-copy">Peek into a storage locker from the doorway, read the clues, and decide what the mystery is worth. Win the auction, excavate your prize front-to-back, then fight daylight and a packed van to bring home the right haul.</p>
+        <span class="status">In Development</span>
+        <p class="working-title">Working title · Prototype v0.1</p>
+      </div>
+      <div class="locker-scene" role="img" aria-label="A dark pixel-art storage locker packed with boxes, a safe, a crate, and a lamp">
+        <div class="locker">
+          <div class="loot safe"></div>
+          <div class="loot box one"></div>
+          <div class="loot crate"></div>
+          <div class="loot lamp"></div>
+          <div class="loot box two"></div>
+        </div>
+        <div class="bid-card">CURRENT BID $180</div>
+      </div>
+    </section>
+
+    <div class="tldr"><strong>TL;DR:</strong> A storage-auction strategy game built around partial information. Learn the tells, outplay rival bidders, dig through what you win, and turn a cramped van full of questionable junk into a resale empire.</div>
+
+    <section class="section">
+      <h2>One Day, Five Hard Choices</h2>
+      <div class="loop">
+        <div class="loop-step"><span class="loop-number">01</span><h3>Peek</h3><p>Study three lockers from the doorway. The best treasure is hidden behind the worst junk.</p></div>
+        <div class="loop-step"><span class="loop-number">02</span><h3>Bid</h3><p>Read the room and compete with rivals who have their own tells, motives, and budgets.</p></div>
+        <div class="loop-step"><span class="loop-number">03</span><h3>Dig</h3><p>Pull the pile apart front-to-back. Containers may hide a jackpot—or absolutely nothing.</p></div>
+        <div class="loop-step"><span class="loop-number">04</span><h3>Triage</h3><p>Daylight is fading and the van only holds 40. Take the safe or leave room for everything else?</p></div>
+        <div class="loop-step"><span class="loop-number">05</span><h3>Sell</h3><p>Take the fast money or stash valuables until the right specialist comes to town.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>The Locker Is Telling You Something</h2>
+      <div class="grid">
+        <article class="card"><h3>Hidden Archetypes</h3><p>Hoarders, workshops, estates, dead shops, smuggler caches, and time capsules generate distinct kinds of lockers. Visible objects are clues to what lies behind them.</p></article>
+        <article class="card"><h3>Excavation, Not Reveal</h3><p>You cannot click straight through to the prize. Dig order matters, containers nest surprises, and bulky finds can reshape the entire haul.</p></article>
+        <article class="card"><h3>The Right Buyer</h3><p>Pawn Pete always offers quick cash. Rotating specialists pay far more for their categories, turning inventory into a wager on tomorrow.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Know Your Competition</h2>
+      <div class="grid rivals">
+        <article class="card"><div class="rival-icon">$</div><h3>Big Bart</h3><p>Deep pockets and the confidence to keep the price climbing. If Bart wants it, prepare to pay.</p></article>
+        <article class="card"><div class="rival-icon">!</div><h3>Spite Sal</h3><p>Sometimes Sal does not want the locker. Sal just wants you to spend too much on it.</p></article>
+        <article class="card"><div class="rival-icon">?</div><h3>Eagle Ed</h3><p>Sharp eyes, careful bids. Watch Ed closely—his behaviour can reveal more than the open door does.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Prototype &amp; Roadmap</h2>
+      <div class="details">
+        <div class="panel">
+          <h3>Prototype v0.1</h3>
+          <ul>
+            <li>One town and a complete day loop</li>
+            <li>Three storage units auctioned each day</li>
+            <li>Procedural pixel-art items and seeded lockers</li>
+            <li>Rival AI, rotating buyers, cash items, and autosave</li>
+            <li>Three legendary items hidden in every world</li>
+          </ul>
+        </div>
+        <div class="panel roadmap">
+          <h3>Where It Goes Next</h3>
+          <ul>
+            <li>More towns, item pools, buyers, and story lockers</li>
+            <li>Rumours that point toward one-of-one legendaries</li>
+            <li>Tools for peeking deeper and hauling smarter</li>
+            <li>Van, shop, collection, and museum upgrades</li>
+            <li>Sound, music, gamepad, touch, and extra juice</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Bid &amp; Buried is currently in development at <a href="home.html">Brok3n by Design</a>.</p>
+    <p>© 2026 Brok3n by Design</p>
+  </footer>
+</body>
+</html>
