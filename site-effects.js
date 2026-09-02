@@ -417,14 +417,27 @@
     button.setAttribute('aria-label', 'Back to top');
     button.innerHTML = '<span aria-hidden="true">&#8593;</span><span>TOP</span>';
 
+    let newsletterLink = null;
+    const isHomePage = document.querySelector('.hero-buttons') && document.querySelector('#released');
+    if (isHomePage) {
+      newsletterLink = document.createElement('a');
+      newsletterLink.className = 'b3d-newsletter-cta';
+      newsletterLink.href = 'follow-development.html';
+      newsletterLink.setAttribute('aria-label', 'Join the Brok3n by Design newsletter');
+      newsletterLink.innerHTML = '<span aria-hidden="true">&#9993;</span><span>JOIN FIELD NOTES</span>';
+    }
+
     const updateVisibility = () => {
-      button.classList.toggle('is-visible', window.scrollY > 420);
+      const isVisible = window.scrollY > 420;
+      button.classList.toggle('is-visible', isVisible);
+      if (newsletterLink) newsletterLink.classList.toggle('is-visible', isVisible);
     };
 
     button.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
     });
 
+    if (newsletterLink) document.body.appendChild(newsletterLink);
     document.body.appendChild(button);
     updateVisibility();
     window.addEventListener('scroll', updateVisibility, { passive: true });
