@@ -144,13 +144,27 @@
       font-size: 1.5rem;
       color: var(--muted);
       max-width: 700px;
-      margin: 0 auto 40px;
+      margin: 0 auto 18px;
+    }
+    .hero .studio-intro {
+      max-width: 680px;
+      margin: 0 auto 34px;
+      color: #c9c9c9;
+      font-size: 1.05rem;
+      line-height: 1.75;
     }
     .hero-buttons {
       display: flex;
       gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+    }
+    .hero-divider {
+      width: min(1100px, calc(100% - 40px));
+      height: 1px;
+      margin: 0 auto 64px;
+      border: 0;
+      background: linear-gradient(90deg, transparent, var(--border) 15%, var(--border) 85%, transparent);
     }
     /* Sections */
     .section {
@@ -160,6 +174,18 @@
       font-size: 2.2rem;
       margin-bottom: 30px;
       color: var(--text);
+    }
+    .section-heading {
+      margin-bottom: 30px;
+    }
+    .section-heading h2 {
+      margin: 0 0 8px;
+    }
+    .section-intro {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
     }
     /* Featured Game */
     .featured {
@@ -600,6 +626,12 @@
       .hero .tagline {
         font-size: 1.2rem;
       }
+      .hero .studio-intro {
+        font-size: 1rem;
+      }
+      .hero-divider {
+        margin-bottom: 46px;
+      }
       .section h2 {
         font-size: 1.9rem;
       }
@@ -639,17 +671,23 @@
   <div class="hero">
     <h1>BROK3N BY DESIGN</h1>
     <p class="tagline">Strange games, dark humor, and experimental worlds from a one-person indie studio.</p>
+    <p class="studio-intro">Built by one stubborn Canadian, every project is a handcrafted experiment in memorable worlds, unusual mechanics, and ideas that are too strange to leave on the drawing board.</p>
     <div class="hero-buttons">
-      <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Pocket Wilds</a>
+      <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Pocket Wilds · BETA</a>
       <button type="button" class="btn btn-primary" data-wrfm-listen aria-controls="wrfmInlinePlayer" aria-expanded="false">● Listen to WRFM</button>
       <a href="#current" class="btn btn-secondary">Explore the Lab</a>
     </div>
   </div>
 
+  <hr class="hero-divider">
+
   <div class="container">
     <!-- Playable Games -->
     <section id="released" class="section">
-      <h2>Playable Games</h2>
+      <div class="section-heading">
+        <h2>Playable Games.</h2>
+        <p class="section-intro">Hack, slash, and roll some dice—or tune in to a live, sassy radio station packed with unique commercials, listeners, hosts, and more. Everything below is playable right now in your browser.</p>
+      </div>
       <div class="featured">
         <div>
           <div class="status-badge status-beta">Playable · Content-Complete</div>
@@ -663,7 +701,7 @@
             <span class="feature-tag">Story Driven</span>
           </div>
           <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-            <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Beta</a>
+            <a href="https://brok3nbydesign.com/pocket-wilds/" target="_blank" rel="noopener" class="btn btn-primary">▶ Play Pocket Wilds · BETA</a>
             <a href="pocket-wilds.html" class="btn btn-secondary">Game Details</a>
             <button type="button" class="btn btn-secondary" id="watchTrailerBtn" style="font:inherit; font-weight:600; cursor:pointer;">▶ Watch Trailer</button>
           </div>
