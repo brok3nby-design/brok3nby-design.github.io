@@ -416,6 +416,19 @@
       background: #e040fb;
       color: white;
     }
+    .status-playtest {
+      background: #ffd54a;
+      color: #111;
+    }
+    .development-warning {
+      color: #ffd54a;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: -4px 0 20px;
+    }
+    .development-warning::first-letter {
+      font-weight: 800;
+    }
     .project-card p {
       color: var(--muted);
       margin-bottom: 20px;
@@ -691,9 +704,10 @@
       </div>
       <div class="featured">
         <div>
-          <div class="status-badge status-beta">Playable · Content-Complete</div>
+          <div class="status-badge status-beta">Playable · Beta</div>
           <h2 style="font-size: 2.6rem; margin: 10px 0;">Pocket Wilds</h2>
           <p style="font-size: 1.15rem; color: #ccc;">A hybrid between classic Zelda exploration and Final Fantasy — real-time in the overworld, and a <strong>dice pool</strong> once a boss closes the door behind you.</p>
+          <p class="development-warning">* Pocket Wilds is still in development and may change.</p>
           <div class="features">
             <span class="feature-tag">Adventure RPG</span>
             <span class="feature-tag">Dice Boss Battles</span>
@@ -779,9 +793,9 @@
           <a href="speck.html" class="btn btn-secondary">View Project</a>
         </div>
         <div class="project-card">
-          <div class="status-group" aria-label="Project status: In Development and Flow">
-            <div class="status-badge status-dev">Alpha 0.11.0</div>
+          <div class="status-group" aria-label="Project status: Flow; playtesters wanted">
             <div class="status-badge status-flow">Flow</div>
+            <div class="status-badge status-playtest">WANNA PLAYTEST?</div>
           </div>
           <h3>Glass &amp; Fortune</h3>
           <p>A roguelike of loaded fate. Five glass dice where number and colour both score, twelve Readings, and a masked cat who narrates every cast. Bend the roll, build the hand, cheat fate.</p>
@@ -843,7 +857,7 @@
       <h2>About the Studio</h2>
       <div style="max-width: 720px;">
         <p style="font-size: 1.15rem; color: #ccc; margin-bottom: 18px;">
-          We build games that mix strange ideas, dark humor, nostalgia, and experimental mechanics.
+          I build games that mix strange ideas, dark humor, nostalgia, and experimental mechanics.
           Every project explores something a little different — from retro RPGs and satirical personality tests
           to haunted card games and fictional radio stations.
         </p>
