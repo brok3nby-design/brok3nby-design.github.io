@@ -268,6 +268,52 @@
     .roadmap div:last-child {
       margin-bottom: 0;
     }
+    .playtest-callout {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border: 1px solid rgba(0, 255, 159, .4);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 255, 159, .09), rgba(21, 21, 21, .96) 60%);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .22);
+    }
+    .playtest-callout::after {
+      content: '?';
+      position: absolute;
+      right: 22px;
+      top: 50%;
+      color: rgba(0, 255, 159, .07);
+      font-family: 'VT323', monospace;
+      font-size: 9rem;
+      line-height: 1;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .playtest-timing {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 12px;
+      border: 1px solid rgba(0, 255, 159, .38);
+      border-radius: 999px;
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 1.05rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .playtest-callout p {
+      position: relative;
+      z-index: 1;
+      max-width: 740px;
+      margin: 0 0 22px;
+      color: #ccc;
+    }
+    .playtest-callout .btn {
+      position: relative;
+      z-index: 1;
+    }
     .status-alpha {
       background: #b07cc6;
       color: #100810;
@@ -461,6 +507,13 @@
       .status-held {
         padding: 20px;
       }
+      .playtest-callout {
+        padding: 24px 20px;
+      }
+      .playtest-callout::after {
+        right: 8px;
+        font-size: 7rem;
+      }
     }
 
     footer {
@@ -606,6 +659,15 @@
         </div>
       </div>
     </div>
+
+    <section class="section" aria-labelledby="playtest-heading">
+      <h2 id="playtest-heading">Playtesters Wanted Soon</h2>
+      <div class="playtest-callout">
+        <span class="playtest-timing">Expected in 1&ndash;2 months</span>
+        <p><strong>Glass &amp; Fortune will need real hands at the table.</strong> I&rsquo;m not looking for playtesters quite yet, but I expect to open the doors in the next month or two. If you&rsquo;d like to help test the balance, pacing, clarity, and strange edge cases, follow development and I&rsquo;ll announce when playtesting begins.</p>
+        <a href="follow-development.html" class="btn btn-primary">Get the Playtest Announcement</a>
+      </div>
+    </section>
 
     <div class="section statusboard" id="build-status">
       <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
