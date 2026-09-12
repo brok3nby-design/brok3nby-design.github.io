@@ -3,6 +3,7 @@
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
+  const motionAllowed = () => window.B3DPreferences ? window.B3DPreferences.motionAllowed() : !reducedMotion.matches;
 
   function ready(callback) {
     if (document.readyState === 'loading') {
@@ -13,7 +14,7 @@
   }
 
   function addParticles() {
-    if (reducedMotion.matches || !window.HTMLCanvasElement) return;
+    if (!window.HTMLCanvasElement) return;
 
     const canvas = document.createElement('canvas');
     canvas.className = 'b3d-particle-canvas';
@@ -45,6 +46,11 @@
 
     function tick() {
       context.clearRect(0, 0, width, height);
+      if (!motionAllowed() || document.hidden || window.B3DPreferences?.get('particles') === false) {
+        particles.length = 0;
+        frame = 0;
+        return;
+      }
       for (let index = particles.length - 1; index >= 0; index -= 1) {
         const particle = particles[index];
         particle.x += particle.vx;
@@ -65,6 +71,7 @@
     }
 
     function spawn(event) {
+      if (!motionAllowed() || document.hidden || event.pointerType === 'touch' || window.B3DPreferences?.get('particles') === false) return;
       const target = event.target instanceof Element
         ? event.target.closest('section, .hero, .project-card, .feature-card, .gallery-item, .hero-image, .hero-visual')
         : null;
@@ -106,8 +113,16 @@
       if (!label) return;
       element.classList.add('b3d-glitch');
       element.dataset.glitch = label;
+      for (let index = 0; index < 2; index += 1) {
+        const copy = document.createElement('span');
+        copy.className = 'glitch-copy';
+        copy.setAttribute('aria-hidden', 'true');
+        copy.textContent = label;
+        element.appendChild(copy);
+      }
       let timeout = 0;
       element.addEventListener('mouseenter', () => {
+        if (!motionAllowed()) return;
         window.clearTimeout(timeout);
         element.classList.remove('is-glitching');
         void element.offsetWidth;
@@ -177,29 +192,6 @@
     });
   }
 
-  function retireLegacyMusic() {
-    try {
-      localStorage.setItem('bbd_music_playing', '0');
-    } catch (error) {}
-
-    document.querySelectorAll('#musicBtn, .floating-music-btn').forEach(button => {
-      button.hidden = true;
-      button.setAttribute('aria-hidden', 'true');
-      button.setAttribute('tabindex', '-1');
-    });
-
-    document.querySelectorAll('audio#bgMusic').forEach(audio => {
-      const stop = () => {
-        if (!audio.paused) audio.pause();
-      };
-      audio.pause();
-      audio.muted = true;
-      audio.loop = false;
-      audio.preload = 'none';
-      audio.addEventListener('play', stop);
-    });
-  }
-
   function addAchievements() {
     const stack = document.createElement('div');
     stack.className = 'b3d-achievement-stack';
@@ -209,6 +201,7 @@
     const unlocked = new Set();
 
     function hasUnlocked(key) {
+      if (window.B3DPassport) return window.B3DPassport.has(key);
       if (unlocked.has(key)) return true;
       try {
         return sessionStorage.getItem(`b3d_achievement_${key}`) === '1';
@@ -218,6 +211,7 @@
     }
 
     function remember(key) {
+      if (window.B3DPassport) { window.B3DPassport.unlock(key); return; }
       unlocked.add(key);
       try {
         sessionStorage.setItem(`b3d_achievement_${key}`, '1');
@@ -272,7 +266,7 @@
     footer.classList.add('b3d-ambient-footer');
 
     const hour = new Date().getHours();
-    if (!reducedMotion.matches && (hour >= 18 || hour < 6)) {
+    if (hour >= 18 || hour < 6) {
       const fireflies = document.createElement('div');
       fireflies.className = 'b3d-fireflies';
       fireflies.setAttribute('aria-hidden', 'true');
@@ -367,15 +361,15 @@
 
   function addCartridgeCards() {
     const cartridgeSound = new Audio('sounds/cartridge.mp3');
-    cartridgeSound.preload = 'auto';
+    cartridgeSound.preload = 'none';
     cartridgeSound.volume = .8;
 
     document.querySelectorAll('.project-card').forEach(card => {
       card.classList.add('b3d-cartridge');
 
-      if (!reducedMotion.matches) {
+      {
         card.addEventListener('pointermove', event => {
-          if (event.pointerType === 'touch') return;
+          if (event.pointerType === 'touch' || !motionAllowed()) return;
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width - .5;
           const y = (event.clientY - rect.top) / rect.height - .5;
@@ -393,17 +387,15 @@
       if (!link) return;
       link.addEventListener('click', event => {
         if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        event.preventDefault();
-        if (!reducedMotion.matches) card.classList.add('is-inserting');
-        try {
-          cartridgeSound.currentTime = 0;
-          cartridgeSound.play().catch(() => {});
-        } catch (error) {}
-        link.textContent = 'INSERTING…';
+        if (window.B3DPreferences?.get('sound')) {
+          try {
+            cartridgeSound.currentTime = 0;
+            cartridgeSound.play().catch(() => {});
+          } catch (error) {}
+        }
         if (window.B3DAchievements) {
           window.B3DAchievements.unlock('cartridge', 'BLOW ON IT FIRST', 'Inserted a suspiciously browser-shaped cartridge.');
         }
-        window.setTimeout(() => window.location.assign(link.href), 540);
       });
     });
   }
@@ -430,11 +422,17 @@
     const updateVisibility = () => {
       const isVisible = window.scrollY > 420;
       button.classList.toggle('is-visible', isVisible);
-      if (newsletterLink) newsletterLink.classList.toggle('is-visible', isVisible);
+      button.tabIndex = isVisible ? 0 : -1;
+      button.setAttribute('aria-hidden', String(!isVisible));
+      if (newsletterLink) {
+        newsletterLink.classList.toggle('is-visible', isVisible);
+        newsletterLink.tabIndex = isVisible ? 0 : -1;
+        newsletterLink.setAttribute('aria-hidden', String(!isVisible));
+      }
     };
 
     button.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: motionAllowed() ? 'smooth' : 'auto' });
     });
 
     if (newsletterLink) document.body.appendChild(newsletterLink);
@@ -444,7 +442,6 @@
   }
 
   ready(() => {
-    retireLegacyMusic();
     addAchievements();
     addParticles();
     addGlitches();
