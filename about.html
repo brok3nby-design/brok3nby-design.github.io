@@ -310,26 +310,22 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/studio.jpg">
+<link rel="canonical" href="https://brok3nbydesign.com/about.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Navigation -->
-  <nav>
-    <div class="logo"><a href="home.html">BROK3N BY DESIGN</a></div>
-    <div class="nav-center">
-      <canvas id="visualizer"></canvas>
-    </div>
-    <div class="nav-right">
-      <a href="home.html#released">Games</a>
-      <a href="home.html#current">Labs</a>
-      <a href="about.html" class="active">About</a>
-      <a href="index.html">Watch Intro</a>
-      <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="wrfm-live-link" aria-label="Listen live to WRFM 97.1">● 97.1 WRFM · LIVE</a>
-    </div>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html" aria-current="page">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
   <!-- Hero -->
-  <div class="hero">
+  <div class="hero" id="main-content" tabindex="-1">
     <h1>ABOUT THE STUDIO</h1>
     <p class="tagline">Games that shouldn't work... but somehow do.</p>
   </div>
@@ -351,7 +347,7 @@
       </p>
     </section>
 
-    <section class="section">
+    <section class="section"><h2>A few chapters from the studio</h2><div class="studio-timeline"><div><p class="eyebrow">CREATIVE ROOTS</p><h3>Games, video, and sound</h3><p>A lifelong love of games, shaped by years of image, video, and audio editing.</p></div><div><p class="eyebrow">EARLY EXPLORATIONS</p><h3>Dolls, departments, and strange ideas</h3><p>Concept artwork and interactive experiments helped shape the studio’s creative practice.</p></div><div><p class="eyebrow">WORLDS YOU CAN VISIT</p><h3>The wilds and the airwaves</h3><p><a href="pocket-wilds.html">Pocket Wilds</a> and <a href="wrfm.html">WRFM</a> turn those interests into experiences you can explore.</p></div></div><details class="studio-disclosure"><summary>Read the longer story</summary><section class="section">
       <h2>How I Got Here</h2>
       <p>I've been playing games since the '80s, from Mario to PC gaming and point-and-click adventures like King's Quest. That mix of exploration, character, and unexpected discoveries still shapes what I make.</p>
       <p>My creative background is in Photoshop, video editing, and audio. Years spent cutting gameplay and GTA videos taught me timing, pacing, and how a small detail can make a story or a joke land.</p>
@@ -365,7 +361,7 @@
       <p>The Department of Questionable Intent started as a weird personality test. Naturally, I couldn't leave it alone. Soon there were clearance levels, offices to explore, things to unlock and a fictional organization with much more going on beneath the surface. It's currently on hold while I focus on other projects.</p>
       <p>One piece of that world became WRFM — Workplace Relief Frequency: a fictional radio station with music, a host, call-ins, developer jokes and commercials for businesses that sound almost legitimate until you listen to what they're selling.</p>
       <p>WRFM brought the studio's interests in sound, worldbuilding, and interactive design together. It's now a live station you can listen to, explore, and keep finding things in.</p>
-    </section>
+    </section></details></section>
 
     <!-- Flow Programming -->
     <section class="section">
@@ -501,7 +497,7 @@
   <!-- Footer -->
   <footer>
     <div class="container">
-      <h2 style="margin-bottom: 10px;">BROK3N BY DESIGN</h2>
+      <p class="footer-kicker">INDEPENDENT GAME STUDIO</p>
       <p class="studio-credit">Independently created by Brok3n by Design.</p>
       <div class="social-links">
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">@brok3nbydesign on X</a>
@@ -510,110 +506,11 @@
         © 2026 Brok3n by Design. All rights broken.
       </p>
     </div>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
   <!-- Background Music (same as main page) -->
-  <audio id="bgMusic" loop>
-    <source src="sounds/site_music_1.ogg" type="audio/ogg">
-    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
-  </audio>
-  <script>
-    const music = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicBtn');
-    const visualizer = document.getElementById('visualizer');
-    const ctx = visualizer.getContext('2d');
-    let musicPlaying = false;
-    let audioContext, analyser, source;
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        source = audioContext.createMediaElementSource(music);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-        analyser.fftSize = 64;
-      }
-    }
-    function drawVisualizer() {
-      if (!musicPlaying) return;
-      visualizer.style.display = 'block';
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-      ctx.clearRect(0, 0, visualizer.width, visualizer.height);
-      ctx.fillStyle = '#00ff9f';
-      const barWidth = (visualizer.width / bufferLength) * 1.5;
-      let x = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2.2;
-        ctx.fillRect(x, visualizer.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-      requestAnimationFrame(drawVisualizer);
-    }
-    function toggleMusic() {
-      initAudio();
-      if (!musicPlaying) {
-        music.play().then(() => {
-          musicPlaying = true;
-          musicBtn.textContent = "MUSIC: ON";
-          musicBtn.classList.add('playing');
-          visualizer.width = 600;
-          visualizer.height = 50;
-          drawVisualizer();
-          localStorage.setItem('bbd_music_playing', '1');
-        }).catch(() => {
-          alert("Please click the music button again to enable audio.");
-        });
-      } else {
-        music.pause();
-        musicPlaying = false;
-        musicBtn.textContent = "MUSIC: OFF";
-        musicBtn.classList.remove('playing');
-        visualizer.style.display = 'none';
-        ctx.clearRect(0, 0, visualizer.width, visualizer.height);
-        localStorage.setItem('bbd_music_playing', '0');
-      }
-    }
-    // Resume playback position across page navigations
-    const savedTime = parseFloat(localStorage.getItem('bbd_music_time') || '0');
-    function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
-    if (music.readyState >= 1) restoreTime();
-    else music.addEventListener('loadedmetadata', restoreTime);
-    music.addEventListener('timeupdate', () => {
-      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
-    });
-    function persistMusic() {
-      if (!music.paused) localStorage.setItem('bbd_music_time', music.currentTime);
-    }
-    window.addEventListener('pagehide', persistMusic);
-    window.addEventListener('beforeunload', persistMusic);
-    function autoStartMusic() {
-      music.muted = true;
-      music.play().then(() => {
-        music.muted = false;
-        musicPlaying = true;
-        musicBtn.textContent = "MUSIC: ON";
-        musicBtn.classList.add('playing');
-        initAudio();
-        visualizer.width = 600;
-        visualizer.height = 50;
-        drawVisualizer();
-        localStorage.setItem('bbd_music_playing', '1');
-      }).catch(() => {
-        music.muted = false;
-        const resume = () => {
-          toggleMusic();
-          document.removeEventListener('pointerdown', resume);
-          document.removeEventListener('keydown', resume);
-        };
-        document.addEventListener('pointerdown', resume);
-        document.addEventListener('keydown', resume);
-      });
-    }
-    window.onload = function() {
-      music.pause();
-      localStorage.setItem('bbd_music_playing', '0');
-    };
-  </script>
+  
 </body>
 </html>

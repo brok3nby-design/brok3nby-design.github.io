@@ -23,13 +23,26 @@
 
 .b3d-glitch::before,
 .b3d-glitch::after {
-  content: attr(data-glitch);
+  content: none;
   position: absolute;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
+}
+
+/* Color separation uses the original heading, without inserting repeated text. */
+.b3d-glitch.is-glitching {
+  text-shadow: -2px 0 #ff4057, 2px 0 #00e5ff;
+}
+
+.b3d-still .b3d-glitch.is-glitching {
+  text-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b3d-glitch.is-glitching { text-shadow: none; }
 }
 
 .b3d-glitch.is-glitching::before {

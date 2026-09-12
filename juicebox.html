@@ -10,7 +10,7 @@
   <meta property="og:title" content="Juicebox | Brok3n by Design">
   <meta property="og:description" content="An experimental short film designed and directed at Brok3n by Design using AI-assisted creative tools. Currently in early development.">
   <meta property="og:url" content="https://brok3nbydesign.com/juicebox.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/pocket-wilds-1.png">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/juicebox.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -194,19 +194,23 @@
       outline-offset: 4px;
     }
   </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/juicebox.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html">← Back to Home</a>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <div class="container">
+  <div class="container" id="main-content" tabindex="-1">
     <div class="hero">
-      <div class="hero-image">[ Concept Still ]</div>
+      <img class="concept-art" src="images/studio/juicebox.svg" alt="Juicebox production notebook title artwork">
       <h1>Juicebox</h1>
       <div class="status">IN DEVELOPMENT</div>
       <p class="genre">AI Short Film • In Development</p>
@@ -232,14 +236,7 @@
       </div>
     </div>
 
-    <div class="section">
-      <h2>Gallery</h2>
-      <div class="gallery-grid">
-        <div class="gallery-item">[ Still 01 ]</div>
-        <div class="gallery-item">[ Still 02 ]</div>
-        <div class="gallery-item">[ Still 03 ]</div>
-      </div>
-    </div>
+    <section class="section"><h2>Production notebook</h2><p>Character, voice, and short-form storytelling are being explored. Finished stills and clips will be shared as they are ready.</p></section>
 
     <div class="section">
       <h2>Latest Development</h2>
@@ -263,154 +260,16 @@
     <p class="studio-credit">Independently created by Brok3n by Design.</p>
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
 
   <!-- Site-wide background music -->
-  <audio id="bgMusic" loop preload="none">
-    <source src="sounds/site_music_1.ogg" type="audio/ogg">
-    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
-  </audio>
 
-  <button
-    class="floating-music-btn"
-    id="musicBtn"
-    aria-label="Toggle background music"
-  >
-    &#9834; MUSIC: OFF
-  </button>
+  
 
-  <style>
-    .floating-music-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 900;
-      background: rgba(17,17,17,.85);
-      color: var(--text);
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-family: 'VT323', monospace;
-      font-size: 1.15rem;
-      letter-spacing: 1px;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      transition: all .2s ease;
-    }
-    .floating-music-btn:hover {
-      color: var(--accent);
-      box-shadow: 0 0 14px rgba(0,255,159,.35);
-    }
-    .floating-music-btn.playing {
-      color: var(--accent);
-    }
-  </style>
-
-  <script>
-    (function() {
-      const music = document.getElementById('bgMusic');
-      const button = document.getElementById('musicBtn');
-
-      if (!music || !button) return;
-
-      // Safe storage helpers – prevent SecurityError in sandboxed environments
-      const storage = {
-        available: (function() {
-          try {
-            const key = '__bbd_test__';
-            localStorage.setItem(key, '1');
-            localStorage.removeItem(key);
-            return true;
-          } catch (e) {
-            return false;
-          }
-        })(),
-        get(key) {
-          if (!this.available) return null;
-          try { return localStorage.getItem(key); } catch (e) { return null; }
-        },
-        set(key, value) {
-          if (!this.available) return;
-          try { localStorage.setItem(key, value); } catch (e) {}
-        }
-      };
-
-      const PLAYING_KEY = 'bbd_music_playing';
-      const TIME_KEY = 'bbd_music_time';
-      const savedTime = parseFloat(storage.get(TIME_KEY) || '0');
-
-      function showOn() {
-        button.textContent = '♪ MUSIC: ON';
-        button.classList.add('playing');
-      }
-
-      function showOff() {
-        button.textContent = '♪ MUSIC: OFF';
-        button.classList.remove('playing');
-      }
-
-      function restoreTime() {
-        if (savedTime > 0 && music.duration && savedTime < music.duration) {
-          try {
-            music.currentTime = savedTime;
-          } catch (error) {}
-        }
-      }
-
-      if (music.readyState >= 1) {
-        restoreTime();
-      } else {
-        music.addEventListener('loadedmetadata', restoreTime);
-      }
-
-      music.addEventListener('timeupdate', () => {
-        if (!music.paused) {
-          storage.set(TIME_KEY, music.currentTime);
-        }
-      });
-
-      function persist() {
-        if (!music.paused) {
-          storage.set(TIME_KEY, music.currentTime);
-        }
-      }
-
-      window.addEventListener('pagehide', persist);
-      window.addEventListener('beforeunload', persist);
-
-      function start() {
-        return music.play().then(() => {
-          showOn();
-          storage.set(PLAYING_KEY, '1');
-        });
-      }
-
-      button.addEventListener('click', () => {
-        if (music.paused) {
-          start().catch(() => {});
-        } else {
-          music.pause();
-          showOff();
-          storage.set(PLAYING_KEY, '0');
-        }
-      });
-
-      if (storage.get(PLAYING_KEY) === '1') {
-        start().catch(() => {
-          const resume = () => {
-            start().finally(() => {
-              document.removeEventListener('pointerdown', resume);
-              document.removeEventListener('keydown', resume);
-            });
-          };
-          document.addEventListener('pointerdown', resume);
-          document.addEventListener('keydown', resume);
-        });
-      } else {
-        showOff();
-      }
-    })();
-  </script>
+  
 
 </body>
 </html>

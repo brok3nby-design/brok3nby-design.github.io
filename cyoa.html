@@ -10,7 +10,7 @@
   <meta property="og:title" content="CYOA | Brok3n by Design">
   <meta property="og:description" content="An interactive choose-your-own-adventure experience guided entirely by the reader.">
   <meta property="og:url" content="https://brok3nbydesign.com/cyoa.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/pocket-wilds-1.png">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/cyoa.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -41,19 +41,23 @@
     .changelog, .roadmap { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:25px; }
     footer { background:#111; padding:50px 20px 30px; text-align:center; border-top:1px solid var(--border); }
   </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/cyoa.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html">← Back to Home</a>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <div class="container">
+  <div class="container" id="main-content" tabindex="-1">
     <div class="hero">
-      <div class="hero-image">[ CYOA Story Interface Placeholder ]</div>
+      <img class="concept-art" src="images/studio/cyoa.svg" alt="Branching paths illustration for CYOA">
       <h1>CYOA</h1>
       <div class="status">IN DEVELOPMENT</div>
       <p class="genre">Interactive Fiction • Choice-Driven • Narrative</p>
@@ -76,13 +80,7 @@
       </div>
     </div>
 
-    <div class="section">
-      <h2>Gallery</h2>
-      <div class="gallery-grid">
-        <div class="gallery-item">[ Story Screenshot ]</div>
-        <div class="gallery-item">[ Choice Screen ]</div>
-      </div>
-    </div>
+    <section class="section"><h2>Story notebook</h2><p>The first complete story path is in development. Scenes and choices will be shared when they are ready to explore.</p></section>
 
     <div class="section">
       <h2>Latest Development</h2>
@@ -106,52 +104,14 @@
     <p class="studio-credit">Independently created by Brok3n by Design.</p>
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
 
   <!-- Site-wide background music (continues across pages) -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="sounds/site_music_1.ogg" type="audio/ogg">
-    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
-  </audio>
-  <button class="floating-music-btn" id="musicBtn" aria-label="Toggle background music">&#9834; MUSIC: OFF</button>
-  <style>
-    .floating-music-btn { position:fixed; bottom:20px; right:20px; z-index:900; background:rgba(17,17,17,.85); color:var(--text); border:1px solid var(--accent); border-radius:999px; padding:10px 18px; font-family:'VT323',monospace; font-size:1.15rem; letter-spacing:1px; cursor:pointer; backdrop-filter:blur(6px); transition:all .2s ease; }
-    .floating-music-btn:hover { color:var(--accent); box-shadow:0 0 14px rgba(0,255,159,.35); }
-    .floating-music-btn.playing { color:var(--accent); }
-  </style>
-  <script>
-    (function(){
-      const music = document.getElementById('bgMusic');
-      const btn = document.getElementById('musicBtn');
-      if (!music) return;
-      const P = 'bbd_music_playing', T = 'bbd_music_time';
-      const savedTime = parseFloat(localStorage.getItem(T) || '0');
-      function on(){ btn.textContent = '♪ MUSIC: ON'; btn.classList.add('playing'); }
-      function off(){ btn.textContent = '♪ MUSIC: OFF'; btn.classList.remove('playing'); }
-      function restoreTime(){ if (savedTime > 0 && music.duration && savedTime < music.duration) { try { music.currentTime = savedTime; } catch (e) {} } }
-      if (music.readyState >= 1) restoreTime();
-      else music.addEventListener('loadedmetadata', restoreTime);
-      music.addEventListener('timeupdate', () => { if (!music.paused) localStorage.setItem(T, music.currentTime); });
-      function persist(){ if (!music.paused) localStorage.setItem(T, music.currentTime); }
-      window.addEventListener('pagehide', persist);
-      window.addEventListener('beforeunload', persist);
-      function start(){ return music.play().then(() => { on(); localStorage.setItem(P, '1'); }); }
-      btn.addEventListener('click', () => {
-        if (music.paused) start().catch(() => {});
-        else { music.pause(); off(); localStorage.setItem(P, '0'); }
-      });
-      if (localStorage.getItem(P) === '1') {
-        start().catch(() => {
-          const resume = () => { start().finally(() => {
-            document.removeEventListener('pointerdown', resume);
-            document.removeEventListener('keydown', resume);
-          }); };
-          document.addEventListener('pointerdown', resume);
-          document.addEventListener('keydown', resume);
-        });
-      } else { off(); }
-    })();
-  </script>
+  
+  
 
 </body>
 </html>

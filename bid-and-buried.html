@@ -10,7 +10,7 @@
   <meta property="og:title" content="Bid &amp; Buried | Brok3n by Design">
   <meta property="og:description" content="Buy blind. Dig deep. Get rich. A pixel-art storage-auction treasure hunt.">
   <meta property="og:url" content="https://brok3nbydesign.com/bid-and-buried.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/locker/buried-05.png">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/bid-and-buried.jpg">
   <meta property="og:image:alt" content="Bid &amp; Buried game logo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
@@ -160,16 +160,20 @@
       .screenshots-grid { grid-template-columns: 1fr; gap: 14px; }
     }
   </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/bid-and-buried.html">
 </head>
 <body>
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html#current">← Back to Home</a>
-  </nav>
+<a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <div class="container">
+  <div class="container" id="main-content" tabindex="-1">
     <div class="hero">
       <div class="hero-image">
         <img src="images/locker/buried-05.png" alt="Bid &amp; Buried game logo" width="1672" height="941">
@@ -239,7 +243,10 @@
     <p class="studio-credit">Independently created by Brok3n by Design.</p>
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
   <script>
     // The logo occupies buried-05.png. Screenshot slots use 01–04 and 06–15.
     // Missing future files stay hidden and appear automatically once added.

@@ -10,7 +10,7 @@
   <meta property="og:title" content="DOQI | Brok3n by Design">
   <meta property="og:description" content="A satirical personality game where every ridiculous decision secretly shapes who you become.">
   <meta property="og:url" content="https://brok3nbydesign.com/doqi.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/doqi/doqi_01.jpg">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/doqi.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -318,17 +318,21 @@
       outline-offset: 4px;
     }
   </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/doqi.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html">← Back to Home</a>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <div class="container">
+  <div class="container" id="main-content" tabindex="-1">
     <div class="hero">
       <div class="hero-image">
         <div class="hero-slideshow" id="hero-slideshow">
@@ -352,7 +356,8 @@
       </div>
 
       <h1>DOQI</h1>
-      <div class="status">PROTOTYPE</div>
+      <p class="eyebrow">Department of Questionable Intent</p>
+      <div class="status">PROTOTYPE · ON HOLD</div>
       <p>A satirical personality game where every ridiculous decision secretly shapes who you become.</p>
       <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
     </div>
@@ -360,7 +365,7 @@
     <div class="section">
       <h2>Overview</h2>
       <p>DOQI is a strange, funny, and slightly unsettling game about identity, choices, and how the smallest decisions can completely change who you are.</p>
-      <div class="b3d-tldr"><strong>TL;DR:</strong> A satirical personality game where ridiculous choices quietly shape your identity and determine which ending you receive. Currently a prototype.</div>
+      <div class="b3d-tldr"><strong>TL;DR:</strong> A satirical personality game where ridiculous choices quietly shape your identity and determine which ending you receive. A prototype currently on hold.</div>
     </div>
 
     <div class="section">
@@ -424,7 +429,10 @@
     <p class="studio-credit">Independently created by Brok3n by Design.</p>
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -617,136 +625,10 @@
   </script>
 
   <!-- Site-wide background music -->
-  <audio id="bgMusic" loop preload="none">
-    <source src="sounds/site_music_1.ogg" type="audio/ogg">
-    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
-  </audio>
 
-  <button
-    class="floating-music-btn"
-    id="musicBtn"
-    aria-label="Toggle background music"
-  >
-    &#9834; MUSIC: OFF
-  </button>
+  
 
-  <style>
-    .floating-music-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 900;
-      background: rgba(17,17,17,.85);
-      color: var(--text);
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-family: 'VT323', monospace;
-      font-size: 1.15rem;
-      letter-spacing: 1px;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      transition: all .2s ease;
-    }
-    .floating-music-btn:hover {
-      color: var(--accent);
-      box-shadow: 0 0 14px rgba(0,255,159,.35);
-    }
-    .floating-music-btn.playing {
-      color: var(--accent);
-    }
-  </style>
-
-  <script>
-    (function() {
-      const music = document.getElementById('bgMusic');
-      const button = document.getElementById('musicBtn');
-
-      if (!music) return;
-
-      const PLAYING_KEY = 'bbd_music_playing';
-      const TIME_KEY = 'bbd_music_time';
-      const savedTime = parseFloat(
-        localStorage.getItem(TIME_KEY) || '0'
-      );
-
-      function showOn() {
-        button.textContent = '♪ MUSIC: ON';
-        button.classList.add('playing');
-      }
-
-      function showOff() {
-        button.textContent = '♪ MUSIC: OFF';
-        button.classList.remove('playing');
-      }
-
-      function restoreTime() {
-        if (
-          savedTime > 0 &&
-          music.duration &&
-          savedTime < music.duration
-        ) {
-          try {
-            music.currentTime = savedTime;
-          } catch (error) {}
-        }
-      }
-
-      if (music.readyState >= 1) {
-        restoreTime();
-      } else {
-        music.addEventListener('loadedmetadata', restoreTime);
-      }
-
-      music.addEventListener('timeupdate', () => {
-        if (!music.paused) {
-          localStorage.setItem(TIME_KEY, music.currentTime);
-        }
-      });
-
-      function persist() {
-        if (!music.paused) {
-          localStorage.setItem(TIME_KEY, music.currentTime);
-        }
-      }
-
-      window.addEventListener('pagehide', persist);
-      window.addEventListener('beforeunload', persist);
-
-      function start() {
-        return music.play().then(() => {
-          showOn();
-          localStorage.setItem(PLAYING_KEY, '1');
-        });
-      }
-
-      button.addEventListener('click', () => {
-        if (music.paused) {
-          start().catch(() => {});
-        } else {
-          music.pause();
-          showOff();
-          localStorage.setItem(PLAYING_KEY, '0');
-        }
-      });
-
-      if (localStorage.getItem(PLAYING_KEY) === '1') {
-        start().catch(() => {
-          const resume = () => {
-            start().finally(() => {
-              document.removeEventListener('pointerdown', resume);
-              document.removeEventListener('keydown', resume);
-            });
-          };
-
-          document.addEventListener('pointerdown', resume);
-          document.addEventListener('keydown', resume);
-        });
-      } else {
-        showOff();
-      }
-    })();
-  </script>
+  
 
 </body>
 </html>
