@@ -10,7 +10,7 @@
   <meta property="og:title" content="WRFM Radio — After Hours | Brok3n by Design">
   <meta property="og:description" content="One live station, one shared timeline. Tune in with Vera Lang, climb the listener leaderboard, and unlock 50+ achievements.">
   <meta property="og:url" content="https://brok3nbydesign.com/wrfm.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/wrfm/wrfm_01.jpg">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/wrfm.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -571,16 +571,20 @@
     }
   </style>
   <link rel="stylesheet" href="site-effects.css">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
   <script src="site-effects.js" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/wrfm.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html">← Back to Home</a>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <div class="container">
+  <div class="container" id="main-content" tabindex="-1">
     <div class="hero">
       <div class="hero-image">
         <div class="hero-slideshow" id="hero-slideshow">
@@ -608,7 +612,7 @@
     </div>
 
     <div class="section">
-      <h2>Overview</h2>
+      <h2>Overview</h2><div class="studio-card"><h3>Keep the station with you</h3><p>Host Vera Lang has the microphone. Open the station in its own tab to keep listening while you explore the studio website.</p><a class="studio-button" href="https://brok3nbydesign.com/wrfm/" target="_blank" rel="noopener">Open the radio in a new tab ↗</a></div>
       <p>WRFM is a playable online radio station running on one shared timeline. Everyone listening hears the same broadcast at the same moment, with two channels, fictional bands, station host Vera Lang, listener challenges, and a community leaderboard.</p>
       <div class="b3d-tldr"><strong>TL;DR:</strong> A playable online radio station where everyone hears the same broadcast. Tune into two channels, meet the host and fictional bands, or chase listener challenges with the community.</div>
     </div>
@@ -693,7 +697,8 @@
       </div>
     </div>
 
-    <div class="section statusboard" id="build-status">
+    <details class="studio-disclosure"><summary>Development details & complete feature inventory</summary>
+<div class="section statusboard" id="build-status">
       <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
 
       <div class="statusboard-head">
@@ -783,13 +788,17 @@
         </div>
       </div>
     </div>
+</details>
 
   </div>
 
   <footer>
     <p><a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">● Listen to WRFM Live</a> · Follow updates on <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">X</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -982,142 +991,10 @@
   </script>
 
   <!-- Site-wide background music -->
-  <audio id="bgMusic" loop preload="none">
-    <source src="sounds/site_music_1.ogg" type="audio/ogg">
-    <source src="sounds/site_music_1.mp3" type="audio/mpeg">
-  </audio>
 
-  <button
-    class="floating-music-btn"
-    id="musicBtn"
-    aria-label="Toggle background music"
-    hidden
-  >
-    &#9834; MUSIC: OFF
-  </button>
+  
 
-  <style>
-    .floating-music-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 900;
-      background: rgba(17,17,17,.85);
-      color: var(--text);
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-family: 'VT323', monospace;
-      font-size: 1.15rem;
-      letter-spacing: 1px;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      transition: all .2s ease;
-    }
-    .floating-music-btn:hover {
-      color: var(--accent);
-      box-shadow: 0 0 14px rgba(0,255,159,.35);
-    }
-    .floating-music-btn.playing {
-      color: var(--accent);
-    }
-  </style>
-
-  <script>
-    (function() {
-      const music = document.getElementById('bgMusic');
-      const button = document.getElementById('musicBtn');
-
-      if (!music) return;
-
-      // The embedded WRFM station owns this page's audio experience.
-      music.pause();
-      button.hidden = true;
-      return;
-
-      const PLAYING_KEY = 'bbd_music_playing';
-      const TIME_KEY = 'bbd_music_time';
-      const savedTime = parseFloat(
-        localStorage.getItem(TIME_KEY) || '0'
-      );
-
-      function showOn() {
-        button.textContent = '♪ MUSIC: ON';
-        button.classList.add('playing');
-      }
-
-      function showOff() {
-        button.textContent = '♪ MUSIC: OFF';
-        button.classList.remove('playing');
-      }
-
-      function restoreTime() {
-        if (
-          savedTime > 0 &&
-          music.duration &&
-          savedTime < music.duration
-        ) {
-          try {
-            music.currentTime = savedTime;
-          } catch (error) {}
-        }
-      }
-
-      if (music.readyState >= 1) {
-        restoreTime();
-      } else {
-        music.addEventListener('loadedmetadata', restoreTime);
-      }
-
-      music.addEventListener('timeupdate', () => {
-        if (!music.paused) {
-          localStorage.setItem(TIME_KEY, music.currentTime);
-        }
-      });
-
-      function persist() {
-        if (!music.paused) {
-          localStorage.setItem(TIME_KEY, music.currentTime);
-        }
-      }
-
-      window.addEventListener('pagehide', persist);
-      window.addEventListener('beforeunload', persist);
-
-      function start() {
-        return music.play().then(() => {
-          showOn();
-          localStorage.setItem(PLAYING_KEY, '1');
-        });
-      }
-
-      button.addEventListener('click', () => {
-        if (music.paused) {
-          start().catch(() => {});
-        } else {
-          music.pause();
-          showOff();
-          localStorage.setItem(PLAYING_KEY, '0');
-        }
-      });
-
-      if (localStorage.getItem(PLAYING_KEY) === '1') {
-        start().catch(() => {
-          const resume = () => {
-            start().finally(() => {
-              document.removeEventListener('pointerdown', resume);
-              document.removeEventListener('keydown', resume);
-            });
-          };
-
-          document.addEventListener('pointerdown', resume);
-          document.addEventListener('keydown', resume);
-        });
-      } else {
-        showOff();
-      }
-    })();
-  </script>
+  
 
 </body>
 </html>

@@ -10,7 +10,7 @@
   <meta property="og:title" content="Speck | Brok3n by Design">
   <meta property="og:description" content="An earth-scale shared world. Explore it, dig under it, design everything you own, and build a home that stays on the map.">
   <meta property="og:url" content="https://brok3nbydesign.com/speck.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/speck/speck_01.png">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/speck.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brok3nbydesign">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
@@ -513,25 +513,29 @@
     }
   </style>
   <link rel="stylesheet" href="site-effects.css">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
   <script src="site-effects.js" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/speck.html">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <nav>
-    <a href="home.html" class="brand">BROK3N BY DESIGN</a>
-    <a href="home.html">← Back to Home</a>
-  </nav>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN</a><div class="studio-links"><a href="home.html#released">Games</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a></div></nav>
+<!-- STUDIO NAV END -->
 
-  <main class="container">
+  <main class="container" id="main-content" tabindex="-1">
     <section class="hero">
       <div class="hero-visual">
         <img class="hero-logo" src="images/speck/logo.png" alt="Speck — a shared world is taking shape">
       </div>
 
-      <h1>SPECK</h1>
+      <h1>SPECK</h1><p class="studio-small">Private development. Public multiplayer is not open yet.</p>
       <div class="status-group" aria-label="Project status: In Development and Flow">
         <div class="status">IN DEVELOPMENT</div>
-        <div class="status status-flow">FLOW</div>
+        
       </div>
       <p class="genre">Persistent Shared World • Exploration • Crafting • Building</p>
       <p>You are one pixel in a world 72,000 of them across. Walk it, dig under it, design every object you own, and build a home that stays on the map after you log off.</p>
@@ -624,7 +628,8 @@
       </div>
     </section>
 
-    <section class="section statusboard" id="build-status" aria-labelledby="build-status-heading">
+    <details class="studio-disclosure"><summary>Development details & complete feature inventory</summary>
+<section class="section statusboard" id="build-status" aria-labelledby="build-status-heading">
       <h2 id="build-status-heading">What&rsquo;s Built &amp; What&rsquo;s Left</h2>
 
       <div class="statusboard-head">
@@ -807,6 +812,7 @@
         </ul>
       </div>
     </section>
+</details>
 
   </main>
 
@@ -814,7 +820,10 @@
     <p class="studio-credit">Independently created by Brok3n by Design.</p>
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design</p>
-  </footer>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
 
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
     <button class="lightbox-close" type="button" aria-label="Close screenshot viewer">&times;</button>
