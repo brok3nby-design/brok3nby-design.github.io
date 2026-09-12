@@ -109,17 +109,8 @@
   function addGlitches() {
     const selectors = '.project-card h3, .hero h1, main h1, .hero-mark strong';
     document.querySelectorAll(selectors).forEach(element => {
-      const label = element.textContent.trim();
-      if (!label) return;
+      if (!element.textContent.trim() || element.classList.contains('b3d-glitch')) return;
       element.classList.add('b3d-glitch');
-      element.dataset.glitch = label;
-      for (let index = 0; index < 2; index += 1) {
-        const copy = document.createElement('span');
-        copy.className = 'glitch-copy';
-        copy.setAttribute('aria-hidden', 'true');
-        copy.textContent = label;
-        element.appendChild(copy);
-      }
       let timeout = 0;
       element.addEventListener('mouseenter', () => {
         if (!motionAllowed()) return;

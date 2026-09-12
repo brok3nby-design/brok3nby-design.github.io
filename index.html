@@ -7,90 +7,39 @@
   <meta name="description" content="Brok3n by Design is an independent game studio where each project is designed, directed, and built by a single creator using modern creative tools.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #000;
-      overflow: hidden;
-    }
-
-    .video-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #000;
-    }
-
-    video {
-      max-width: 96%;
-      max-height: 90%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      transform: translateY(-5vh);
-    }
-
-    .enter-btn {
-      position: absolute;
-      bottom: 13vh;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 18px 60px;
-      font-size: 1.6rem;
-      background: transparent;
-      border: 2px solid #00ff9f;
-      color: #00ff9f;
-      font-family: "Courier New", monospace;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-
-    .enter-btn:hover,
-    .enter-btn:focus-visible {
-      background-color: #00ff9f;
-      color: #000;
-    }
-
-    .enter-btn:focus-visible {
-      outline: 3px solid #fff;
-      outline-offset: 4px;
-    }
-    .intro-credit {
-      position: absolute;
-      bottom: 3vh;
-      left: 20px;
-      right: 20px;
-      margin: 0;
-      color: #c9c9c9;
-      font: .875rem/1.5 "Courier New", monospace;
-      text-align: center;
-    }
-  </style>
-  <link rel="stylesheet" href="site-effects.css">
-  <script src="site-effects.js" defer></script>
+body { margin:0; background:#000; color:#eee; font-family:monospace; }
+.video-container { min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:20px; box-sizing:border-box; }
+video { display:block; width:min(100%,850px); max-height:58svh; object-fit:contain; }
+.intro-actions { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
+.enter-btn { display:inline-block; padding:16px 54px; font-size:1.4rem; border:2px solid #00ff9f; color:#00ff9f; text-decoration:none; }
+.enter-btn:hover { background:#00ff9f; color:#00150c; }
+.intro-credit { margin:0; font-size:.85rem; line-height:1.5; color:#bbb; }
+.intro-actions label { display:flex; gap:10px; align-items:center; min-height:44px; font-size:.9rem; }
+.intro-actions input { width:20px; height:20px; accent-color:#00ff9f; }
+#intro-note { min-height:1em; margin:0; font-size:.8rem; color:#9cbaa7; }
+@media(max-height:500px) and (min-width:700px){.video-container{flex-direction:row;} video{width:55%;max-height:85svh;}.intro-actions{max-width:40%;}}
+</style>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+  <script src="intro.js" defer></script>
+<meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/studio.jpg">
+<link rel="canonical" href="https://brok3nbydesign.com/">
 </head>
 <body>
 
-  <div class="video-container">
-    <video id="splashVideo" autoplay muted loop playsinline>
-      <source src="videos/BrokenIntro.mp4" type="video/mp4">
-    </video>
-
-    <button class="enter-btn" id="enterBtn" onclick="enterSite()">
-      ENTER
-    </button>
+  <main class="video-container">
+  <h1 class="sr-only">Brok3n by Design — Independent Game Studio</h1>
+  <video id="splashVideo" muted loop playsinline preload="none" poster="images/studio/share/studio.jpg" aria-label="Brok3n by Design studio intro"><source src="videos/BrokenIntro.mp4" type="video/mp4"></video>
+  <div class="intro-actions">
+    <a class="enter-btn" href="home.html">ENTER THE STUDIO</a>
+    <button type="button" id="intro-pause" class="studio-button" aria-pressed="false" hidden>Play intro</button>
+    <label hidden><input type="checkbox" id="remember-intro">Go straight to the games next time</label>
     <p class="intro-credit">Independently created by Brok3n by Design.</p>
+    <p id="intro-note" role="status"></p>
   </div>
-
-  <script>
-    function enterSite() {
-      window.location.href = "home.html";
-    }
-  </script>
-
+</main>
 </body>
 </html>

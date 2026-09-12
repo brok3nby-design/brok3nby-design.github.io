@@ -17,6 +17,7 @@
 .studio-links a { text-decoration:none; color:#e9efec; font-size:.93rem; min-height:44px; display:inline-flex; align-items:center; }
 .studio-links a:hover,.studio-links a[aria-current='page'] { color:#00ff9f; }
 .studio-footer { text-align:center; padding:40px 24px 64px; border-top:1px solid #303832; }
+.footer-kicker { margin:0 0 10px; color:var(--accent); font:600 .78rem/1.2 'VT323',monospace; letter-spacing:.16em; }
 .studio-utility { display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:center; margin:24px auto; }
 .studio-utility a { color:inherit; min-height:44px; display:inline-flex; align-items:center; }
 .studio-utility a:hover { color:var(--accent,#00ff9f); }
