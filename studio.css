@@ -33,6 +33,18 @@
 .studio-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:20px; }
 .studio-grid img { width:100%; border-radius:6px; }
 .studio-small { font-size:.9rem; color:#a9b8af; }
+/* Let transparent game artwork sit directly on the page. */
+.hero .hero-logo-wrap,
+.hero .hero-visual,
+.hero .hero-image,
+.hero .hero-logo,
+.hero .hero-image img {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.hero .hero-logo { filter: none; }
 .shelf-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; flex-wrap:wrap; }
 .shelf-heading h2 { border:0; margin-bottom:4px; }
 .shelf-controls { margin:24px 0; }
