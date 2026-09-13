@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Embed example — DOQI five-question teaser</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui, sans-serif; background: #111; color: #eee; }
+    .doqi-teaser-frame {
+      display: block;
+      width: 100%;
+      max-width: 800px;
+      height: 760px;           /* responsive initial height; resized by the optional postMessage hook below */
+      border: 0;
+      border-radius: 14px;
+      background: #832615;      /* matches the teaser ground so there is no white flash while loading */
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>DOQI five-question teaser (embed example)</h1>
+  <p>Copy the <code>&lt;iframe&gt;</code> below into the studio page. Adjust <code>src</code> to where the teaser folder is hosted (for example <code>/teasers/doqi/</code>).</p>
+
+  <iframe
+    class="doqi-teaser-frame"
+    id="doqi-teaser"
+    src="/teasers/doqi/index.html"
+    title="DOQI Field Evaluation — five-question website teaser"
+    loading="lazy"
+    allow="clipboard-write"
+    sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox"
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+
+  <script>
+    // Optional: listen for versioned events from the teaser.
+    // The teaser only posts when the embedding page's origin is in its parentOrigins allowlist
+    // (set in teaser/index.html), and it posts with that exact origin as targetOrigin.
+    // Always verify event.origin on this side too.
+    var TEASER_ORIGIN = location.origin; // same-origin embed; change if the teaser is hosted elsewhere
+    var frame = document.getElementById("doqi-teaser");
+    window.addEventListener("message", function (event) {
+      if (event.origin !== TEASER_ORIGIN) return;
+      var msg = event.data;
+      if (!msg || msg.source !== "doqi-teaser" || msg.version !== 1) return;
+      if (msg.event === "ready" || msg.event === "resize") {
+        if (typeof msg.height === "number" && msg.height > 200 && msg.height < 4000) {
+          frame.style.height = msg.height + "px";
+        }
+      }
+      if (msg.event === "completed") {
+        // The teaser was finished. No result, answers, or personal data are included.
+        console.log("DOQI teaser completed");
+      }
+    });
+  </script>
+</body>
+</html>
