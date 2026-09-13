@@ -339,6 +339,25 @@
       border-color: var(--accent);
       color: var(--accent);
     }
+    .glass-teaser-section {
+      scroll-margin-top: 24px;
+    }
+    .glass-teaser-frame {
+      display: block;
+      width: 100%;
+      height: 1120px;
+      margin: 28px auto 0;
+      border: 0;
+      background: transparent;
+    }
+    .glass-teaser-link {
+      display: block;
+      width: fit-content;
+      margin: 18px auto 0;
+    }
+    @media (max-width: 600px) {
+      .glass-teaser-frame { height: 1400px; }
+    }
 
     /* ---- Build status board ---- */
     .statusboard,
@@ -563,6 +582,7 @@
       </div>
       <p>A roguelike game of loaded fate. Bend the roll. Build the hand. Cheat fate.</p>
       <div class="hero-actions">
+        <a href="#dice-teaser" class="btn btn-primary">Play the Dice Teaser</a>
         <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
         <a href="#build-status" class="btn btn-ghost">What&rsquo;s Built &amp; What&rsquo;s Left</a>
       </div>
@@ -592,6 +612,20 @@
       </p>
       <div class="b3d-tldr"><strong>TL;DR:</strong> A dark tabletop roguelike where five glass dice score by number and colour. Bend individual dice, build powerful hands, and survive twelve increasingly strange Readings.</div>
     </div>
+
+    <section class="section glass-teaser-section" id="dice-teaser" aria-labelledby="dice-teaser-title">
+      <p class="eyebrow">PLAYABLE WEBSITE TEASER</p>
+      <h2 id="dice-teaser-title">Roll. Bend one die. See what changes.</h2>
+      <p>Try a small, self-contained piece of Glass &amp; Fortune. Roll five dice, choose one, and spend Favour to TURN, TINT, or RECAST it.</p>
+      <iframe
+        class="glass-teaser-frame"
+        src="teasers/glass-and-fortune/"
+        title="Glass &amp; Fortune interactive glass dice teaser"
+        loading="lazy"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+      ></iframe>
+      <a class="btn btn-ghost glass-teaser-link" href="teasers/glass-and-fortune/" target="_blank" rel="noopener">Open the dice teaser in its own tab ↗</a>
+    </section>
 
     <div class="section">
       <h2>Features</h2>
