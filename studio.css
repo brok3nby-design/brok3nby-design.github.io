@@ -52,7 +52,7 @@
 .shelf-filters button[aria-pressed='true'] { background:#00ff9f; border-color:#00ff9f; color:#07150d; }
 .project-shelf { grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); align-items:stretch; }
 .project-shelf .project-card { padding:0 0 30px; display:flex; flex-direction:column; background:#121714; }
-.shelf-cover { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; background:#18201b; border-bottom:1px solid #354039; }
+.shelf-cover { display:block; width:100%; height:auto; aspect-ratio:3/4; object-fit:contain; object-position:center; flex-shrink:0; background:#18201b; border-bottom:1px solid #354039; }
 .shelf-card-body { display:flex; flex-direction:column; flex:1; padding:22px 24px 0; }
 .project-shelf .shelf-card-body h3 { font-size:2rem; margin:10px 0; color:var(--project-accent,#00ff9f); }
 .shelf-hook { font-size:1rem; font-weight:600; color:#edf5ef; margin:0 0 12px; }
