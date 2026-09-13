@@ -160,5 +160,9 @@ function bendDie(die,kind,random=Math.random){
   } else { if(d.scar!=='steadfast')d.n=houseFaces?houseFaces[rnd(houseFaces.length)]:G.upgrades.cup?2+rnd(5):1+rnd(6); d.c=COLORS[rnd(6)].id; }
  return d;
 }
-globalThis.GFRules={COLORS,HANDS,HAND_RULES,evaluateHand,scoreHand,bendDie};
+const TUTORIAL_DICE=[
+    {n:3,c:'ruby'},{n:3,c:'sapphire'},{n:2,c:'sapphire'},{n:5,c:'amber'},{n:6,c:'amethyst'}
+  ];
+const FIRST_READING={"name":"First Omen","target":80,"casts":3};
+globalThis.GFRules={TUTORIAL_DICE,FIRST_READING,COLORS,HANDS,HAND_RULES,evaluateHand,scoreHand,bendDie};
 })();

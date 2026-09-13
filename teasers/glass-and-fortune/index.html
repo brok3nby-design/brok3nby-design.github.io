@@ -1,51 +1,33 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#100e0d">
-  <meta name="description" content="A little fate at your fingertips. Roll five glass dice, bend a die, and discover your fortune. A Glass & Fortune website teaser.">
-  <title>Glass & Fortune — A little fate</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="glass.css">
-  <link rel="stylesheet" href="style.css">
-  <script src="rules.js" defer></script>
-  <script src="engine.js" defer></script>
-  <script src="app.js" defer></script>
-</head>
-<body>
-<main id="toy" class="toy">
-  <header class="topbar"><span class="eyebrow">Website teaser <span aria-hidden="true"> / </span> Open table</span><div class="utilities"><button id="sound" aria-pressed="false">Sound off</button><button id="restart">Restart</button></div></header>
-  <section class="intro" aria-labelledby="title">
-    <h1 id="title"><img src="assets/logo.webp" alt="Glass & Fortune" width="1500" height="700"></h1>
-    <p class="invitation">A little fate. A little persuasion.</p>
-    <p class="prompt">Roll. Bend one die. See what changes.</p>
-  </section>
-  <section class="table" aria-label="Five glass dice">
-    <div class="table-heading"><span class="eyebrow" id="phase">01 / Invite fortune</span><span id="round-note">Five dice. Your possibility.</span></div>
-    <div id="tray" class="tray" role="group" aria-label="Select one die to bend" aria-describedby="selection"></div>
-    <p id="selection" class="selection">Five pieces of glass. One small negotiation with fate.</p>
-    <button id="roll" class="primary"><span aria-hidden="true">⚄</span> <span id="roll-label">Roll the Dice</span><span aria-hidden="true">↗</span></button>
-    <p class="roll-note">A fresh round is always free.</p>
-  </section>
-  <section class="reading" aria-label="Your hand and score">
-    <div class="reading-main"><span class="eyebrow" id="result-kicker">Your fortune awaits</span><h2 id="hand-name">What will the glass reveal?</h2><p id="explanation">Numbers make the hand. Colours can make it extraordinary.</p><p id="formula" class="formula">Every die has a number, a colour, and a symbol.</p></div>
-    <div class="score"><span class="eyebrow">Hand score</span><strong id="score">—</strong><span id="delta">Roll to discover</span></div>
-  </section>
-  <section class="bending" aria-labelledby="bend-title">
-    <div class="bend-heading"><div><span class="eyebrow">02 / Persuade fate</span><h2 id="bend-title">Change a little. Change everything.</h2></div><div class="allowance"><span id="favours" aria-hidden="true">◆ ◆ ◆</span><span id="allowance">3 / 3 Favour</span></div></div>
-    <p id="bend-hint">After rolling, select a die. Each bend costs 1 Favour.</p>
-    <div class="actions">
-      <button id="turn" aria-disabled="true"><span class="action-icon" aria-hidden="true">↑</span><span><b>TURN</b><small id="turn-detail">Number +1 · 6 → 1</small></span></button>
-      <button id="tint" aria-disabled="true"><span class="action-icon" aria-hidden="true">◈</span><span><b>TINT</b><small id="tint-detail">Next colour in the cycle</small></span></button>
-      <button id="recast" aria-disabled="true"><span class="action-icon" aria-hidden="true">⟳</span><span><b>RECAST</b><small>Random number + colour</small></span></button>
-    </div>
-    <div id="colour-guide" class="colour-guide" aria-label="Tint order, wrapping back to Garnet"></div>
-    <p id="change" class="change">Three small chances to change your hand. Use any mix of bends.</p>
-  </section>
-  <footer><p>There is more beyond this table.</p><a href="https://brok3nbydesign.com/glass-and-fortune.html" target="_blank" rel="noopener noreferrer">Explore Glass & Fortune <span aria-hidden="true">↗</span></a><small>Independently created by Brok3n by Design.</small></footer>
-  <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-  <noscript><p class="noscript">Enable JavaScript to roll the dice. This teaser runs entirely in your browser.</p></noscript>
-</main>
-</body>
-</html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#100e0d">
+<meta name="description" content="Learn Glass & Fortune with a short guided hand, then play First Omen. Five glass dice. Three Favour. One Reading.">
+<title>Glass & Fortune — Learn to Play</title>
+<link rel="icon" href="data:,"><link rel="stylesheet" href="glass.css"><link rel="stylesheet" href="style.css">
+<script src="rules.js" defer></script><script src="engine.js" defer></script><script src="app.js" defer></script>
+</head><body><main id="toy" class="toy">
+<header class="topbar"><a class="brand" href="https://brok3nbydesign.com/glass-and-fortune.html" target="_blank" rel="noopener noreferrer"><img src="assets/logo.webp" alt="Glass & Fortune" width="1500" height="700"></a><div class="utilities"><span class="eyebrow">Website teaser</span><button id="sound" aria-pressed="true">Music on</button><button id="restart">Restart</button></div></header>
+<section id="welcome" class="welcome" aria-labelledby="welcome-title">
+<img class="welcome-morrow" src="assets/morrow.webp" alt="Morrow, your guide at the glass table" width="200" height="240">
+<p class="eyebrow">Take a seat at Morrow’s table</p><h1 id="welcome-title">Learn to persuade fate.</h1>
+<p class="lead">Make a hand from five glass dice.<br>Change a number. Change a colour. Then cast.</p>
+<ol class="welcome-steps"><li><b>Follow one practice hand</b><span>We’ll highlight exactly what to do.</span></li><li><b>Play your first Reading</b><span>Reach 80 points with three Favour per cast.</span></li></ol>
+<button id="start" class="primary">Start the guided hand <span aria-hidden="true">→</span></button>
+<button id="skip" class="text-button">I know how to play · Skip to Reading I</button>
+<p class="music-note" id="music-note">Game music starts when you begin. Mute it at any time.</p>
+</section>
+<section id="board" class="board" aria-label="Glass & Fortune table" hidden>
+<div class="reading-header"><div><p class="eyebrow" id="mode-label">Guided practice</p><h1 id="reading-title">Morrow stacked the glass.</h1></div><div class="total"><span>Reading score</span><strong><span id="total">0</span> <small>/ <span id="target">650</span></small></strong><span id="needed">650 needed to pass</span></div></div>
+<div id="progress" class="progress" role="progressbar" aria-label="Reading score" aria-valuemin="0" aria-valuemax="650" aria-valuenow="0"><i id="progress-fill"></i></div>
+<aside id="coach" class="coach" aria-labelledby="coach-title"><img src="assets/morrow.webp" alt="" width="56" height="68"><div><span id="step-label" class="eyebrow">Morrow’s lesson · 1 / 6</span><h2 id="coach-title">Select the Cobalt 2.</h2><p id="coach-copy"></p></div></aside>
+<div class="colour-section"><div class="colour-heading"><span class="eyebrow">Tint colour order</span><span id="colour-note">One step to the right. Sea Glass wraps to Garnet.</span></div><div id="colour-guide" class="colour-guide" aria-label="Tint colour order"></div></div>
+<div class="dice-zone"><div id="tray" class="tray" role="group" aria-label="Choose one die" aria-describedby="selection"></div><p id="selection" class="selection"></p><div class="arrange"><span>Arrange dice</span><button id="sort-number">1–6 · Number</button><button id="sort-colour">◆ · Colour</button></div></div>
+<div class="hand-row"><section class="hand" aria-label="Current hand preview"><span class="eyebrow" id="result-label">Current hand · not yet cast</span><h2 id="hand-name">Pair</h2><p id="explanation"></p><div class="hand-score"><strong id="score">51</strong><span>points <small id="delta"></small></span></div><p id="change"></p><details><summary>How this scores</summary><p id="formula"></p></details></section><div class="cast-controls"><button id="roll" class="primary" hidden>Roll the Dice</button><button id="cast" class="primary" aria-disabled="true">Cast This Hand <span aria-hidden="true">→</span></button><p id="cast-hint">Casting banks the score of all five dice.</p></div></div>
+<section class="bending" aria-label="Bend the selected die"><div class="resources"><div><span>Casts left</span><strong id="casts-left">1</strong></div><div class="favour"><span id="favours" aria-hidden="true">◆ ◆ ◆</span><strong id="allowance">3 / 3 Favour</strong></div></div><div class="actions"><button id="turn" aria-disabled="true"><b>TURN</b><span id="turn-detail">Raise number · 1 Favour</span></button><button id="tint" aria-disabled="true"><b>TINT</b><span id="tint-detail">Next colour · 1 Favour</span></button><button id="recast" aria-disabled="true"><b>RECAST</b><span>Reroll both · 1 Favour</span></button></div><p id="bend-hint">Select one die, then choose an action. Every action costs 1 Favour.</p></section>
+<div id="outcome" class="outcome" hidden><h2 id="outcome-title" tabindex="-1"></h2><p id="outcome-copy"></p><button id="next" class="primary">Play Reading I <span aria-hidden="true">→</span></button><button id="replay-lesson" class="text-button">Repeat the guided hand</button></div>
+<p class="table-rule"><b>Table rule</b> <span id="rule-text">Practise TURN and TINT; learn when RECAST is a gamble.</span></p><button id="help" class="text-button">Replay the tutorial</button>
+</section>
+<footer><a href="https://brok3nbydesign.com/glass-and-fortune.html" target="_blank" rel="noopener noreferrer">Explore the full Glass & Fortune project ↗</a><small>Website teaser · Independently created by Brok3n by Design.</small></footer>
+<p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+<noscript><p>Enable JavaScript to try this tutorial. It runs entirely in your browser.</p></noscript>
+</main></body></html>
