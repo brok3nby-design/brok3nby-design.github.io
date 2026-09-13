@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100e0d">
+  <meta name="description" content="A little fate at your fingertips. Roll five glass dice, bend a die, and discover your fortune. A Glass & Fortune website teaser.">
+  <title>Glass & Fortune — A little fate</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="glass.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="rules.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<main id="toy" class="toy">
+  <header class="topbar"><span class="eyebrow">Website teaser <span aria-hidden="true"> / </span> Open table</span><div class="utilities"><button id="sound" aria-pressed="false">Sound off</button><button id="restart">Restart</button></div></header>
+  <section class="intro" aria-labelledby="title">
+    <h1 id="title"><img src="assets/logo.webp" alt="Glass & Fortune" width="1500" height="700"></h1>
+    <p class="invitation">A little fate. A little persuasion.</p>
+    <p class="prompt">Roll. Bend one die. See what changes.</p>
+  </section>
+  <section class="table" aria-label="Five glass dice">
+    <div class="table-heading"><span class="eyebrow" id="phase">01 / Invite fortune</span><span id="round-note">Five dice. Your possibility.</span></div>
+    <div id="tray" class="tray" role="group" aria-label="Select one die to bend" aria-describedby="selection"></div>
+    <p id="selection" class="selection">Five pieces of glass. One small negotiation with fate.</p>
+    <button id="roll" class="primary"><span aria-hidden="true">⚄</span> <span id="roll-label">Roll the Dice</span><span aria-hidden="true">↗</span></button>
+    <p class="roll-note">A fresh round is always free.</p>
+  </section>
+  <section class="reading" aria-label="Your hand and score">
+    <div class="reading-main"><span class="eyebrow" id="result-kicker">Your fortune awaits</span><h2 id="hand-name">What will the glass reveal?</h2><p id="explanation">Numbers make the hand. Colours can make it extraordinary.</p><p id="formula" class="formula">Every die has a number, a colour, and a symbol.</p></div>
+    <div class="score"><span class="eyebrow">Hand score</span><strong id="score">—</strong><span id="delta">Roll to discover</span></div>
+  </section>
+  <section class="bending" aria-labelledby="bend-title">
+    <div class="bend-heading"><div><span class="eyebrow">02 / Persuade fate</span><h2 id="bend-title">Change a little. Change everything.</h2></div><div class="allowance"><span id="favours" aria-hidden="true">◆ ◆ ◆</span><span id="allowance">3 / 3 Favour</span></div></div>
+    <p id="bend-hint">After rolling, select a die. Each bend costs 1 Favour.</p>
+    <div class="actions">
+      <button id="turn" aria-disabled="true"><span class="action-icon" aria-hidden="true">↑</span><span><b>TURN</b><small id="turn-detail">Number +1 · 6 → 1</small></span></button>
+      <button id="tint" aria-disabled="true"><span class="action-icon" aria-hidden="true">◈</span><span><b>TINT</b><small id="tint-detail">Next colour in the cycle</small></span></button>
+      <button id="recast" aria-disabled="true"><span class="action-icon" aria-hidden="true">⟳</span><span><b>RECAST</b><small>Random number + colour</small></span></button>
+    </div>
+    <div id="colour-guide" class="colour-guide" aria-label="Tint order, wrapping back to Garnet"></div>
+    <p id="change" class="change">Three small chances to change your hand. Use any mix of bends.</p>
+  </section>
+  <footer><p>There is more beyond this table.</p><a href="https://brok3nbydesign.com/glass-and-fortune.html" target="_blank" rel="noopener noreferrer">Explore Glass & Fortune <span aria-hidden="true">↗</span></a><small>Independently created by Brok3n by Design.</small></footer>
+  <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+  <noscript><p class="noscript">Enable JavaScript to roll the dice. This teaser runs entirely in your browser.</p></noscript>
+</main>
+</body>
+</html>
