@@ -58,6 +58,8 @@
 .shelf-hook { font-size:1rem; font-weight:600; color:#edf5ef; margin:0 0 12px; }
 .project-shelf .shelf-description { color:#acb8b0; line-height:1.65; font-size:.95rem; margin:0 0 24px; }
 .shelf-card-body .btn { margin-top:auto; text-align:center; padding:11px 16px; }
+.shelf-teaser-link { display:block; width:fit-content; margin:10px auto 0; color:#b7c8bd; font-size:.84rem; text-underline-offset:3px; }
+.shelf-teaser-link:hover { color:var(--project-accent,#00ff9f); }
 .shelf-status { font: .72rem/1.5 monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--project-accent,#00ff9f); }
 .shelf-number { float:right; opacity:.55; }
 .shelf-note { padding:18px 0; color:#a9b8af; font-size:.9rem; }

@@ -89,6 +89,9 @@
     }
     .btn-primary { background: var(--accent); color: #000; }
     .btn-primary:hover { background: #00cc7a; }
+    .btn-secondary { background: transparent; border: 2px solid #444; color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
     .section { margin-bottom: 80px; }
     .section h2 {
       font-size: 2rem;
@@ -183,7 +186,10 @@
       <div class="status">IN DEVELOPMENT</div>
       <p class="genre">Pixel Art • Auction Strategy • Treasure Hunting</p>
       <p>Buy blind. Dig deep. Get rich. Read the clues inside each locker, outbid your rivals, and turn a van full of questionable junk into a resale empire.</p>
-      <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
+      <div class="hero-actions">
+        <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
+        <a href="teasers/bid-and-buried/" target="_blank" rel="noopener" class="btn btn-secondary">Try the Locker Teaser ↗</a>
+      </div>
     </div>
 
     <div class="section">
