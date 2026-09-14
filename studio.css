@@ -57,6 +57,8 @@
 .shelf-card-body { display:flex; flex-direction:column; flex:1; padding:22px 24px 0; }
 .project-shelf .shelf-card-body h3 { font-size:2rem; margin:10px 0; color:var(--project-accent,#00ff9f); }
 .shelf-hook { font-size:1rem; font-weight:600; color:#edf5ef; margin:0 0 12px; }
+.shelf-quick-play { width:fit-content; margin:-5px 0 12px; color:var(--project-accent,#00ff9f); font:700 .85rem/1.4 monospace; text-underline-offset:4px; }
+.shelf-quick-play:hover { color:#fff; }
 .project-shelf .shelf-description { color:#acb8b0; line-height:1.65; font-size:.95rem; margin:0 0 24px; }
 .shelf-card-body .btn { margin-top:auto; text-align:center; padding:11px 16px; }
 .shelf-teaser-link { display:block; width:fit-content; margin:10px auto 0; color:#b7c8bd; font-size:.84rem; text-underline-offset:3px; }
@@ -77,6 +79,8 @@
 .demo-card-body { display:flex; flex:1; flex-direction:column; padding:24px; }
 .demo-card-body .eyebrow { color:var(--demo-accent,#00ff9f); }
 .demo-card-body h3 { margin:6px 0 10px; color:#f1f5f2; font-size:1.8rem; }
+.demo-quick-link { width:fit-content; margin:-4px 0 14px; color:var(--demo-accent,#00ff9f); font:700 .9rem/1.4 monospace; text-underline-offset:4px; }
+.demo-quick-link:hover { color:#fff; }
 .demo-card-body p:not(.eyebrow) { margin:0 0 22px; color:#acb8b0; }
 .demo-card-body .btn { margin-top:auto; }
 .upcoming-section .section-intro { margin-bottom:26px; }
