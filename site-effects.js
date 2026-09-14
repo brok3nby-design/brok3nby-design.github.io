@@ -400,14 +400,14 @@
     button.setAttribute('aria-label', 'Back to top');
     button.innerHTML = '<span aria-hidden="true">&#8593;</span><span>TOP</span>';
 
-    let newsletterLink = null;
+    let playtestLink = null;
     const isHomePage = document.querySelector('.hero-buttons') && document.querySelector('#released');
     if (isHomePage) {
-      newsletterLink = document.createElement('a');
-      newsletterLink.className = 'b3d-newsletter-cta';
-      newsletterLink.href = 'follow-development.html';
-      newsletterLink.setAttribute('aria-label', 'Join the Brok3n by Design newsletter');
-      newsletterLink.innerHTML = '<span aria-hidden="true">&#9993;</span><span>JOIN FIELD NOTES</span>';
+      playtestLink = document.createElement('a');
+      playtestLink.className = 'b3d-playtest-cta';
+      playtestLink.href = 'glass-and-fortune.html#playtest-heading';
+      playtestLink.setAttribute('aria-label', 'Learn about upcoming Brok3n by Design playtests');
+      playtestLink.innerHTML = '<span class="b3d-playtest-dot" aria-hidden="true"></span><span>PLAYTESTERS WANTED</span>';
     }
 
     const updateVisibility = () => {
@@ -415,10 +415,10 @@
       button.classList.toggle('is-visible', isVisible);
       button.tabIndex = isVisible ? 0 : -1;
       button.setAttribute('aria-hidden', String(!isVisible));
-      if (newsletterLink) {
-        newsletterLink.classList.toggle('is-visible', isVisible);
-        newsletterLink.tabIndex = isVisible ? 0 : -1;
-        newsletterLink.setAttribute('aria-hidden', String(!isVisible));
+      if (playtestLink) {
+        playtestLink.classList.toggle('is-visible', isVisible);
+        playtestLink.tabIndex = isVisible ? 0 : -1;
+        playtestLink.setAttribute('aria-hidden', String(!isVisible));
       }
     };
 
@@ -426,7 +426,7 @@
       window.scrollTo({ top: 0, behavior: motionAllowed() ? 'smooth' : 'auto' });
     });
 
-    if (newsletterLink) document.body.appendChild(newsletterLink);
+    if (playtestLink) document.body.appendChild(playtestLink);
     document.body.appendChild(button);
     updateVisibility();
     window.addEventListener('scroll', updateVisibility, { passive: true });
