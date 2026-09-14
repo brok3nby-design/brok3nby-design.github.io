@@ -79,10 +79,10 @@
 .demo-card-body { display:flex; flex:1; flex-direction:column; padding:24px; }
 .demo-card-body .eyebrow { color:var(--demo-accent,#00ff9f); }
 .demo-card-body h3 { margin:6px 0 10px; color:#f1f5f2; font-size:1.8rem; }
-.demo-quick-link { width:fit-content; margin:-4px 0 14px; color:var(--demo-accent,#00ff9f); font:700 .9rem/1.4 monospace; text-underline-offset:4px; }
-.demo-quick-link:hover { color:#fff; }
 .demo-card-body p:not(.eyebrow) { margin:0 0 22px; color:#acb8b0; }
 .demo-card-body .btn { margin-top:auto; }
+.demo-card-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:auto; }
+.demo-card-actions .btn { flex:1 1 150px; margin-top:0; }
 .upcoming-section .section-intro { margin-bottom:26px; }
 .passport-banner { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px; padding:28px; border:1px solid #516749; background:linear-gradient(115deg,#20281b,#101613); border-radius:8px; }
 .passport-banner .passport-mark { font:3rem monospace; color:#d4e597; }
