@@ -4,15 +4,14 @@
 <meta charset="utf-8">
 <title>Bid &amp; Buried — website teaser</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A one-locker taste of Bid & Buried: look from the door, dig front to back, pick what fits in the van. Website teaser, independently created by Brok3n by Design.">
+<meta name="description" content="Join one auction, win the door off Eagle Ed, dig the unit out and look closer at what came home. A directed taste of Bid & Buried with the game's own voices and sounds. Website teaser, independently created by Brok3n by Design.">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="teaser.css">
 <script>
-  // ---- embed configuration ----
-  // parentOrigin: the exact origin of the studio page that embeds this teaser
-  // (for example "https://brok3nbydesign.com"). Leave it empty and the teaser
-  // never calls postMessage at all. Never "*". See README.md, "Embedding".
-  window.BB_TEASER_CONFIG = { parentOrigin: '' };
+  // ---- the teaser flag: the game's loaders read it and fetch only what this page ships ----
+  // parentOrigin: the exact origin of the studio page that embeds this teaser (for example
+  // "https://brok3nbydesign.com"). Empty means the teaser never calls postMessage. Never "*".
+  window.BB_TEASER = { parentOrigin: '' };
 </script>
 </head>
 <body>
@@ -20,41 +19,61 @@
   <header class="top">
     <div class="brand">
       <span class="logo">BID &amp; BURIED</span>
-      <span class="kicker">website teaser · one locker</span>
+      <span class="kicker">website teaser · one door, one afternoon</span>
     </div>
     <div class="tools" role="group" aria-label="Teaser controls">
-      <button type="button" class="btn small" id="btnNew">New locker</button>
+      <button type="button" class="btn small ghost" id="btnSound" aria-pressed="true">Sound: on</button>
+      <button type="button" class="btn small ghost" id="btnFull">Fullscreen</button>
       <button type="button" class="btn small ghost" id="btnRestart">Restart</button>
-      <button type="button" class="btn small ghost" id="btnSound" aria-pressed="false">Sound: off</button>
     </div>
   </header>
 
   <main class="main">
-    <section class="scene" aria-labelledby="sceneTitle">
-      <h1 id="sceneTitle" class="unit-title" tabindex="-1">Unit —</h1>
-      <div class="canvas-box">
-        <canvas id="scene" width="540" height="376" role="img" aria-label="Storage unit, door closed."></canvas>
-        <noscript><p class="noscript">This teaser needs JavaScript. See the full project at brok3nbydesign.com.</p></noscript>
-      </div>
-      <p class="status" id="status" aria-live="polite"></p>
-    </section>
-
-    <section class="panel" id="panel" aria-live="off">
-      <!-- the phase panel: filled by bb-teaser.js -->
-    </section>
+    <div class="stage" id="stage">
+      <canvas id="game" width="960" height="540" aria-label="Bid & Buried teaser: the game screen. The line under it says what to do next."></canvas>
+      <noscript><p class="noscript">This teaser needs JavaScript. See the full project at brok3nbydesign.com.</p></noscript>
+    </div>
+    <p class="coach" id="coach" aria-live="polite"></p>
+    <p class="hintline" id="hintline">Click or tap the buttons on the screen. M mutes, F is fullscreen, Escape backs out of a card.
+      <a href="#" id="skip">skip ahead ▸</a></p>
   </main>
 
   <footer class="foot">
     <p class="credit">Independently created by <a href="https://brok3nbydesign.com" rel="noopener">Brok3n by Design</a>.</p>
-    <p class="links">
-      <a href="https://brok3nbydesign.com/bid-and-buried.html" rel="noopener">The full project: Bid &amp; Buried →</a>
-      <span class="seed" id="seedLine"></span>
-    </p>
+    <p class="links"><a href="https://brok3nbydesign.com/bid-and-buried.html" rel="noopener" id="fullLink">The full project: Bid &amp; Buried →</a></p>
   </footer>
 </div>
 
-<script src="js/bb-core.js"></script>
-<script src="js/bb-teaser-gen.js"></script>
-<script src="js/bb-teaser.js"></script>
+<script src="sounds/manifest.js"></script>
+<script src="js/util.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/items.js"></script>
+<script src="js/games.js"></script>
+<script src="js/oddments.js"></script>
+<script src="js/sets.js"></script>
+<script src="js/town.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/gen.js"></script>
+<script src="js/memory.js"></script>
+<script src="js/lockerstories.js"></script>
+<script src="js/ending.js"></script>
+<script src="js/lines.js"></script>
+<script src="js/stories.js"></script>
+<script src="js/home.js"></script>
+<script src="js/clues.js"></script>
+<script src="js/codex.js"></script>
+<script src="js/tv.js"></script>
+<script src="js/npcintro.js"></script>
+<script src="js/ephemera.js"></script>
+<script src="js/firstmorning.js"></script>
+<script src="js/itemcard.js"></script>
+<script src="js/drivehome.js"></script>
+<script src="js/walkdown.js"></script>
+<script src="js/phone.js"></script>
+<script src="js/focus.js"></script>
+<script src="js/game.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/dev.js"></script>
+<script src="js/teaser.js"></script>
 </body>
 </html>

@@ -1,188 +1,147 @@
 # Bid & Buried — website teaser
 
-One storage locker, dug out front to back, in 30–90 seconds. A taste of *Bid & Buried*
-for the studio website. Independently created by Brok3n by Design.
+One door of one afternoon, played in the game itself. About ninety seconds.
 
 Full project: https://brok3nbydesign.com/bid-and-buried.html
 
-## What it is
+## What happens
 
-- **Look from the door.** The front row is lit, the rest is dark. Tap a thing in the
-  front row and the yard tells you what it knows (the game's own peek hints). The
-  office's line about the tenant and the door's own flavor line are the other clues.
-- **Buy it.** No rivals, no bidding: Buzz's opening number is the price. (The auction,
-  the rivals, the paper and the daily economy are the full game's.)
-- **Dig it out, front to back.** Anything behind something is blocked until that is
-  out of the way. Boxes, trunks, bags and lockboxes open as you pull them. Every find
-  gets its real name, its game value, its tier colour and one line: a fixed note (the
-  drawer things, the decade's things, named junk), what it did when you lifted it
-  (rattled, slid, heavier than it looks), or what a closer look turns up (a serial, a
-  year, initials, a ticket stub from a town). A legend or its fake stays "needs an
-  appraiser" until the end.
-- **What would you keep?** The van holds less than came out. Choose. Cash rides in your
-  pocket.
-- **The haul.** Paid, kept, cash, left for the scrap man, net. What kind of unit it was
-  and which front-row thing gave it away. New locker, restart this unit, or the link to
-  the full project.
+1. **Join the auction.** Buzz Kettleman has the gavel; Eagle Ed is on unit 901 at $175 and
+   his strip reads *sweating*. Buzz introduces him with his own recorded card, the way every
+   rival gets introduced once in the game.
+2. **Bid.** Ed holds. The count starts on you, with the roll under it and the heartbeat. At
+   "going once" Ed finds his nerve: the late-bid sting, "A late bid!", his recorded line.
+   Bid again. He is past his number and folds, in his own voice. Going once, going twice,
+   **SOLD** — the cheer, the gavel, the sting, and the room settles.
+3. **Dig it out.** The real dig screen: front to back, energy per pull, the LOAD IT / LEAVE IT
+   panel, the van bar. Something loose at the back gets the game's first-find ceremony (the
+   hum, the dust, the object rising, "This is why you dig", PICK IT UP).
+4. **Home.** The haul on the garage floor. LOOK CLOSER on the crate that came home: its
+   drawers (SEARCH), a rummage, and the false bottom. Every one of them pays here; in the game
+   they pay about one time in five.
+5. **The end card**, and the link to the game page.
 
-Everything in the unit comes from the game's own code: the 217-item catalogue, the nine
-owner archetypes and their pools, brands and conditions, containers and what they can
-hold, stacking, the sleeper-in-a-bag rule, named junk, the myth slot (a legend or a very
-good fake), the procedural pixel sprites. `js/bb-core.js` *is* eleven of the game's
-source files, concatenated, unedited. No item art files exist — the sprites are drawn
-by code.
+Everything on screen, and every sound, is the game's own: `js/` is the full game, unedited.
+`js/teaser.js` is the director: one seeded world (Dusty Flats, day 9), one unit dressed with
+the game's own parts (an epic thing loose in the back row, a crate whose LOOK CLOSER seeds
+are chosen so they land, cash in the front row), Ed's paddle scripted for the drama, and a
+line under the picture saying what to do next. The auction, the dig, the reveal and the
+closer look are the real screens with their real rules.
+
+The teaser reads nothing from and writes nothing to a real game's save: the game's storage
+adapter is swapped for memory, and it runs as a demo world (no saves, no arcs, no phone, no
+interruptions, no cold open).
 
 ## Files to upload
 
-Copy the whole `teaser/` folder to the site as `/teasers/bid-and-buried/`:
+Copy the whole `teaser/` folder to the site as `/teasers/bid-and-buried/`.
 
-| File | Raw | gzip | What |
-|---|---:|---:|---|
-| `index.html` | 2.5 KB | 1.1 KB | the page, and the one embed setting |
-| `teaser.css` | 9.6 KB | 2.8 KB | styles (the game's palette) |
-| `js/bb-core.js` | 464 KB | 139 KB | the game's catalogue, generator and sprites (built) |
-| `js/bb-teaser-gen.js` | 15 KB | 6 KB | the teaser's rules: plan, bounds, the van, the summary |
-| `js/bb-teaser.js` | 29 KB | 9 KB | the page: canvas, controls, phases, sound, messages |
-| `fonts/VT323.ttf` | 144 KB | 41 KB | the masthead face |
-| `fonts/Rubik-Regular.ttf` | 171 KB | 76 KB | the UI face |
-| `fonts/Rubik-Bold.ttf` | 172 KB | 77 KB | the UI face, bold |
-| **Total** | **~1.0 MB** | **~352 KB** | |
+| Folder | What | Size |
+|---|---|---:|
+| `index.html`, `teaser.css` | the page and the one embed setting | ~15 KB |
+| `js/` | the game (30 files) plus `teaser.js` | ~1.9 MB |
+| `fonts/` | VT323, Rubik regular and bold | ~0.5 MB |
+| `backgrounds/` | the auction, the dig, the garage | ~0.85 MB |
+| `npcs/`, `ui/` | Ed (portrait and cutout), Buzz (still and talking), the paddle and ticket | ~1.5 MB |
+| `sounds/` + `sounds/manifest.js` | Buzz's gavel lines and numbers, Ed's bank, the effects the run plays, one take each of three music cues, two ambiences | see the build's printout |
 
-Also in the folder, optional on the site: `README.md` (this file) and `cover.png`
-(1200×630, a representative image for the project page or a social card).
+`README.md` and `cover.png` (1200×630) are in the folder too; they are optional on the site.
 
-No server code, no account, no paid service, no external runtime, no secrets, no
-network requests beyond its own eight files. All paths are relative, so it works from
-any folder depth and from a plain `file://` double-click too. Make sure the host serves
-`.ttf` (any static host does) and, ideally, gzip or brotli for `.js`.
+Sounds and music load when they first play, not up front: the page is interactive after the
+scripts, the fonts and the auction background (about 3 MB), and the rest streams behind the
+sale. No server code, no account, no paid service, no external runtime, no secrets, no
+requests beyond the folder. Relative paths, any folder depth, `file://` works too.
 
-The first meaningful frame needs `index.html`, `teaser.css` and the three scripts; the
-canvas carries no text, so the fonts arrive whenever they arrive (`font-display: swap`).
+Make sure the host serves `.mp3`, `.wav`, `.ttf` and `.png/.jpg` with sensible types (any
+static host does) and gzip or brotli for `.js`.
 
 ## Controls
 
 | Input | What |
 |---|---|
-| Tap / click a thing in the locker picture | door phase: the yard's hint · dig phase: pull it |
-| Tap / click a thing in the list | the same, with the name spelled out; blocked things say so |
-| Tab / Shift+Tab, Enter or Space | every control is a real button; focus is a yellow ring |
-| **New locker** | a fresh unit at once (never the same arrangement twice running) |
-| **Restart** | this unit again, from the door |
-| **Sound: off/on** | a few synthesized clicks, thuds and chimes; off by default, remembered if storage allows |
-| **Buy it** → **Stop digging / Load the van** → **Drive home** | the three steps |
+| Click or tap the buttons on the screen | they are the game's own: BID, LOAD IT, PICK IT UP, LOOK CLOSER, SEARCH… |
+| Tab / Enter, or a controller | the game's focus ring moves between the same buttons |
+| **M** | mute (also the speaker icon top left, and the page's Sound button) |
+| **F** | fullscreen |
+| **Escape** | backs out of a card or a closer look |
+| **Sound / Fullscreen / Restart** (page buttons) | the page's own |
+| **skip ahead ▸** (under the picture) | jumps to the next beat, the honest way (the game does the work) |
 
-Hover only ever draws an outline; nothing is revealed by hover alone.
+Sound is on when you press JOIN THE AUCTION (that click is the browser's audio permission);
+"join with the sound off" starts muted. The yellow pulse on the canvas and the line under it
+are the director; everything else is the game.
 
-## Seeds (repeatable lockers)
+## Seeds
 
-Every page load rolls a fresh locker. For a repeatable one:
-
-```
-/teasers/bid-and-buried/?seed=4242
-/teasers/bid-and-buried/?seed=raccoon        (words are hashed)
-/teasers/bid-and-buried/?seed=4242&start=dig (skip the door: for screenshots and tests)
-```
-
-The footer's "locker #N" link is the current seed. The same seed gives the same unit,
-the same names and the same values, every time, on every machine.
+The world is seed 4242 every time, so the run is the same door for every visitor (the
+plants are chosen for it). `?seed=N` builds a different world — a different unit, different
+things in it — and the director dresses that one instead; the drama script is the same.
 
 ## Embedding
 
-The example (a title, a sensible starting height, no permissions needed — the teaser
-downloads nothing, plays no media files and asks for no device access):
-
 ```html
 <iframe src="/teasers/bid-and-buried/"
-        title="Bid &amp; Buried — website teaser: one storage locker to dig out"
-        width="100%" height="760" loading="lazy"
+        title="Bid &amp; Buried — website teaser: one auction, one dig, one closer look"
+        width="100%" height="700" loading="lazy" allow="fullscreen"
         referrerpolicy="strict-origin-when-cross-origin"
-        style="border:0;max-width:1040px;display:block;background:#0b0c12"></iframe>
+        style="border:0;max-width:1100px;display:block;background:#0b0c12"></iframe>
 ```
 
-Standalone works as is. Inside an iframe it works as is too — the messages below are
-optional and off until you switch them on.
+`allow="fullscreen"` is the only permission it wants (the F key and the page button); it
+downloads nothing and asks for no device. Standalone works as is; inside a frame it works as
+is. The canvas is 960×540 and scales to the frame's width, so give it at least 640 px of
+width; on a phone, landscape.
 
 ### Messages to the parent page (optional)
 
 In `index.html`, set the exact origin of the page that embeds the teaser:
 
 ```js
-window.BB_TEASER_CONFIG = { parentOrigin: 'https://brok3nbydesign.com' };
+window.BB_TEASER = { parentOrigin: 'https://brok3nbydesign.com' };
 ```
 
-With that set, and only when it is running inside a frame, the teaser calls
-`window.parent.postMessage(message, parentOrigin)` with that exact origin as the
-target (never `"*"`; a value of `"*"` or a non-origin is ignored and nothing is sent).
-It never reads or writes anything in the parent, and never sends user content —
-no answers, no text, no images. The schema, version 1:
+With that set, and only when it runs inside a frame, the teaser calls
+`window.parent.postMessage(message, parentOrigin)` with that exact origin (never `"*"`;
+`"*"` or anything that is not an origin is ignored and nothing is sent). It never reads or
+writes anything in the parent, and never sends user content. Schema, version 2:
 
 | `event` | when | fields |
 |---|---|---|
 | `ready` | the page has booted | `height` (document height in CSS px) |
 | `resize` | the document height changed | `height` |
-| `completed` | the visitor reached the haul summary | `seed` (number), `found` (count), `kept` (count) |
+| `started` | JOIN THE AUCTION was pressed | `seed` |
+| `completed` | the visitor reached the end card | `seed`, `pulls`, `finds` (counts) |
 
-Every message is `{ type: 'bb-teaser', v: 1, event, ...fields }`. The parent should
-check `event.origin` against the teaser's origin and `data.type === 'bb-teaser'`
-before acting; `tools/teaser_embed_test.html` in the game repo is a working listener
-that grows the iframe on `resize`. `completed` is the legitimate "they finished one
-locker" signal for analytics or a nudge to the project page. Nothing here is tied to
-a passport, account or progression system; none is live.
+Every message is `{ type: 'bb-teaser', v: 2, event, ...fields }`. Check `event.origin`
+against the teaser's origin and `data.type === 'bb-teaser'` before acting.
+`tools/teaser_embed_test.html` in the game repo is a working listener that grows the frame
+on `resize`. `completed` is the honest "they finished a door" signal; nothing here is tied to
+a passport, an account or the game's progression, and none of that is live.
 
-## Accessibility and behaviour
+## Behaviour and limits
 
-- Real `<button>`s everywhere, labelled; the locker picture is `role="img"` with a
-  description that follows the phase, and every item in it is also in a labelled list.
-- Visible focus (yellow ring), 14 px minimum text, a dark palette with the game's
-  contrast.
-- Works with touch, mouse and keyboard, from 320 px wide phones to desktop; one column
-  under 900 px, two above.
-- `prefers-reduced-motion`: no door roll, no lift-out, no card slide; the picture just
-  changes.
-- Animation runs only while something moves and stops when the tab is hidden; if the
-  browser stops delivering frames (a background tab, a hidden pane) a watchdog settles
-  the picture after 1.5 s so nothing is ever stuck.
-- Storage blocked (private mode, strict settings): everything works; only the sound
-  preference is not remembered.
-- Missing art cannot happen (sprites are code), but a sprite that fails to draw falls
-  back to the game's mystery crate rather than a hole.
-- Sound is Web Audio synthesis, created on the first click of the sound button; no
-  files, nothing autoplays.
-
-## Limits, on purpose
-
-- No auction, no rivals, no towns, no paper, no buyers, no days: it is a teaser.
-- One town's pricing (Dusty Flats, a day-9 door), with two other towns' habits
-  borrowed so a door is never dull: Salt Lick's sleeper in a bag, Marrow Creek's
-  named-junk rate.
-- Values are the game's appraised values; in the full game a plain thing prices
-  itself on arrival and anything with a claim on it (a legend, a maker's mark) needs
-  the appraiser, which is why a legend or its fake stays "needs an appraiser" until
-  the summary.
-- Locked boxes open on the tailgate here; in the game a locksmith costs $60 and a
-  day.
-- Media piles (tapes, records, shoeboxes of cartridges) come out as one thing with one
-  value; in the game you flip through them spine by spine.
-- The set pieces, the authored story doors, the provenance chains and the paper are
-  built across days, so they never roll in a single-locker teaser.
-- Up to 16 finds per unit (things on the floor plus what is in them); larger units
-  hand loose junk to the scrap man before the door opens.
+- Runs at the game's own 960×540; scales down to the frame. Under about 640 px wide the text
+  gets small: it is a desktop and landscape-phone teaser, not a portrait-phone one.
+- Keyboard: the game's focus ring (Tab, Enter, Escape) and a standard-mapping gamepad both work,
+  as in the game. The page's own buttons are real buttons.
+- Animation runs at the game's frame rate; a hidden tab keeps its clock (the game ticks a
+  hidden tab itself) so a sale finishes even if you look away.
+- Storage blocked: nothing changes; the teaser stores nothing anyway.
+- Missing art: the game draws its own stand-ins (Ed's card without his cutout is still a card).
+- No reduced-motion mode of its own: the game's MOTION setting is not exposed here; the run
+  has no motion clips, only the game's ordinary screen animation.
+- Not in the teaser: the paper, the yard, rivals other than Ed, the buyers, the day summary,
+  the second and third doors, the towns, the story arcs.
 
 ## Rebuilding
 
-`js/bb-core.js` is generated. When the game's catalogue changes:
-
 ```
-python tools/build_teaser.py            # bundle, copy fonts, run the checks, zip
+python tools/build_teaser.py            # copy the game, pick the art and sounds, write the manifest, run the checks, zip
 python tools/build_teaser.py --cover    # also render cover.png (needs playwright + Chrome/Edge)
-node tools/teaser_check.js --verbose    # the headless checks alone
+node tools/teaser_check.js --verbose    # the headless run alone
 ```
 
-The checks prove: fixed seeds regenerate identically; 600 units clear front to back
-and a blocked thing never pulls; 400 units in a row never repeat an arrangement and
-stay inside the find cap; every archetype and contract rolls; the van's empty and
-full states summarise; every sprite in the catalogue draws at every shade; a blocked
-storage write is swallowed.
-
-The teaser reads nothing from and writes nothing to the full game's save. It is a
-separate entry point with its own two files; the game's `index.html` is untouched.
+The checks play the whole run headless through the game's own functions: the card, the bid,
+the count, Ed's late paddle, the fold, the hammer and the money; the dig with the coach's own
+pull order, the reveal, the van; home, the drawers, the rummage, the false bottom; the end
+card; restart; and every skip. Rebuild whenever the game changes.
