@@ -1,6 +1,6 @@
 # Bid & Buried — website teaser
 
-One door of one afternoon, played in the game itself. About ninety seconds.
+One door of one afternoon, played in the game itself. About a minute.
 
 Full project: https://brok3nbydesign.com/bid-and-buried.html
 
@@ -12,21 +12,25 @@ Full project: https://brok3nbydesign.com/bid-and-buried.html
 2. **Bid.** Ed holds. The count starts on you, with the roll under it and the heartbeat. At
    "going once" Ed finds his nerve: the late-bid sting, "A late bid!", his recorded line.
    Bid again. He is past his number and folds, in his own voice. Going once, going twice,
-   **SOLD** — the cheer, the gavel, the sting, and the room settles.
+   **SOLD**: the cheer, the gavel, the sting, and the room settles.
 3. **Dig it out.** The real dig screen: front to back, energy per pull, the LOAD IT / LEAVE IT
-   panel, the van bar. Something loose at the back gets the game's first-find ceremony (the
-   hum, the dust, the object rising, "This is why you dig", PICK IT UP).
-4. **Home.** The haul on the garage floor. LOOK CLOSER on the crate that came home: its
-   drawers (SEARCH), a rummage, and the false bottom. Every one of them pays here; in the game
-   they pay about one time in five.
-5. **The end card**, and the link to the game page.
+   panel, the van bar. The crate up front, then the way to the back, where something loose
+   gets the game's first-find ceremony (the hum, the dust, the object rising, PICK IT UP).
+4. **LOAD UP & LEAVE.** The door comes down and that is the end of play.
+5. **The results screen.** Home, the haul gone through: every box opened, the crate's rummage
+   and false bottom tried, everything appraised, all done by the game's own functions in the
+   background. What came home with its values, what the evening found, and the call to action:
+   SEE THE GAME PAGE.
 
-Everything on screen, and every sound, is the game's own: `js/` is the full game, unedited.
-`js/teaser.js` is the director: one seeded world (Dusty Flats, day 9), one unit dressed with
-the game's own parts (an epic thing loose in the back row, a crate whose LOOK CLOSER seeds
-are chosen so they land, cash in the front row), Ed's paddle scripted for the drama, and a
-line under the picture saying what to do next. The auction, the dig, the reveal and the
-closer look are the real screens with their real rules.
+About a minute. Everything on screen, and every sound, is the game's own: `js/` is the full
+game, unedited. `js/teaser.js` is the director: one seeded world (Dusty Flats, day 9), one
+unit dressed with the game's own parts (an epic thing loose in the back row, a crate whose
+LOOK CLOSER seeds are chosen so they land, cash in the front row), Ed's paddle scripted for the
+drama, and a line under the picture saying what to do next. The auction, the dig and the
+reveal are the real screens with their real rules.
+
+Not in it, on purpose: the yard, the paper, the garage screen, the buyers, the second door,
+the next day. It is a teaser, not a demo.
 
 The teaser reads nothing from and writes nothing to a real game's save: the game's storage
 adapter is swapped for memory, and it runs as a demo world (no saves, no arcs, no phone, no
@@ -37,13 +41,14 @@ interruptions, no cold open).
 Copy the whole `teaser/` folder to the site as `/teasers/bid-and-buried/`.
 
 | Folder | What | Size |
-|---|---|---:|
+|---|---:|---:|
 | `index.html`, `teaser.css` | the page and the one embed setting | ~15 KB |
-| `js/` | the game (30 files) plus `teaser.js` | ~1.9 MB |
+| `js/` | the game (30 files) plus `teaser.js` | ~1.7 MB |
 | `fonts/` | VT323, Rubik regular and bold | ~0.5 MB |
-| `backgrounds/` | the auction, the dig, the garage | ~0.85 MB |
-| `npcs/`, `ui/` | Ed (portrait and cutout), Buzz (still and talking), the paddle and ticket | ~1.5 MB |
-| `sounds/` + `sounds/manifest.js` | Buzz's gavel lines and numbers, Ed's bank, the effects the run plays, one take each of three music cues, two ambiences | see the build's printout |
+| `backgrounds/` | the auction and the dig | ~0.6 MB |
+| `npcs/` | Ed (portrait and cutout), Buzz (still and talking) | ~3.3 MB |
+| `sounds/` + `sounds/manifest.js` | 54 files, one take each: Buzz's card for Ed, the chant and the numbers $200-$400, the count and the sale, Ed's bid and fold, the effects the run plays, two ambiences. No music | ~5 MB |
+| **Total** | | **~12 MB** on disk; about 3 MB before the first click, the rest streams as it plays |
 
 `README.md` and `cover.png` (1200×630) are in the folder too; they are optional on the site.
 
@@ -59,11 +64,11 @@ static host does) and gzip or brotli for `.js`.
 
 | Input | What |
 |---|---|
-| Click or tap the buttons on the screen | they are the game's own: BID, LOAD IT, PICK IT UP, LOOK CLOSER, SEARCH… |
+| Click or tap the buttons on the screen | they are the game's own: BID, LOAD IT, PICK IT UP, LOAD UP & LEAVE |
 | Tab / Enter, or a controller | the game's focus ring moves between the same buttons |
 | **M** | mute (also the speaker icon top left, and the page's Sound button) |
 | **F** | fullscreen |
-| **Escape** | backs out of a card or a closer look |
+| **Escape** | backs out of a card |
 | **Sound / Fullscreen / Restart** (page buttons) | the page's own |
 | **skip ahead ▸** (under the picture) | jumps to the next beat, the honest way (the game does the work) |
 
@@ -81,7 +86,7 @@ things in it — and the director dresses that one instead; the drama script is 
 
 ```html
 <iframe src="/teasers/bid-and-buried/"
-        title="Bid &amp; Buried — website teaser: one auction, one dig, one closer look"
+        title="Bid &amp; Buried — website teaser: one auction, one dig"
         width="100%" height="700" loading="lazy" allow="fullscreen"
         referrerpolicy="strict-origin-when-cross-origin"
         style="border:0;max-width:1100px;display:block;background:#0b0c12"></iframe>
@@ -110,7 +115,7 @@ writes anything in the parent, and never sends user content. Schema, version 2:
 | `ready` | the page has booted | `height` (document height in CSS px) |
 | `resize` | the document height changed | `height` |
 | `started` | JOIN THE AUCTION was pressed | `seed` |
-| `completed` | the visitor reached the end card | `seed`, `pulls`, `finds` (counts) |
+| `completed` | the visitor reached the results screen | `seed`, `pulls`, `finds` (counts) |
 
 Every message is `{ type: 'bb-teaser', v: 2, event, ...fields }`. Check `event.origin`
 against the teaser's origin and `data.type === 'bb-teaser'` before acting.
@@ -130,8 +135,8 @@ a passport, an account or the game's progression, and none of that is live.
 - Missing art: the game draws its own stand-ins (Ed's card without his cutout is still a card).
 - No reduced-motion mode of its own: the game's MOTION setting is not exposed here; the run
   has no motion clips, only the game's ordinary screen animation.
-- Not in the teaser: the paper, the yard, rivals other than Ed, the buyers, the day summary,
-  the second and third doors, the towns, the story arcs.
+- Not in the teaser: the paper, the yard, the garage, rivals other than Ed, the buyers, the
+  day summary, the second and third doors, the towns, the story arcs.
 
 ## Rebuilding
 
@@ -143,5 +148,5 @@ node tools/teaser_check.js --verbose    # the headless run alone
 
 The checks play the whole run headless through the game's own functions: the card, the bid,
 the count, Ed's late paddle, the fold, the hammer and the money; the dig with the coach's own
-pull order, the reveal, the van; home, the drawers, the rummage, the false bottom; the end
-card; restart; and every skip. Rebuild whenever the game changes.
+pull order, the reveal, the van; LOAD UP & LEAVE onto the results (the haul opened, gone
+through and appraised); restart; and every skip. Rebuild whenever the game changes.

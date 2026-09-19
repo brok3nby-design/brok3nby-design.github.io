@@ -54,7 +54,6 @@
     one('npcs/npc_ed.png', _npcImg, 'ed', true);
     one('npcs/npc_buzz.jpg', _npcImg, 'buzz', true);
     one('npcs/npc_buzz_talk.jpg', _npcImg, 'buzz_talk', true);
-    for (const f of AUC_UI_ART) { const stem = f.replace(/\.\w+$/, ''); one('ui/' + f, _uiImg, stem); }
     askCutout('ed', true);
   };
 
@@ -262,40 +261,19 @@
     }
     if (D.phase === 'dig') {
       if (G.mode === 'reveal') { say('This is why you dig. One in every unit, some days. PICK IT UP.'); ringOn(/^PICK IT UP$/); return; }
-      if (G.modal) { say('Leave the rest for the scrap man. LEAVE IT, and drive home.'); ringOn(/^LEAVE IT$/); return; }
       if (G.inspect) { say('You pulled it out. Load it in the van, or leave it on the floor.'); ringOn(/^LOAD/); return; }
       const left = G.cur.items.length;
       const trunk = G.cur.items.find((it) => it.uid === D.trunkUid);
       const epic = G.cur.items.find((it) => it.uid === D.epicUid);
       // the two plants have to come home: the trunk (front row) first, then the epic thing at the back
       const next = nextPull();
-      if (!next) { say(left ? 'That is plenty for one door. LOAD UP & LEAVE.' : 'Empty. LOAD UP & LEAVE.'); ringOn(/^LOAD UP/); return; }
+      if (!next) { say(left ? 'That is plenty for one door. The rest is for the scrap man. LOAD UP & LEAVE.' : 'Empty. LOAD UP & LEAVE.'); ringOn(/^LOAD UP/); return; }
       const name = BASE_BY_ID[next.base].name.toLowerCase();
       if (next === trunk) say(D.pulls ? 'The ' + name + ' next. Something shifts inside it.' : 'Your unit. Front stuff first: pull the ' + name + '.');
       else if (next === epic) say('The back row is clear. Something is down there. Pull it.');
       else if (trunk) say('The ' + name + ' is in the way of the ' + BASE_BY_ID[trunk.base].name.toLowerCase() + '. Front to back: it comes out first.');
       else say('Front to back: the ' + name + ' is in the way of whatever is at the back. Pull it.');
       ringRect(itemRect(next));
-      return;
-    }
-    if (D.phase === 'home') {
-      if (G.homeInspect) {
-        const HI = G.homeInspect;
-        if (D.finds > 0) { say('Found. That is the closer look: drawers, a rummage, a false bottom. Close this and the afternoon is done.', true); ringOn(/^DONE$|^CLOSE$|^BACK$/); return; }
-        const open = HI.zones.some((z) => z.kind === 'compartment' && !z.done);
-        if (open) { say('Hands in it. SEARCH the drawers first.'); ringOn(/^SEARCH$/); return; }
-        say('Now the thing itself: go through it, then feel around for a false bottom.');
-        ringOn(/^▸ /);
-        return;
-      }
-      if (D.finds > 0) { endTeaser(); return; }
-      const trunk = G.stash.find((it) => it.uid === D.trunkUid);
-      const view = sortedView(G.stash);
-      const idx = trunk ? view.indexOf(trunk) : -1;
-      if (trunk && G.sellSel >= 0 && view[G.sellSel] === trunk) { say('LOOK CLOSER. Everything you haul home gets gone through by hand.'); ringOn(/^(LOOK|OPEN|FLIP)/); return; }
-      say('Home. The haul is on the floor of the garage. Tap the ' + BASE_BY_ID[trunk ? trunk.base : 'trunk'].name.toLowerCase() + '.');
-      const cells = hotspots.filter((h) => h.w === 62 && h.h === 62);
-      ringRect(idx >= 0 && cells[idx] ? { x: cells[idx].x, y: cells[idx].y, w: 62, h: 62 } : null);
       return;
     }
   }
@@ -338,17 +316,40 @@
   };
   const _startDig = startDig;
   startDig = function () { _startDig(); if (D.active) { D.phase = 'dig'; D.pulls = 0; say(''); } };
-  // the drive home lands on the yard (next door, or home): the teaser has one door, so it is home
-  const _driveHome = driveHome;
-  driveHome = function () { _driveHome(); if (D.active && G.mode === 'yard') goHome(); };
-  const _goHome = goHome;
-  goHome = function () { _goHome(); if (D.active) { D.phase = 'home'; G.homeTab = 'stash'; G.sellSel = -1; } };
-  const _inspectZoneClick = inspectZoneClick;
-  inspectZoneClick = function (z) {
-    const f0 = G.dayStats ? G.dayStats.searchFinds : 0;
-    _inspectZoneClick(z);
-    if (D.active && G.dayStats && G.dayStats.searchFinds > f0) D.finds += G.dayStats.searchFinds - f0;
+  // LOAD UP & LEAVE is the end of play: no leave check, no yard, no garage. The game unloads the van
+  // and goes through the haul the way an evening at home would (every box opened, the trunk's rummage
+  // and false bottom tried, everything appraised), and the results screen shows what that turned up.
+  const _tryDriveHome = tryDriveHome, _driveHome = driveHome;
+  tryDriveHome = function () { if (!D.active || D.phase !== 'dig') return _tryDriveHome(); if (!G.inspect) driveHome(); };
+  driveHome = function () {
+    _driveHome();
+    if (!D.active || D.phase !== 'dig') return;
+    try { finishRun(); } catch (e) { D.results = D.results || { haul: [], lines: [], cash: 0, worth: 0, trunkName: 'the trunk' }; }
+    endTeaser();
   };
+  function finishRun() {
+    const wasMuted = _muted; _muted = true;       // the evening happens in a second, silently
+    try {
+      goHome();                                   // unload the van into the haul (the game's own)
+      const lines = [];
+      for (const it of G.stash.slice()) if (it.loot && !it.locked) for (const l of emptyContainer(it, true)) if (l.col !== PAL.dgray) lines.push(l);   // a box with nothing in it says nothing here
+      const trunk = G.stash.find((it) => it.uid === D.trunkUid);
+      if (trunk) {
+        openInspect(trunk);
+        const HI = G.homeInspect;
+        if (HI) {
+          for (const z of HI.zones) if (z.kind === 'rummage' || z.kind === 'falseBottom') inspectZoneClick(z);
+          for (const l of HI.log) if (l.find || l.col === PAL.yellow || l.col === PAL.green) lines.push({ text: l.text, col: l.col });
+        }
+        G.homeInspect = null;
+      }
+      for (const it of G.stash) if (!it.cash && !it.searched && !it.loot && !it.locked) searchItem(it);
+      D.finds = lines.length;
+      const haul = G.stash.filter((it) => !it.cash).slice().sort((a, b) => (b.val || 0) - (a.val || 0));
+      let worth = 0; for (const it of haul) worth += it.val || 0;
+      D.results = { haul, lines, cash: (G.dayStats && G.dayStats.cashFound) || 0, worth, trunkName: trunk ? dName(trunk) : 'the trunk' };
+    } finally { _muted = wasMuted; }
+  }
 
   // ================= the two cards of our own =================
   function drawStartCard() {
@@ -360,26 +361,54 @@
     T(W / 2, 168, 'buy blind. dig deep. get rich.', PAL.gray, 18, 'center');
     const lines = ['Dusty Flats, a Tuesday. Three units on the row and a crowd in lawn chairs.',
       'Eagle Ed has the notebook out on unit ' + (D.unit || '?') + '. So do you, sort of.',
-      'One door, start to finish: the bidding, the dig, and what the trunk had in it.'];
+      'One door: the bidding, the dig, and what came home.'];
     for (let i = 0; i < lines.length; i++) T(W / 2, 214 + i * 26, lines[i], PAL.paper, 17, 'center');
     button(W / 2 - 170, 318, 340, 52, 'JOIN THE AUCTION', () => begin(false), { col: PAL.dgreen, fs: 22 });
     button(W / 2 - 110, 384, 220, 34, 'join with the sound off', () => begin(true), { col: PAL.slate, fs: 14 });
-    T(W / 2, 440, 'about ninety seconds. the game\'s own voices and sounds.', PAL.dgray, 13, 'center');
+    T(W / 2, 440, 'about a minute. the game\'s own voices and sounds.', PAL.dgray, 13, 'center');
     T(W / 2, 460, 'website teaser - the full game is at brok3nbydesign.com', PAL.dgray, 13, 'center');
   }
   function drawEndCard() {
-    px(g, 0, 0, W, H, 'rgba(6,7,12,0.92)');
-    T(W / 2, 92, 'THAT WAS ONE DOOR.', PAL.yellow, 48, 'center', false, LOGO_FONT);
-    const paid = G.cur ? G.cur.paid : 0;
-    let worth = 0; for (const it of G.stash) worth += it.cash ? it.val : (it.val || 0);
-    const lines = ['Paid ' + fmt$(paid) + ' at the hammer. Hauled home ' + G.stash.length + ' things, worth about ' + fmt$(worth) + ' before anybody haggles.',
-      'The full game is sixty days of this: nine towns, twenty-one rivals who keep score,',
-      'a paper that gets things wrong on purpose, and a legend in every county that nobody tells the same way.'];
-    for (let i = 0; i < lines.length; i++) T(W / 2, 170 + i * 26, lines[i], PAL.paper, 16, 'center');
-    button(W / 2 - 190, 290, 380, 56, 'SEE THE GAME PAGE', () => { try { window.open(FULL, '_blank', 'noopener'); } catch (e) { location.href = FULL; } }, { col: PAL.orange, fs: 22 });
-    button(W / 2 - 130, 362, 260, 38, 'PLAY THE TEASER AGAIN', () => restart(), { col: PAL.slate, fs: 15 });
-    T(W / 2, 430, 'BID & BURIED  -  buy blind. dig deep. get rich.', PAL.gray, 15, 'center');
-    T(W / 2, 452, 'independently created by Brok3n by Design', PAL.dgray, 13, 'center');
+    px(g, 0, 0, W, H, '#0b0c12');
+    if (_bg.bg_dig && _bg.bg_dig[0]) { g.globalAlpha = 0.22; drawCoverBG(_bg.bg_dig[0], _bg.bg_dig[0].naturalWidth, _bg.bg_dig[0].naturalHeight); g.globalAlpha = 1; }
+    const R = D.results || { haul: [], lines: [], cash: 0, worth: 0, trunkName: 'the trunk' };
+    const paid = G.cur ? G.cur.paid || 0 : 0;
+    T(W / 2, 14, 'HOME. THE HAUL, GONE THROUGH.', PAL.yellow, 36, 'center', false, LOGO_FONT);
+    T(W / 2, 54, 'Paid ' + fmt$(paid) + ' at the hammer.   Cash out of the boxes: ' + fmt$(R.cash) + '.   The rest appraises at ' + fmt$(R.worth) + '.', PAL.paper, 15, 'center');
+    // left: what came home, biggest first
+    const gx = 34, gy = 90, cw = 116, ch = 88, cols = 4;
+    const shown = R.haul.slice(0, 12);
+    for (let i = 0; i < shown.length; i++) {
+      const it = shown[i], x = gx + (i % cols) * cw, y = gy + Math.floor(i / cols) * ch;
+      px(g, x, y, cw - 6, ch - 6, PAL.ink); px(g, x + 2, y + 2, cw - 10, ch - 10, '#1d1a2a');
+      const tier = tierOf(it.val || 0);
+      px(g, x + 2, y + 2, cw - 10, 3, tier.col);
+      const spr = getSprite(it.spr, it.pal, it.cond, it.uid);
+      const sc = Math.min(40 / spr.width, 40 / spr.height, 2), dw = Math.round(spr.width * sc), dh = Math.round(spr.height * sc);
+      g.drawImage(spr, x + Math.round((cw - 6 - dw) / 2), y + 6 + Math.round((40 - dh) / 2), dw, dh);
+      const nf = fitLines(dName(it), cw - 14, [12, 11], 2, true);
+      for (let k = 0; k < nf.lines.length; k++) T(x + (cw - 6) / 2, y + 47 + k * 12, nf.lines[k], PAL.white, nf.fs, 'center', true);
+      T(x + (cw - 6) / 2, y + 71, fmt$(it.val || 0), tier.col, 13, 'center', true);
+    }
+    if (R.haul.length > 12) T(gx, gy + 3 * ch + 2, '...and ' + (R.haul.length - 12) + ' more', PAL.dgray, 12);
+    // right: what the evening found
+    const rx = 516, rw = 412;
+    px(g, rx - 8, 86, rw + 16, 262, 'rgba(10,12,20,0.7)');
+    T(rx, 94, 'AT HOME, WITH THE LIGHT ON', PAL.gray, 12, 'left', true);
+    T(rx, 110, 'The ' + String(R.trunkName).toLowerCase().replace(/^(dusty|worn|clean|mint) /, '') + ', gone through:', PAL.white, 14);
+    let ly = 132;
+    for (const l of R.lines.slice(0, 8)) {
+      const f = fitLines(l.text, rw, [13, 12], 2, true);
+      for (const line of f.lines) { T(rx, ly, line, l.col || PAL.paper, f.fs); ly += 16; }
+      ly += 3;
+      if (ly > 330) break;
+    }
+    if (!R.lines.length) T(rx, ly, 'Nothing hidden this time. It happens.', PAL.dgray, 13);
+    T(W / 2, 360, 'That was one door of one afternoon. The full game is sixty of them: nine towns, twenty-one rivals who keep score,', PAL.paper, 14, 'center');
+    T(W / 2, 378, 'a paper that gets things wrong on purpose, and a legend in every county that nobody tells the same way.', PAL.paper, 14, 'center');
+    button(W / 2 - 190, 410, 380, 52, 'SEE THE GAME PAGE', () => { try { window.open(FULL, '_blank', 'noopener'); } catch (e) { location.href = FULL; } }, { col: PAL.orange, fs: 22 });
+    button(W / 2 - 110, 470, 220, 30, 'PLAY THE TEASER AGAIN', () => restart(), { col: PAL.slate, fs: 13 });
+    T(W / 2, 512, 'BID & BURIED  -  buy blind. dig deep. get rich.   |   independently created by Brok3n by Design', PAL.dgray, 12, 'center');
   }
 
   // ================= the run =================
@@ -406,7 +435,7 @@
     postHeight();
   }
   function restart() {
-    D.done = false; D.phase = 'start'; D.edN = 0; D.pulls = 0; D.finds = 0; D.coach = '';
+    D.done = false; D.phase = 'start'; D.edN = 0; D.pulls = 0; D.finds = 0; D.coach = ''; D.results = null;
     voFlush(true);
     G.auction = null; G.dig = null; G.inspect = null; G.homeInspect = null; G.modal = null; G.reveal = null; G.npcIntro = null;
     G.mode = 'teaserStart';
@@ -441,10 +470,9 @@
         if (G.mode === 'reveal') endReveal();
         if (G.inspect) decideInspect(true);
       }
-      driveHome(); if (G.mode !== 'sell') goHome();
+      tryDriveHome();
       return;
     }
-    if (D.phase === 'home') { G.homeInspect = null; G.modal = null; endTeaser(); }
   }
 
   // ---- the page's buttons ----
