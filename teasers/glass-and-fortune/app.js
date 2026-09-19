@@ -7,7 +7,11 @@
     start:['morrow_tutorial_welcome.mp3','tutorial_01_pair.mp3'],
     1:['tutorial_02_turn.mp3'], 2:['tutorial_03_tint.mp3'],
     3:['tutorial_04_full_house_choice.mp3'], 4:['tutorial_05_full_house_turn.mp3'],
-    5:['tutorial_04_cast.mp3'], 6:['tutorial_05_complete.mp3']
+    5:['tutorial_04_cast.mp3'], 6:['tutorial_05_complete.mp3','tutorial_07_playtest_invite.mp3']
+  };
+  const choiceCueAt={
+    'tutorial_01_pair.mp3':{step:0,seconds:5},
+    'tutorial_04_full_house_choice.mp3':{step:3,seconds:10.4}
   };
   const handVoice={
     SCATTERED:'hand_poor_omen.mp3',PAIR:'hand_pair.mp3',TWINPAIR:'hand_twin_pair.mp3',TRIAD:'hand_triad.mp3',STRAIGHT:'hand_glass_run.mp3',FULLHOUSE:'hand_full_house.mp3',FOURFOLD:'hand_fourfold.mp3',FLUSH:'hand_stained_flush.mp3',SPECTRUM:'hand_full_spectrum.mp3',FIVEFOLD:'hand_five_of_fortune.mp3',NOVA:'hand_perfect_fortune.mp3',SPECTRUM_FIVE:'hand_prismatic_five.mp3',STAINED_STRAIGHT:'hand_stained_run.mp3',SPECTRUM_STRAIGHT:'hand_spectrum_run.mp3',STAINED_FOURFOLD:'hand_stained_fourfold.mp3',SPECTRUM_FOURFOLD:'hand_spectrum_fourfold.mp3',STAINED_FULLHOUSE:'hand_stained_full_house.mp3',SPECTRUM_FULLHOUSE:'hand_spectrum_full_house.mp3',STAINED_TRIAD:'hand_stained_triad.mp3',SPECTRUM_TRIAD:'hand_spectrum_triad.mp3',STAINED_TWINPAIR:'hand_stained_twin_pair.mp3',SPECTRUM_TWINPAIR:'hand_spectrum_twin_pair.mp3',STAINED_PAIR:'hand_stained_pair.mp3',SPECTRUM_PAIR:'hand_spectrum_pair.mp3'
@@ -20,7 +24,7 @@
     ['Press TURN: 5 becomes 6.','A second 6 completes a Full House: three 3s and two 6s. All five colours are different too.'],
     ['Press Cast This Hand.','Your hand is worth 678 points. Casting banks all five dice together and completes this practice Reading.']
   ];
-  let frame=0,animation=null,sound=true,voiceEnabled=true,music=null,effect=null,voice=null,voiceQueue=[],voiceRevision=0;
+  let frame=0,animation=null,sound=true,voiceEnabled=true,music=null,effect=null,voice=null,voiceQueue=[],voiceRevision=0,choiceCueStep=-1;
   const diceButtons=Array.from({length:5},(_,i)=>{
     const el=document.createElement('button');el.className='die';el.type='button';
     el.innerHTML='<span class="sigil" aria-hidden="true"></span><span class="pip" aria-hidden="true"></span><span class="cname" aria-hidden="true"></span>';
@@ -54,14 +58,28 @@
   function guidedTarget(){
     return ({0:diceButtons[2],1:$('turn'),2:$('tint'),3:diceButtons[3],4:$('turn'),5:$('cast'),6:$('playtest-link')})[game.step];
   }
-  function focusNext(){if(game.mode==='tutorial'&&!game.busy)guidedTarget()?.focus({preventScroll:true});}
+  function focusNext(){
+    if(game.mode!=='tutorial'||game.busy)return;
+    if([0,3].includes(game.step)&&choiceCueStep!==game.step){$('coach-title').focus({preventScroll:true});return;}
+    guidedTarget()?.focus({preventScroll:true});
+  }
+  function revealChoiceCue(step=game.step){
+    if(game.mode!=='tutorial'||game.busy||game.step!==step||![0,3].includes(step))return;
+    choiceCueStep=step;render();guidedTarget()?.focus({preventScroll:true});
+  }
+  function armChoiceCue(file,audio){
+    const cue=choiceCueAt[file];if(!cue||game.step!==cue.step)return;
+    if(!audio){revealChoiceCue(cue.step);return;}
+    const reveal=()=>{if(audio.currentTime+.04<cue.seconds)return;audio.removeEventListener('timeupdate',reveal);revealChoiceCue(cue.step);};
+    audio.addEventListener('timeupdate',reveal);audio.addEventListener('ended',()=>revealChoiceCue(cue.step),{once:true});reveal();
+  }
   function updateChoiceMarker(){
     const marker=$('tutorial-choice-marker'),target=document.querySelector('.tutorial-choice');
     const hidden=!target||game.mode!=='tutorial'||game.busy;
     marker.toggleAttribute('hidden',hidden);
     if(hidden)return;
     const r=target.getBoundingClientRect();
-    Object.assign(marker.style,{left:`${r.left-7}px`,top:`${r.top-7}px`,width:`${r.width+14}px`,height:`${r.height+14}px`});
+    Object.assign(marker.style,{left:`${r.left-17}px`,top:`${r.top-17}px`,width:`${r.width+34}px`,height:`${r.height+34}px`});
   }
   addEventListener('resize',updateChoiceMarker);
   addEventListener('scroll',updateChoiceMarker,{passive:true});
@@ -126,7 +144,10 @@
     $('next').textContent=tutorial?'Play Reading I →':'Play First Omen Again →';
     $('help').hidden=tutorial||done;
     document.querySelectorAll('.tutorial-target,.tutorial-choice').forEach(el=>el.classList.remove('tutorial-target','tutorial-choice'));
-    if(tutorial&&!game.busy)guidedTarget()?.classList.add([0,3].includes(game.step)?'tutorial-choice':'tutorial-target');
+    if(tutorial&&!game.busy){
+      if([0,3].includes(game.step)){if(choiceCueStep===game.step)guidedTarget()?.classList.add('tutorial-choice');}
+      else guidedTarget()?.classList.add('tutorial-target');
+    }
     updateChoiceMarker();
   }
   function syncMusic(){
@@ -144,7 +165,7 @@
   }
   function speak(files){
     const queue=(Array.isArray(files)?files:[files]).filter(Boolean);
-    if(!voiceEnabled||document.hidden||!queue.length)return;
+    if(!voiceEnabled||document.hidden||!queue.length){if(game.mode==='tutorial'&&[0,3].includes(game.step))revealChoiceCue();return;}
     stopVoice();voiceQueue=queue;const revision=voiceRevision;
     const next=()=>{
       if(revision!==voiceRevision)return;
@@ -152,9 +173,11 @@
       if(!file){if(music&&sound)music.volume=.28;return;}
       voice=new Audio('assets/voice/'+file);voice.preload='auto';voice.volume=.92;
       if(music&&sound)music.volume=.06;
-      voice.addEventListener('ended',next,{once:true});
-      voice.addEventListener('error',next,{once:true});
-      voice.play().catch(()=>{if(music&&sound)music.volume=.28;});
+      let advanced=false;const advance=()=>{if(advanced)return;advanced=true;next();};
+      voice.addEventListener('playing',()=>armChoiceCue(file,voice),{once:true});
+      voice.addEventListener('ended',advance,{once:true});
+      voice.addEventListener('error',()=>{armChoiceCue(file,null);advance();},{once:true});
+      voice.play().catch(()=>{if(music&&sound)music.volume=.28;armChoiceCue(file,null);advance();});
     };
     next();
   }
@@ -197,7 +220,7 @@
     syncMusic();frame=requestAnimationFrame(tick);
   }
   function begin(mode){
-    clearAnimation();stopEffects();if(mode==='tutorial')game.tutorial();else game.reading();
+    clearAnimation();stopEffects();choiceCueStep=-1;if(mode==='tutorial')game.tutorial();else game.reading();
     render();syncMusic();if(mode==='tutorial'){focusNext();speak(tutorialVoice.start);}else{ $('roll').focus({preventScroll:true});speak('reading_01_first_omen.mp3'); }
     $('board').scrollIntoView({block:'start',behavior:'instant'});announce(coachText().join(' '));
   }
@@ -207,10 +230,10 @@
   click('roll',()=>animate(game.roll(),'roll'));click('cast',()=>animate(game.cast(),'cast'));
   for(const [id,kind] of [['turn','num'],['tint','hue'],['recast','full']])click(id,()=>animate(game.bend(kind),kind));
   for(const [id,kind] of [['sort-number','number'],['sort-colour','colour']])click(id,()=>{if(game.sort(kind)){render();announce('Dice arranged by '+kind+'.');}});
-  click('restart',()=>{clearAnimation();stopEffects();stopVoice();music?.pause();game.reset();render();$('start').focus();announce('Restarted. Begin the guided hand or skip to Reading I.');});
+  click('restart',()=>{clearAnimation();stopEffects();stopVoice();music?.pause();choiceCueStep=-1;game.reset();render();$('start').focus();announce('Restarted. Begin the guided hand or skip to Reading I.');});
   click('sound',()=>{sound=!sound;$('sound').setAttribute('aria-pressed',String(sound));$('sound').textContent=sound?'Music on':'Music off';$('music-note').textContent=sound?'Game music and Morrow start when you begin. Mute either at any time.':'Music is off. Morrow can still guide you.';if(!sound)stopEffects();syncMusic();});
-  click('voice',()=>{voiceEnabled=!voiceEnabled;$('voice').setAttribute('aria-pressed',String(voiceEnabled));$('voice').textContent=voiceEnabled?'Morrow on':'Morrow off';if(!voiceEnabled)stopVoice();});
-  document.addEventListener('visibilitychange',()=>{document.documentElement.classList.toggle('paused',document.hidden);cancelAnimationFrame(frame);if(animation)animation.last=null;if(document.hidden){music?.pause();stopEffects();stopVoice();}else{if(game.mode!=='welcome')syncMusic();if(animation)frame=requestAnimationFrame(tick);}});
+  click('voice',()=>{voiceEnabled=!voiceEnabled;$('voice').setAttribute('aria-pressed',String(voiceEnabled));$('voice').textContent=voiceEnabled?'Morrow on':'Morrow off';if(!voiceEnabled){stopVoice();revealChoiceCue();}});
+  document.addEventListener('visibilitychange',()=>{document.documentElement.classList.toggle('paused',document.hidden);cancelAnimationFrame(frame);if(animation)animation.last=null;if(document.hidden){music?.pause();stopEffects();stopVoice();}else{if(game.mode!=='welcome')syncMusic();if(animation)frame=requestAnimationFrame(tick);revealChoiceCue();}});
   motion.addEventListener('change',()=>{if(motion.matches){diceButtons.forEach(el=>el.classList.remove('rolling','pulse'));if(animation)animation.duration=280;}});
   render();
 })();
