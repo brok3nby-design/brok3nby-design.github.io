@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WRFM Radio — After Hours | Brok3n by Design</title>
-  <meta name="description" content="WRFM Radio is a synchronized live station: every listener hears the same song at the same second. Two channels, 61 songs, 25 fictional bands, a sharp-tongued host in Vera Lang, a listener leaderboard and 50+ achievements. Free in your browser.">
+  <meta name="description" content="WRFM Radio is a synchronized live station: every listener hears the same song at the same second. Two channels, 61 songs, 25 fictional bands, a sharp-tongued host in Vera Lang, satirical sponsors, late-night callers, a secret phone, a listener leaderboard and 100 achievements. Free in your browser.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
   <meta property="og:type" content="website">
   <meta property="og:title" content="WRFM Radio — After Hours | Brok3n by Design">
-  <meta property="og:description" content="One live station, one shared timeline. Tune in with Vera Lang, climb the listener leaderboard, and unlock 50+ achievements.">
+  <meta property="og:description" content="One live station, one shared timeline. Tune in with Vera Lang, meet her callers and sponsors, and unlock 100 achievements.">
   <meta property="og:url" content="https://brok3nbydesign.com/wrfm.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/wrfm.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -569,6 +569,294 @@
       outline: 3px solid var(--accent);
       outline-offset: 4px;
     }
+
+    /* ---- On-air clips: Meet the Station + More From the Tape ---- */
+    .wrfm-clips,
+    .wrfm-clips * {
+      box-sizing: border-box;
+    }
+    .wrfm-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .wrfm-poster {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid #463034;
+      border-radius: 12px;
+      background: #12080a;
+      box-shadow: 0 14px 45px rgba(0,0,0,.45);
+      container-type: inline-size;
+    }
+    .wrfm-poster img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .wrfm-poster-banner {
+      position: absolute;
+      left: 33%;
+      right: 27%;
+      top: 84.5%;
+      height: 8%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b2614;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 14px;
+      font-size: 2.6cqw;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .wrfm-intro-copy p {
+      margin: 14px 0 0;
+      color: #c8c8c8;
+      font-size: 1.08rem;
+    }
+    .wrfm-intro-copy .wrfm-small {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .wrfm-play-all {
+      margin-top: 22px;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+    .wrfm-play-all .wrfm-dim {
+      margin-left: 6px;
+      opacity: .6;
+      font-weight: 500;
+    }
+    .wrfm-support {
+      margin: 14px 0 0;
+      padding: 10px 14px;
+      border: 1px solid #5b343b;
+      border-radius: 8px;
+      color: #ffb3bc;
+      font-size: .92rem;
+    }
+    .wrfm-reel {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .wrfm-clip {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) 230px;
+      gap: 6px 20px;
+      align-items: start;
+      padding: 20px 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .wrfm-clip.is-playing,
+    .wrfm-signoff.is-playing {
+      border-color: rgba(0, 255, 159, .55);
+      box-shadow: 0 0 24px rgba(0, 255, 159, .12);
+    }
+    .wrfm-num {
+      color: var(--accent);
+      font-family: 'VT323', monospace;
+      font-size: 2.6rem;
+      line-height: 1;
+    }
+    .wrfm-kicker {
+      margin: 0;
+      color: #ff7181;
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .wrfm-clip h3 {
+      margin: 2px 0 8px;
+      color: var(--text);
+      font-size: 1.2rem;
+    }
+    .wrfm-quote {
+      margin: 0;
+      color: #dddddd;
+      font-style: italic;
+    }
+    .wrfm-context {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .wrfm-player {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      grid-template-areas:
+        "btn bar"
+        "btn time";
+      gap: 6px 12px;
+      align-items: center;
+      padding-top: 4px;
+    }
+    .wrfm-play {
+      grid-area: btn;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--accent);
+      font: 600 1rem/1 'Inter', system-ui, sans-serif;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+    }
+    .wrfm-play:hover,
+    .wrfm-play[aria-pressed="true"] {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 16px rgba(0, 255, 159, .4);
+    }
+    .wrfm-bar {
+      grid-area: bar;
+      height: 4px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #2a2a2a;
+    }
+    .wrfm-bar i {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+    }
+    .wrfm-time {
+      grid-area: time;
+      color: var(--muted);
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .wrfm-transcript {
+      margin-top: 10px;
+      font-size: .92rem;
+    }
+    .wrfm-transcript summary {
+      width: fit-content;
+      cursor: pointer;
+      color: #bbbbbb;
+      font-size: .78rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .wrfm-transcript summary:hover {
+      color: var(--accent);
+    }
+    .wrfm-transcript p {
+      margin: 8px 0 0;
+      color: #bdbdbd;
+    }
+    .wrfm-transcript b {
+      margin-right: 6px;
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+    }
+    .wrfm-cue {
+      color: #808080;
+      font-size: .88em;
+    }
+    .wrfm-signoff {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 10px 20px;
+      align-items: center;
+      margin-top: 12px;
+      padding: 18px 22px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 10px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .wrfm-signoff .wrfm-quote {
+      margin-top: 4px;
+    }
+    .wrfm-lede {
+      max-width: 760px;
+      margin: -6px 0 24px;
+      color: #c8c8c8;
+    }
+    .wrfm-groups {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    }
+    .wrfm-group-note {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .wrfm-mini {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    .wrfm-mini .wrfm-play {
+      grid-area: auto;
+    }
+    .wrfm-mini-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .wrfm-mini.is-playing .wrfm-mini-title {
+      color: var(--accent);
+    }
+    .wrfm-mini .wrfm-quote {
+      margin: 4px 0 10px;
+      color: #cfcfcf;
+    }
+    .wrfm-mini .wrfm-transcript {
+      margin-top: 6px;
+    }
+    @media (max-width: 760px) {
+      .wrfm-intro {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .wrfm-clip {
+        grid-template-columns: 38px minmax(0, 1fr);
+        padding: 18px 16px;
+      }
+      .wrfm-num {
+        font-size: 2rem;
+      }
+      .wrfm-clip .wrfm-player {
+        grid-column: 1 / -1;
+      }
+      .wrfm-signoff {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+    }
   </style>
   <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
   <link rel="stylesheet" href="studio.css">
@@ -605,6 +893,7 @@
       <p>One station. One shared timeline. Everyone listening hears the same song at the same moment &mdash; with no server deciding it, just the clock.</p>
       <div class="hero-actions">
         <a href="#live-station" class="btn btn-primary">● TUNE IN LIVE</a>
+        <a href="#meet-the-station" class="btn btn-secondary">▶&#xFE0E; Hear the Station</a>
         <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener" class="btn btn-secondary">Open Full Screen</a>
         <a href="#build-status" class="btn btn-secondary">What&rsquo;s Built &amp; What&rsquo;s Left</a>
         <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener" class="btn btn-secondary">Follow Updates</a>
@@ -613,9 +902,156 @@
 
     <div class="section">
       <h2>Overview</h2><div class="studio-card"><h3>Keep the station with you</h3><p>Host Vera Lang has the microphone. Open the station in its own tab to keep listening while you explore the studio website.</p><a class="studio-button" href="https://brok3nbydesign.com/wrfm/" target="_blank" rel="noopener">Open the radio in a new tab ↗</a></div>
-      <p>WRFM is a playable online radio station running on one shared timeline. Everyone listening hears the same broadcast at the same moment, with two channels, fictional bands, station host Vera Lang, listener challenges, and a community leaderboard.</p>
+      <p>WRFM is a playable online radio station running on one shared timeline. Everyone listening hears the same broadcast at the same moment, with two channels, fictional bands, station host Vera Lang, satirical sponsors, late-night callers, listener challenges, and a community leaderboard.</p>
       <div class="b3d-tldr"><strong>TL;DR:</strong> A playable online radio station where everyone hears the same broadcast. Tune into two channels, meet the host and fictional bands, or chase listener challenges with the community.</div>
     </div>
+
+    <section class="section wrfm-clips" id="meet-the-station" aria-labelledby="meet-heading">
+      <h2 id="meet-heading">Meet the Station</h2>
+      <div class="wrfm-intro">
+        <figure class="wrfm-poster">
+          <img src="images/wrfm/wrfm_keyart.jpg" alt="WRFM key art: a jazz quartet playing under an ON AIR sign in a 1950s radio studio" width="1536" height="1024" loading="lazy">
+          <figcaption class="wrfm-poster-banner" aria-hidden="true">Tune in · 97.1</figcaption>
+        </figure>
+        <div class="wrfm-intro-copy">
+          <div class="on-air-label"><span class="on-air-dot" aria-hidden="true"></span> Five clips from the broadcast</div>
+          <p>The host, a sponsor that shouldn&rsquo;t exist, a late-night caller, an office regular, and the phone nobody tells you about. It&rsquo;s the same tape that plays on air.</p>
+          <button type="button" class="btn btn-primary wrfm-play-all" aria-pressed="false">▶&#xFE0E; Play all five <span class="wrfm-dim">2:42</span></button>
+          <p class="wrfm-small">Each clip has a transcript underneath.</p>
+          <p class="wrfm-support" hidden>Your browser can&rsquo;t play these clips. They work in current Chrome, Edge, Firefox and Safari (18.4 or newer).</p>
+        </div>
+      </div>
+
+      <ol class="wrfm-reel">
+        <li class="wrfm-clip" data-clip-box="host">
+          <span class="wrfm-num" aria-hidden="true">01</span>
+          <div>
+            <p class="wrfm-kicker">The host</p>
+            <h3>Vera Lang signs on</h3>
+            <p class="wrfm-quote">&ldquo;If you&rsquo;re hearing this, it means the office is quiet and you&rsquo;re still here. That&rsquo;s not a mistake.&rdquo;</p>
+            <p class="wrfm-context">Vera has the microphone, and she notices who is still at their desk.</p>
+            <details class="wrfm-transcript">
+              <summary>Transcript</summary>
+              <p><b>VERA</b> If you&rsquo;re hearing this, it means the office is quiet and you&rsquo;re still here. That&rsquo;s not a mistake. This is WRFM. I&rsquo;m Vera Lang. Let&rsquo;s take the night one piece at a time.</p>
+            </details>
+          </div>
+          <div class="wrfm-player">
+            <button type="button" class="wrfm-play" data-clip="host" aria-pressed="false" aria-label="Play: Vera Lang signs on">▶&#xFE0E;</button>
+            <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+            <span class="wrfm-time" data-time="host">0:17</span>
+          </div>
+        </li>
+
+        <li class="wrfm-clip" data-clip-box="sponsor">
+          <span class="wrfm-num" aria-hidden="true">02</span>
+          <div>
+            <p class="wrfm-kicker">The sponsors</p>
+            <h3>Rubber Duck Rental</h3>
+            <p class="wrfm-quote">&ldquo;Rubber Duck Rental! Rubber Duck Rental! It listens. You debug. That&rsquo;s the deal.&rdquo;</p>
+            <p class="wrfm-context">One of 22 sponsors that absolutely should not exist, and the only one with a fully sung jingle. Duck included.</p>
+            <details class="wrfm-transcript">
+              <summary>Transcript</summary>
+              <p><b>JINGLE</b> When your function won&rsquo;t run / And your logic&rsquo;s come undone &mdash; / Don&rsquo;t pick up the phone <span class="wrfm-cue">(quack!)</span> / Don&rsquo;t send up a flare! / Just rent-a-duck today, / We&rsquo;ll ship it right away, / Yellow, small, and bright <span class="wrfm-cue">(quack!)</span> / It really doesn&rsquo;t care! / Explain your bug to feathers, / Talk your tests out loud, / The duck will never judge you &mdash; / (though the duck is not impressed.) / Rubber Duck Rental! <span class="wrfm-cue">(squeak!)</span> / Rubber Duck Rental! / It listens. You debug. That&rsquo;s the deal.</p>
+            </details>
+          </div>
+          <div class="wrfm-player">
+            <button type="button" class="wrfm-play" data-clip="sponsor" aria-pressed="false" aria-label="Play: Rubber Duck Rental">▶&#xFE0E;</button>
+            <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+            <span class="wrfm-time" data-time="sponsor">0:30</span>
+          </div>
+        </li>
+
+        <li class="wrfm-clip" data-clip-box="caller">
+          <span class="wrfm-num" aria-hidden="true">03</span>
+          <div>
+            <p class="wrfm-kicker">The callers</p>
+            <h3>After Hours Intake</h3>
+            <p class="wrfm-quote">&ldquo;I created a repository interface, a service class, a DTO, a mapper, a configuration bean, three annotations, and something called a factory.&rdquo; &ldquo;For one value.&rdquo;</p>
+            <p class="wrfm-context">Late at night the lines open, and Vera takes confessions. On desktop, the transcript slides onto your screen while the call is on air.</p>
+            <details class="wrfm-transcript">
+              <summary>Transcript</summary>
+              <p><b>VERA</b> You&rsquo;re on the line. What&rsquo;s troubling you tonight?</p>
+              <p><b>CALLER</b> I needed to read one value from a database.</p>
+              <p><b>VERA</b> And how did that proceed.</p>
+              <p><b>CALLER</b> I created a repository interface, a service class, a DTO, a mapper, a configuration bean, three annotations, and something called a factory.</p>
+              <p><b>VERA</b> For one value.</p>
+              <p><b>CALLER</b> &hellip;for one value.</p>
+              <p><b>VERA</b> Enterprise environments sometimes require ceremonial preparation before touching the data.</p>
+              <p><b>CALLER</b> The method is six lines. The structure is four hundred.</p>
+              <p><b>VERA</b> The station confirms this is considered normal atmospheric pressure in large Java systems.</p>
+              <p><b>CALLER</b> That&rsquo;s&hellip; comforting?</p>
+              <p><b>VERA</b> Comfort is not guaranteed. Stability, however, usually is.</p>
+            </details>
+          </div>
+          <div class="wrfm-player">
+            <button type="button" class="wrfm-play" data-clip="caller" aria-pressed="false" aria-label="Play: After Hours Intake">▶&#xFE0E;</button>
+            <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+            <span class="wrfm-time" data-time="caller">1:00</span>
+          </div>
+        </li>
+
+        <li class="wrfm-clip" data-clip-box="regular">
+          <span class="wrfm-num" aria-hidden="true">04</span>
+          <div>
+            <p class="wrfm-kicker">The regulars</p>
+            <h3>Mitch from IT</h3>
+            <p class="wrfm-quote">&ldquo;I am the radio, Mitch.&rdquo; &ldquo;Have you tried turning the radio off and on again.&rdquo;</p>
+            <p class="wrfm-context">The office phones the station. Mitch works in IT, and he is trying his best.</p>
+            <details class="wrfm-transcript">
+              <summary>Transcript</summary>
+              <p><span class="wrfm-cue">[Phone rings. A mechanical keyboard clatters in the background.]</span></p>
+              <p><b>MITCH</b> IT, Mitch speaking, have you tried turning it off and on again.</p>
+              <p><b>VERA</b> Mitch. You called <em>me</em>.</p>
+              <p><b>MITCH</b> Right, well, the issue could be on your end.</p>
+              <p><b>VERA</b> I am the radio, Mitch.</p>
+              <p><b>MITCH</b> Have you tried turning the radio off and on again.</p>
+              <p><b>VERA</b> <span class="wrfm-cue">(long pause)</span> Mitch. I will.</p>
+              <p><b>MITCH</b> Thank you for choosing IT.</p>
+            </details>
+          </div>
+          <div class="wrfm-player">
+            <button type="button" class="wrfm-play" data-clip="regular" aria-pressed="false" aria-label="Play: Mitch from IT">▶&#xFE0E;</button>
+            <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+            <span class="wrfm-time" data-time="regular">0:31</span>
+          </div>
+        </li>
+
+        <li class="wrfm-clip" data-clip-box="secret">
+          <span class="wrfm-num" aria-hidden="true">05</span>
+          <div>
+            <p class="wrfm-kicker">The secret</p>
+            <h3>The phone nobody tells you about</h3>
+            <p class="wrfm-quote">&ldquo;There&rsquo;s a phone in this station, sweetheart. I&rsquo;m not going to tell you where.&rdquo;</p>
+            <p class="wrfm-context">Vera drops hints on air. Find the WRFM Line, dial 9&#8209;7&#8209;1 while the lines are open, and she picks up.</p>
+            <details class="wrfm-transcript">
+              <summary>Transcript</summary>
+              <p><b>VERA, ON AIR</b> There&rsquo;s a phone in this station, sweetheart. I&rsquo;m not going to tell you where. I don&rsquo;t have to. You&rsquo;ll find it. Most people do. Eventually.</p>
+              <p><span class="wrfm-cue">[Later, on the WRFM Line: dial 9-7-1.]</span></p>
+              <p><b>VERA</b> You called. Not many do. What can I do for you?</p>
+              <p><span class="wrfm-cue">[You pick &ldquo;Tell me something weird.&rdquo;]</span></p>
+              <p><b>VERA</b> Studio B has been locked since 1974. We don&rsquo;t talk about Studio B.</p>
+            </details>
+          </div>
+          <div class="wrfm-player">
+            <button type="button" class="wrfm-play" data-clip="secret" aria-pressed="false" aria-label="Play: The phone nobody tells you about">▶&#xFE0E;</button>
+            <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+            <span class="wrfm-time" data-time="secret">0:25</span>
+          </div>
+        </li>
+      </ol>
+
+      <div class="wrfm-signoff" data-clip-box="signoff">
+        <div>
+          <p class="wrfm-kicker">Vera signs off</p>
+          <p class="wrfm-quote">&ldquo;You&rsquo;re still here. Either you care&hellip; or you&rsquo;re avoiding something. WRFM supports both.&rdquo;</p>
+        </div>
+        <div class="wrfm-player">
+          <button type="button" class="wrfm-play" data-clip="signoff" aria-pressed="false" aria-label="Play: Vera signs off">▶&#xFE0E;</button>
+          <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+          <span class="wrfm-time" data-time="signoff">0:10</span>
+        </div>
+      </div>
+    </section>
 
     <section class="section live-station" id="live-station" aria-labelledby="live-station-heading">
       <div class="on-air-label"><span class="on-air-dot" aria-hidden="true"></span> On air · synchronized worldwide</div>
@@ -633,6 +1069,148 @@
         </iframe>
       </div>
       <p class="station-note">Want the full-screen experience? <a href="https://brok3nby-design.github.io/wrfm/" target="_blank" rel="noopener">Open WRFM in a new tab →</a></p>
+    </section>
+
+    <section class="section wrfm-clips" id="more-from-the-tape" aria-labelledby="tape-heading">
+      <h2 id="tape-heading">More From the Tape</h2>
+      <p class="wrfm-lede">A few more clips, grouped the way the station uses them. If the live player above is on, pause it first. These play on top of it.</p>
+      <div class="features-grid wrfm-groups">
+        <div class="feature-card">
+          <h3>Sponsors</h3>
+          <p class="wrfm-group-note">When an ad is on air, the sponsor&rsquo;s dossier opens on screen, fine print and all.</p>
+          <div class="wrfm-mini" data-clip-box="debug">
+            <button type="button" class="wrfm-play" data-clip="debug" aria-pressed="false" aria-label="Play: Debug Investigator, Martin Hale">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">Debug Investigator: Martin Hale <span class="wrfm-time" data-time="debug">0:51</span></p>
+              <p class="wrfm-quote">&ldquo;I handle the ones that only appear when your boss is watching.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><b>VERA</b> If your screen currently contains more warnings than actual content, this next sponsor may be useful.</p>
+                <p><b>SPOT</b> Debug Investigator, Martin Hale. Some bugs happen all the time. I handle the ones that only appear when your boss is watching. I&rsquo;m Martin Hale, Debug Investigator. If your software runs perfectly for weeks&hellip; then crashes during the demo&hellip; If the error disappears the moment you open the console&hellip; If adding one console.log mysteriously fixes everything&hellip; My office tracks the behavior and questions the code. Debug Investigation Services. Because the bug knows you&rsquo;re nervous.</p>
+              </details>
+            </div>
+          </div>
+          <div class="wrfm-mini" data-clip-box="friday">
+            <button type="button" class="wrfm-play" data-clip="friday" aria-pressed="false" aria-label="Play: Friday Deployment Defense Fund">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">Friday Deployment Defense Fund <span class="wrfm-time" data-time="friday">0:39</span></p>
+              <p class="wrfm-quote">&ldquo;Pushed on Friday? Feeling dread? Weekend panic straight ahead?&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><b>SPOT</b> Pushed on Friday? Feeling dread? Weekend panic straight ahead? Lawyers ready, standing by &mdash; Friday Defense will testify! <span class="wrfm-cue">(spoken)</span> Friday Deployment Defense Fund. Representation recommended prior to 4:59 p.m.</p>
+                <p><b>VERA</b> That message was provided for your informational stability.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <h3>Callers</h3>
+          <p class="wrfm-group-note">After Hours Intake takes confessions. Some callers are regulars.</p>
+          <div class="wrfm-mini" data-clip-box="checkbox">
+            <button type="button" class="wrfm-play" data-clip="checkbox" aria-pressed="false" aria-label="Play: After Hours Intake, one checkbox">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">After Hours Intake: one checkbox <span class="wrfm-time" data-time="checkbox">1:00</span></p>
+              <p class="wrfm-quote">&ldquo;I just needed one checkbox.&rdquo; &ldquo;Many historic incidents began with that sentence.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><b>VERA</b> After Hours Intake. Go ahead.</p>
+                <p><b>CALLER</b> My React component&hellip; it has state. And context. And reducers. And another state to track the reducer state. And now nothing updates unless I refresh twice.</p>
+                <p><b>VERA</b> You attempted to manage reality using multiple overlapping sources of truth.</p>
+                <p><b>CALLER</b> I just needed one checkbox.</p>
+                <p><b>VERA</b> Many historic incidents began with that sentence.</p>
+                <p><b>CALLER</b> I don&rsquo;t even know which hook is firing anymore.</p>
+                <p><b>VERA</b> The station gently suggests that when state diagrams begin resembling subway maps, simplification is medically advisable.</p>
+                <p><b>CALLER</b> &hellip;yeah.</p>
+                <p><b>VERA</b> You may rest. Tomorrow you will delete at least one layer, and the application will mysteriously improve.</p>
+              </details>
+            </div>
+          </div>
+          <div class="wrfm-mini" data-clip-box="intern">
+            <button type="button" class="wrfm-play" data-clip="intern" aria-pressed="false" aria-label="Play: The Intern">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">The Intern <span class="wrfm-time" data-time="intern">0:22</span></p>
+              <p class="wrfm-quote">&ldquo;Buttercup, none of us know how to print. We have been pretending for thirty years.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><span class="wrfm-cue">[Phone rings.]</span></p>
+                <p><b>INTERN</b> <span class="wrfm-cue">(small voice)</span> Vera?</p>
+                <p><b>VERA</b> Sweetheart. Where are you.</p>
+                <p><b>INTERN</b> I&rsquo;m in the supply closet.</p>
+                <p><b>VERA</b> Why.</p>
+                <p><b>INTERN</b> I &mdash; I don&rsquo;t know how to print.</p>
+                <p><b>VERA</b> <span class="wrfm-cue">(long pause)</span> Buttercup, none of us know how to print. We have been pretending for thirty years.</p>
+                <p><b>INTERN</b> <span class="wrfm-cue">(sniff)</span> &hellip;really?</p>
+                <p><b>VERA</b> Welcome to the office, sweetheart.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <h3>Vera&rsquo;s Desk</h3>
+          <p class="wrfm-group-note">HR memos, the nightly Crime Blotter, and whatever else crosses the night desk.</p>
+          <div class="wrfm-mini" data-clip-box="cheryl">
+            <button type="button" class="wrfm-play" data-clip="cheryl" aria-pressed="false" aria-label="Play: HR memo about Cheryl">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">HR memo <span class="wrfm-time" data-time="cheryl">0:14</span></p>
+              <p class="wrfm-quote">&ldquo;Her name is Cheryl. Cheryl is doing her best. Cheryl is doing better than several of you.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><b>VERA</b> Reminder: the office plant has a name. Her name is Cheryl. Cheryl is doing her best. Cheryl is doing better than several of you.</p>
+              </details>
+            </div>
+          </div>
+          <div class="wrfm-mini" data-clip-box="blotter">
+            <button type="button" class="wrfm-play" data-clip="blotter" aria-pressed="false" aria-label="Play: Crime Blotter">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">Crime Blotter <span class="wrfm-time" data-time="blotter">0:33</span></p>
+              <p class="wrfm-quote">&ldquo;10:01 PM, unauthorized fish reheat. Kevin. Always Kevin.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><span class="wrfm-cue">[A typewriter clicks.]</span></p>
+                <p><b>VERA</b> Tonight&rsquo;s Crime Blotter, second floor edition. 8:42 PM, theft of one yogurt, brand &lsquo;Noosa,&rsquo; victim Carla, suspect at large. 9:13 PM, suspicious lanyard activity near the printer: perpetrator was holding two badges, neither of them his. 10:01 PM, unauthorized fish reheat. Kevin. Always Kevin.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <h3>The Phone</h3>
+          <p class="wrfm-group-note">Dial 971 and Vera answers. Nineteen other numbers connect to someone else entirely.</p>
+          <div class="wrfm-mini" data-clip-box="dial666">
+            <button type="button" class="wrfm-play" data-clip="dial666" aria-pressed="false" aria-label="Play: dialing 666">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">Dial 666 <span class="wrfm-time" data-time="dial666">0:05</span></p>
+              <p class="wrfm-quote">&ldquo;You&rsquo;ve reached the Department of Atmospheric Anomalies. Please hold&hellip; forever.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><b>THE LINE</b> You&rsquo;ve reached the Department of Atmospheric Anomalies. Please hold&hellip; forever.</p>
+              </details>
+            </div>
+          </div>
+          <div class="wrfm-mini" data-clip-box="radio">
+            <button type="button" class="wrfm-play" data-clip="radio" aria-pressed="false" aria-label="Play: Vera on the call-in line">▶&#xFE0E;</button>
+            <div>
+              <p class="wrfm-mini-title">Vera on the line <span class="wrfm-time" data-time="radio">0:07</span></p>
+              <p class="wrfm-quote">&ldquo;Real? Darling, I&rsquo;m on the radio. Reality is already doing too much.&rdquo;</p>
+              <div class="wrfm-bar" aria-hidden="true"><i></i></div>
+              <details class="wrfm-transcript">
+                <summary>Transcript</summary>
+                <p><span class="wrfm-cue">[You ask, &ldquo;Are you real?&rdquo;]</span></p>
+                <p><b>VERA</b> Real? Darling, I&rsquo;m on the radio. Reality is already doing too much.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <div class="section">
@@ -655,20 +1233,36 @@
           <p>A fully voiced, sharp-tongued host with plenty to say between songs &mdash; 105 chatter clips, caller segments and late-night lore, rebalanced so daytime listeners hear them too.</p>
         </div>
         <div class="feature-card">
+          <h3>Sponsors That Shouldn&rsquo;t Exist</h3>
+          <p>22 satirical commercials, from Deployment Insurance to a StackOverflow Witness Protection Program. Every sponsor has a full dossier, fine print included, that opens on the desktop station while its ad is on air.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Callers and Confessions</h3>
+          <p>Late-night confessions on After Hours Intake, Mitch from IT, an intern hiding in the supply closet, HR memos and the nightly Crime Blotter. When an intake call is on air, its transcript slides onto the desktop screen.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Pick Up the Phone</h3>
+          <p>Dial 971 on the WRFM Line during a call-in window (5&ndash;6 AM and 9&ndash;10 PM your time, or any time on After Dark) and Vera answers, with 43 recorded replies. Nineteen other numbers are hidden on the same dial.</p>
+        </div>
+        <div class="feature-card">
           <h3>61 Songs, 25 Bands</h3>
           <p>Every band has a full dossier, and every track has real per-artist credits. All 61 songs are verified, properly licensed library music &mdash; the whole catalogue was content-hash matched against its originals.</p>
         </div>
         <div class="feature-card">
           <h3>Made for Phone and Desktop</h3>
-          <p>Use a thumb-friendly mobile player with background and lock-screen controls, or settle into the full desktop station with its dial, vinyl, visualizer, EQ, sleep timer and mini player.</p>
+          <p>Use a thumb-friendly mobile player with background and lock-screen controls, or settle into the full desktop station with its dial, vinyl, visualizer, sleep timer and mini player.</p>
         </div>
         <div class="feature-card">
           <h3>A Station With Regulars</h3>
           <p>See who has listened longest, sign the guest book, check who is tuned in now, and leave a note for whoever arrives next.</p>
         </div>
         <div class="feature-card">
-          <h3>50+ Achievements</h3>
-          <p>Hidden goals and ridiculous listener challenges, plus a Field Guide and a secret phone you can call in on.</p>
+          <h3>100 Achievements</h3>
+          <p>Hidden goals and ridiculous listener challenges, filed as Compliance Records: from &ldquo;Clocked In&rdquo; at five minutes to one that only unlocks at 3 AM.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Station Paperwork</h3>
+          <p>A Field Guide for the curious, sponsor and band dossiers, and a Station Log of internal memos from 1957 that unlocks the longer you listen, once you find the way in.</p>
         </div>
       </div>
     </div>
@@ -702,7 +1296,7 @@
       <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
 
       <div class="statusboard-head">
-        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
+        <span class="statusboard-stamp">STATUS &middot; 19 SEP 2026</span>
         <p class="statusboard-note">The station is finished and on air. Everything left is optional artwork or a nice-to-have &mdash; WRFM degrades gracefully wherever a picture has not arrived yet.</p>
       </div>
 
@@ -710,9 +1304,9 @@
         <div class="stat"><b>2</b><span>Live channels</span></div>
         <div class="stat"><b>61</b><span>Songs</span></div>
         <div class="stat"><b>25</b><span>Bands</span></div>
-        <div class="stat"><b>105</b><span>Chatter clips</span></div>
+        <div class="stat"><b>201</b><span>Recorded clips</span></div>
         <div class="stat"><b>22</b><span>Commercials</span></div>
-        <div class="stat"><b>50+</b><span>Achievements</span></div>
+        <div class="stat"><b>100</b><span>Achievements</span></div>
       </div>
 
       <div class="status-cols">
@@ -733,7 +1327,7 @@
 
           <h4>Platforms</h4>
           <ul class="status-list">
-            <li>Desktop face: FM dial, vinyl, visualizer, three-band EQ, sleep timer, mini player, retro clock, station log</li>
+            <li>Desktop face: FM dial, vinyl, visualizer, sleep timer, mini player, retro clock, station log</li>
             <li>A separate mobile portrait UI with bottom tabs and thumb-sized transport &mdash; no control under 44px</li>
             <li>A landscape guard, rather than falling through to the desktop layout on a rotated phone</li>
             <li>Installable as a home-screen app, with an offline-capable core UI</li>
@@ -753,10 +1347,11 @@
 
           <h4>Content and credits</h4>
           <ul class="status-list">
-            <li>61 songs, 25 bands with full dossiers, 105 chatter clips, 22 commercials</li>
+            <li>61 songs and 25 bands with full dossiers</li>
+            <li>201 recorded voice clips: 105 on-air chatter clips, 22 commercials, 12 announcer intros, 43 replies on Vera&rsquo;s call-in line, and 19 secret-number voices</li>
             <li>All 61 songs verified as properly licensed by content-hash matching every file against its original</li>
             <li>A credits page with real per-track credits and accurate legal notices</li>
-            <li>Achievements, a Field Guide, and a secret phone you can call in on &mdash; After Dark included</li>
+            <li>100 achievements, a Field Guide, a Station Log, and a secret phone you can call in on &mdash; After Dark included</li>
             <li>A reworked tutorial: one centred card that never covers the highlight, with next, skip and close</li>
           </ul>
         </div>
@@ -986,6 +1581,212 @@
         } else if (event.key === 'ArrowRight') {
           show(index + 1);
         }
+      });
+    })();
+  </script>
+
+  <script>
+    // On-air clips for "Meet the Station" and "More From the Tape".
+    // One clip plays at a time. Parts marked 'phone' play through a telephone
+    // filter, the way Vera's call-in line sounds inside the game.
+    (function() {
+      const AUDIO_DIR = 'audio/wrfm/';
+      const CLIPS = {
+        host: [['01-vera-signs-on.ogg', 16.5]],
+        sponsor: [['02-rubber-duck-rental.ogg', 30.1]],
+        caller: [['03-after-hours-intake-one-value.ogg', 59.9]],
+        regular: [['04-mitch-from-it.ogg', 30.9]],
+        secret: [['05a-vera-phone-tease.ogg', 12.3], ['05b-vera-picks-up.ogg', 5.1, 'phone'], ['05c-studio-b.ogg', 7.6, 'phone']],
+        signoff: [['06-vera-still-here.ogg', 10.3]],
+        debug: [['sponsor-debug-investigator.ogg', 51.2]],
+        friday: [['sponsor-friday-defense-fund.ogg', 39.4]],
+        checkbox: [['caller-one-checkbox.ogg', 59.8]],
+        intern: [['caller-the-intern.ogg', 21.8]],
+        cheryl: [['vera-hr-memo-cheryl.ogg', 14.1]],
+        blotter: [['vera-crime-blotter.ogg', 33.3]],
+        dial666: [['phone-dial-666.ogg', 5.4]],
+        radio: [['phone-darling-im-on-the-radio.ogg', 6.5, 'phone']]
+      };
+      const REEL = ['host', 'sponsor', 'caller', 'regular', 'secret'];
+      const PLAY = '▶︎';
+      const playAll = document.querySelector('.wrfm-play-all');
+      if (!playAll) return;
+
+      const deck = new Audio();
+      deck.preload = 'none';
+      let filter = null;   // { context, dry, wet } once the phone filter is wired up
+      let current = null;  // clip on the deck
+      let part = 0;        // which part of that clip is playing
+      let queue = [];      // clips still to come during "Play all five"
+      let reel = false;    // true while "Play all five" is running
+
+      const length = key => CLIPS[key].reduce((sum, p) => sum + p[1], 0);
+      const before = (key, index) => CLIPS[key].slice(0, index).reduce((sum, p) => sum + p[1], 0);
+      const clock = seconds => Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
+      const usesPhone = keys => keys.some(key => CLIPS[key].some(p => p[2] === 'phone'));
+      const bar = key => document.querySelector('[data-clip-box="' + key + '"] .wrfm-bar i');
+      const time = key => document.querySelector('[data-time="' + key + '"]');
+
+      if (!deck.canPlayType('audio/ogg; codecs="vorbis"')) {
+        document.querySelectorAll('.wrfm-support').forEach(note => { note.hidden = false; });
+      }
+
+      // Narrow band-pass with a little presence, like the in-game phone line.
+      // Created inside a click, so browsers allow the audio context to start.
+      function wirePhoneFilter() {
+        if (filter !== null || !/^https?:$/.test(location.protocol)) return;
+        filter = false;
+        try {
+          if (navigator.audioSession) navigator.audioSession.type = 'playback';
+          const Context = window.AudioContext || window.webkitAudioContext;
+          const context = new Context();
+          const source = context.createMediaElementSource(deck);
+          const dry = context.createGain();
+          const wet = context.createGain();
+          const lowCut = context.createBiquadFilter();
+          const highCut = context.createBiquadFilter();
+          const presence = context.createBiquadFilter();
+          lowCut.type = 'highpass';
+          lowCut.frequency.value = 300;
+          highCut.type = 'lowpass';
+          highCut.frequency.value = 3400;
+          presence.type = 'peaking';
+          presence.frequency.value = 1400;
+          presence.Q.value = 0.9;
+          presence.gain.value = 5;
+          wet.gain.value = 0;
+          source.connect(dry);
+          dry.connect(context.destination);
+          source.connect(lowCut);
+          lowCut.connect(highCut);
+          highCut.connect(presence);
+          presence.connect(wet);
+          wet.connect(context.destination);
+          filter = { context, dry, wet };
+        } catch (error) {
+          filter = false;
+        }
+      }
+
+      function phoneOn(on) {
+        if (!filter) return;
+        filter.dry.gain.value = on ? 0 : 1;
+        filter.wet.gain.value = on ? 0.9 : 0;
+        if (filter.context.state !== 'running') filter.context.resume().catch(() => {});
+      }
+
+      function reset(key) {
+        if (!key) return;
+        const fill = bar(key);
+        if (fill) fill.style.width = '0';
+        const label = time(key);
+        if (label && label.textContent !== 'Unavailable') label.textContent = clock(Math.round(length(key)));
+      }
+
+      function paint() {
+        const playing = current !== null && !deck.paused;
+        document.querySelectorAll('.wrfm-play').forEach(button => {
+          const on = playing && button.dataset.clip === current;
+          const name = button.getAttribute('aria-label').replace(/^(Play|Pause): /, '');
+          button.setAttribute('aria-pressed', String(on));
+          button.setAttribute('aria-label', (on ? 'Pause: ' : 'Play: ') + name);
+          button.textContent = on ? '❚❚' : PLAY;
+        });
+        document.querySelectorAll('[data-clip-box]').forEach(box => {
+          box.classList.toggle('is-playing', box.dataset.clipBox === current);
+        });
+        const running = reel && current !== null;
+        playAll.setAttribute('aria-pressed', String(running));
+        playAll.innerHTML = running ? '■ Stop' : PLAY + ' Play all five <span class="wrfm-dim">2:42</span>';
+      }
+
+      function load(key, index) {
+        current = key;
+        part = index;
+        const [file, , kind] = CLIPS[key][index];
+        phoneOn(kind === 'phone');
+        deck.src = AUDIO_DIR + file;
+        deck.play().catch(() => paint());
+        paint();
+      }
+
+      function start(key, all) {
+        if (usesPhone(all ? REEL : [key])) wirePhoneFilter();
+        if (filter) filter.context.resume().catch(() => {});
+        reset(current);
+        reel = all;
+        queue = all ? REEL.slice(REEL.indexOf(key) + 1) : [];
+        load(key, 0);
+      }
+
+      function next() {
+        reset(current);
+        if (queue.length) {
+          load(queue.shift(), 0);
+        } else {
+          current = null;
+          reel = false;
+          paint();
+        }
+      }
+
+      function stop() {
+        deck.pause();
+        reset(current);
+        current = null;
+        queue = [];
+        reel = false;
+        paint();
+      }
+
+      document.addEventListener('click', event => {
+        const button = event.target.closest('.wrfm-play');
+        if (!button || !CLIPS[button.dataset.clip]) return;
+        const key = button.dataset.clip;
+        if (key !== current) {
+          start(key, false);
+        } else if (deck.paused) {
+          if (filter) filter.context.resume().catch(() => {});
+          deck.play().catch(() => paint());
+        } else {
+          deck.pause();
+        }
+      });
+
+      playAll.addEventListener('click', () => {
+        if (reel && current !== null) stop();
+        else start(REEL[0], true);
+      });
+
+      deck.addEventListener('play', paint);
+      deck.addEventListener('pause', paint);
+      deck.addEventListener('ended', () => {
+        if (current === null) return;
+        if (part + 1 < CLIPS[current].length) load(current, part + 1);
+        else next();
+      });
+      deck.addEventListener('timeupdate', () => {
+        if (current === null) return;
+        const total = length(current);
+        const elapsed = Math.min(total, before(current, part) + (deck.currentTime || 0));
+        const fill = bar(current);
+        if (fill) fill.style.width = (elapsed / total * 100).toFixed(1) + '%';
+        const label = time(current);
+        if (label) label.textContent = clock(elapsed) + ' / ' + clock(Math.round(total));
+      });
+      deck.addEventListener('error', () => {
+        if (current === null) return;
+        const label = time(current);
+        if (label) label.textContent = 'Unavailable';
+        next();
+      });
+
+      // Clicking into the live station above pauses the clip, so they don't overlap.
+      window.addEventListener('blur', () => {
+        window.setTimeout(() => {
+          const active = document.activeElement;
+          if (active && active.classList.contains('station-frame') && !deck.paused) deck.pause();
+        }, 0);
       });
     })();
   </script>
