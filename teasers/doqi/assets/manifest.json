@@ -39,7 +39,8 @@
  "audio": {
   "answer_select_sfx": "audio/answer_select_sfx.ogg",
   "signing_sfx": "audio/signing_sfx.ogg",
-  "laststage_sfx": "audio/laststage_sfx.ogg"
+  "laststage_sfx": "audio/laststage_sfx.ogg",
+  "music": "audio/music.ogg"
  },
  "narration": {
   "18": "audio/sloan_q18.ogg",
@@ -47,5 +48,15 @@
   "30": "audio/sloan_q30.ogg",
   "35": "audio/sloan_q35.ogg",
   "37": "audio/sloan_q37.ogg"
+ },
+ "questions": {
+  "18": "questions/q18.webp",
+  "20": "questions/q20.webp",
+  "30": "questions/q30.webp",
+  "35": "questions/q35.webp",
+  "37": "questions/q37.webp"
+ },
+ "video": {
+  "therapist": "video/therapist.mp4"
  }
 }

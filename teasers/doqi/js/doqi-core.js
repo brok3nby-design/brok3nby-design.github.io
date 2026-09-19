@@ -158,7 +158,7 @@
   function resultText(result, opts) {
     opts = opts || {};
     var lines = [];
-    lines.push("DOQI FIELD EVALUATION - FIVE-QUESTION PREVIEW");
+    lines.push("DOQI FIELD EVALUATION - FIVE-QUESTION PREVIEW (CLASSIFIED)");
     lines.push("Provisional classification: " + result.best.title);
     lines.push("Clearance level " + result.best.level + " (provisional)");
     lines.push("Match strength: " + result.strengthPercent + "%");
@@ -171,7 +171,7 @@
     if (result.runnerUp) lines.push("Also under review: " + result.runnerUp.title);
     if (result.tie && TIE_RULE_TEXT[result.tieRule]) lines.push(TIE_RULE_TEXT[result.tieRule]);
     lines.push("");
-    lines.push("This is a five-question fictional preview, not the full 40-question assessment and not a real psychological evaluation.");
+    lines.push("Fictional website teaser using five of the 40 questions in the full Field Evaluation. Not a real psychological evaluation.");
     lines.push("Full project: " + (opts.projectUrl || "https://brok3nbydesign.com/doqi.html"));
     lines.push("Independently created by Brok3n by Design.");
     return lines.join("\n");

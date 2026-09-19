@@ -17,6 +17,8 @@
       // Exact origins allowed to receive postMessage events when the teaser is embedded.
       // Messages are only sent when the embedding page's origin is in this list.
       parentOrigins: ["https://brok3nbydesign.com", "https://www.brok3nbydesign.com"],
+      // "Get game updates" button next to Save PNG (newsletter panel on the about page).
+      updatesUrl: "https://brok3nbydesign.com/about.html#newsletter",
       // Set to a verified public URL of the full 40-question assessment to show a
       // "Take the full test" button on the result screen. Leave null to hide it.
       fullTestUrl: null
@@ -25,17 +27,14 @@
 </head>
 <body>
   <main class="tz" id="app">
-    <nav aria-label="Return to the game page">
-      <a class="tz-btn tz-btn--ghost tz-btn--small" href="../../doqi.html">← Back to DOQI page</a>
-    </nav>
     <header class="tz-head">
       <div>
         <div class="tz-dept">Department of Questionable Inventions</div>
         <h1 class="tz-title">Field Evaluation <span class="tz-tag">Website teaser</span></h1>
       </div>
       <div class="tz-tools">
-        <button type="button" class="tz-btn tz-btn--ghost tz-btn--small" id="btn-sound" aria-pressed="false" title="Sound is off. Turn on answer sounds and narration.">
-          <span aria-hidden="true">🔇</span> <span id="sound-label">Sound off</span>
+        <button type="button" class="tz-btn tz-btn--ghost tz-btn--small" id="btn-sound" aria-pressed="true" title="Sound is on. Turn off music, narration and effects.">
+          <span aria-hidden="true">🔊</span> <span id="sound-label">Sound on</span>
         </button>
         <button type="button" class="tz-btn tz-btn--ghost tz-btn--small" id="btn-restart" title="Restart the teaser and clear all answers">Restart</button>
       </div>
@@ -56,25 +55,26 @@
 
       <!-- INTRO -->
       <div class="tz-screen tz-intro" id="screen-intro">
-        <img class="tz-stamp" src="assets/stamp.webp" alt="" width="84" height="84" />
-        <h3 class="tz-h2">Preliminary Screening</h3>
-        <p>You have been selected for a <strong>partial</strong> clearance screening: five field simulations lifted from the Department's forty-question Field Evaluation.</p>
-        <div class="tz-terms">
-          <strong>By proceeding you acknowledge:</strong>
-          <ul>
-            <li>Consent to being <strong>mildly mocked</strong> for every questionable decision.</li>
-            <li>Your answers stay in this browser tab's memory only and are erased on restart.</li>
-            <li>This is a fictional website teaser, not the full assessment and not a real psychological evaluation.</li>
-          </ul>
+        <div class="tz-intro-grid">
+          <figure class="tz-therapist">
+            <video id="therapist" src="assets/video/therapist.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
+          </figure>
+          <div class="tz-intro-copy">
+            <h3 class="tz-h2">Dr. Sloan will see you now.</h3>
+            <p class="tz-lead">Five field simulations. Four bad options each. One permanent file.</p>
+            <p class="tz-waiver">By signing, you consent to being <strong>mercilessly mocked</strong>. The Department is not responsible for lost dignity or spontaneous jazz hands.</p>
+            <p class="tz-fine">Fictional. Not a real psychological evaluation. Your answers never leave this tab.</p>
+            <div class="tz-intro-actions">
+              <button type="button" class="tz-btn tz-btn--primary" id="btn-begin">Sign and begin</button>
+            </div>
+          </div>
         </div>
-        <p class="tz-advisory">Advisory: veracity in responses is mandatory; deception serves no party.</p>
-        <button type="button" class="tz-btn tz-btn--primary" id="btn-begin">Sign and begin</button>
-        <p class="tz-tip">Keyboard: Tab to move, 1–4 to answer, Enter to continue.</p>
       </div>
 
       <!-- QUESTION -->
       <form class="tz-screen" id="screen-question" hidden novalidate>
         <p class="tz-count" id="q-count" tabindex="-1">Question 1 of 5</p>
+        <figure class="tz-scene"><img id="q-img" src="" alt="" width="1200" height="800" decoding="async" /></figure>
         <fieldset class="tz-q">
           <legend id="q-text"></legend>
           <div class="tz-opts" id="q-opts"></div>
@@ -112,21 +112,21 @@
         <ul class="tz-traits" id="r-traits" aria-label="Traits on record"></ul>
         <p class="tz-runner" id="r-runner"></p>
         <p class="tz-disclaimer">
-          <strong>Five-question fictional preview.</strong> This is a website teaser adapted from five of the forty field simulations.
-          It is not the full assessment and not a real psychological evaluation. Your answers were never sent anywhere.
+          This website teaser uses five questions from the full <strong>40-question</strong> Field Evaluation.
+          It is fictional, not the full evaluation, and not a real psychological evaluation. Your answers were never sent anywhere.
         </p>
         <div class="tz-actions">
           <button type="button" class="tz-btn tz-btn--primary" id="btn-retake">Retake</button>
           <button type="button" class="tz-btn" id="btn-copy">Copy result text</button>
           <button type="button" class="tz-btn" id="btn-download">Download card (PNG)</button>
-          <a class="tz-btn tz-btn--ghost" id="link-project" href="https://brok3nbydesign.com/doqi.html">Back to DOQI page</a>
+          <a class="tz-btn tz-btn--ghost" id="link-project" href="https://brok3nbydesign.com/doqi.html" target="_blank" rel="noopener">DOQI project page</a>
           <a class="tz-btn tz-btn--ghost" id="link-full" href="#" target="_blank" rel="noopener" hidden>Take the full test</a>
         </div>
       </div>
     </section>
 
     <footer class="tz-foot">
-      Website teaser · <a id="foot-project" href="https://brok3nbydesign.com/doqi.html">Back to DOQI page</a>
+      Website teaser · <a id="foot-project" href="https://brok3nbydesign.com/doqi.html" target="_blank" rel="noopener">DOQI project page for updates</a>
       <span class="tz-credit">Independently created by Brok3n by Design.</span>
     </footer>
   </main>
@@ -139,6 +139,7 @@
       <img id="dlg-card-img" src="" alt="Your DOQI result card" />
       <p>If the Save button does nothing (some embedded pages block downloads), right-click or long-press the image and choose “Save image”.</p>
       <div class="tz-dlg-actions">
+        <a class="tz-btn tz-btn--updates" id="dlg-card-updates" href="https://brok3nbydesign.com/about.html#newsletter" target="_blank" rel="noopener">Get game updates</a>
         <a class="tz-btn tz-btn--primary" id="dlg-card-save" href="#" download="doqi-teaser-result.png">Save PNG</a>
         <button type="button" class="tz-btn tz-btn--ghost" data-close>Close</button>
       </div>

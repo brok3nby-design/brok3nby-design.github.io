@@ -9,6 +9,7 @@
   var DATA = window.DOQI_TEASER_DATA;
   var CORE = window.DOQI_CORE;
   var PROJECT_URL = CONFIG.projectUrl || "https://brok3nbydesign.com/doqi.html";
+  var UPDATES_URL = CONFIG.updatesUrl || "https://brok3nbydesign.com/about.html#newsletter";
   var MESSAGE_VERSION = 1;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -19,6 +20,8 @@
     badge: function (title) { return "assets/badges/" + slug(title) + ".webp"; },
     trait: function (name) { return "assets/traits/" + slug(name) + ".jpg"; },
     stamp: "assets/stamp.webp",
+    scene: function (sourceIndex) { return "assets/questions/q" + sourceIndex + ".webp"; },
+    music: "assets/audio/music.ogg",
     sfx: {
       select: "assets/audio/answer_select_sfx.ogg",
       sign: "assets/audio/signing_sfx.ogg",
@@ -33,7 +36,7 @@
     index: 0,
     answers: [],
     result: null,
-    soundOn: false,
+    soundOn: true,
     cardUrl: null
   };
   function resetAnswers() {
@@ -124,13 +127,48 @@
   function stopAllAudio() {
     stopNarration();
     for (var k in players) { try { players[k].pause(); } catch (e) {} }
+    pauseMusic();
   }
+
+  // Background music: the game's intro/quiz loop. Browsers block audible
+  // autoplay until the visitor interacts, so we try on load and otherwise
+  // start on the first tap, click or key press (e.g. "Sign and begin").
+  var music = null;
+  function startMusic() {
+    if (!state.soundOn || !audioSupported || document.hidden) return;
+    try {
+      if (!music) {
+        music = new Audio(ASSETS.music);
+        music.loop = true;
+        music.preload = "none";
+        music.volume = 0.35;
+      }
+      if (music.paused) music.play().catch(function () {});
+    } catch (e) {}
+  }
+  function pauseMusic() { try { if (music) music.pause(); } catch (e) {} }
+  function onFirstGesture() {
+    window.removeEventListener("pointerdown", onFirstGesture, true);
+    window.removeEventListener("keydown", onFirstGesture, true);
+    startMusic();
+  }
+  window.addEventListener("pointerdown", onFirstGesture, true);
+  window.addEventListener("keydown", onFirstGesture, true);
+
+  // Dr. Sloan's intake loop on the first screen (muted video, like the game).
+  var therapist = document.getElementById("therapist");
+  function playTherapist() {
+    if (!therapist || reducedMotion || document.hidden || state.screen !== "intro") return;
+    try { therapist.playbackRate = 0.75; var p = therapist.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+  }
+  function pauseTherapist() { try { if (therapist) therapist.pause(); } catch (e) {} }
+  if (therapist) therapist.addEventListener("loadedmetadata", function () { try { therapist.playbackRate = 0.75; } catch (e) {} });
   function updateSoundButton() {
     var b = $("btn-sound");
     b.setAttribute("aria-pressed", state.soundOn ? "true" : "false");
     $("sound-label").textContent = state.soundOn ? "Sound on" : "Sound off";
     b.firstElementChild.textContent = state.soundOn ? "🔊" : "🔇";
-    b.title = state.soundOn ? "Sound is on. Turn off answer sounds and narration." : "Sound is off. Turn on answer sounds and narration.";
+    b.title = state.soundOn ? "Sound is on. Turn off music, narration and effects." : "Sound is off. Turn on music, narration and effects.";
     if (!audioSupported) {
       b.disabled = true;
       b.title = "Sound unavailable: this browser cannot play the teaser's OGG audio.";
@@ -146,7 +184,8 @@
     var chip = $("chip");
     if (name === "intro") { chip.textContent = "CLASSIFIED // PRE-SCREEN"; chip.classList.remove("tz-chip--ok"); }
     if (name === "processing") { chip.textContent = "PROCESSING // DO NOT LEAVE"; chip.classList.remove("tz-chip--ok"); }
-    if (name === "result") { chip.textContent = "PROVISIONAL // FILE OPENED"; chip.classList.add("tz-chip--ok"); }
+    if (name === "result") { chip.textContent = "CLASSIFIED"; chip.classList.remove("tz-chip--ok"); }
+    if (name === "intro") playTherapist(); else pauseTherapist();
     updateTicks();
     if (focusEl) { try { focusEl.focus({ preventScroll: false }); } catch (e) { try { focusEl.focus(); } catch (e2) {} } }
     try { window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }); } catch (e) {}
@@ -169,6 +208,11 @@
     chip.classList.remove("tz-chip--ok");
     $("q-count").textContent = "Question " + (i + 1) + " of " + total;
     $("q-text").textContent = q.text;
+    var img = $("q-img");
+    img.src = ASSETS.scene(q.sourceIndex);
+    img.alt = "Field simulation " + q.sourceIndex + " illustration";
+    var nextQ = DATA.questions[i + 1];
+    if (nextQ) { var pre = new Image(); pre.src = ASSETS.scene(nextQ.sourceIndex); }
     var opts = $("q-opts");
     opts.innerHTML = "";
     q.options.forEach(function (opt, idx) {
@@ -316,7 +360,8 @@
 
   // ---------- restart / retake ----------
   function restart(toIntro) {
-    stopAllAudio();
+    stopNarration();
+    for (var k in players) { try { players[k].pause(); } catch (e) {} }
     resetAnswers();
     closeDialogs();
     if (toIntro) {
@@ -412,10 +457,13 @@
   var SANS = '"Inter", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif';
 
   function drawCard(r) {
-    var W = 1200, H = 630;
+    // Logical layout is 1200x630; rendered at 2x (2400x1260) for a crisp, large card.
+    var W = 1200, H = 630, S = 2;
     var canvas = document.createElement("canvas");
-    canvas.width = W; canvas.height = H;
+    canvas.width = W * S; canvas.height = H * S;
     var ctx = canvas.getContext("2d");
+    ctx.scale(S, S);
+    function spacing(px) { try { ctx.letterSpacing = px + "px"; } catch (e) {} }
 
     // ground
     var g = ctx.createRadialGradient(W / 2, H * 0.3, 40, W / 2, H * 0.3, W * 0.8);
@@ -425,101 +473,97 @@
     for (var x = 0; x <= W; x += 40) { ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); ctx.stroke(); }
     for (var y = 0; y <= H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke(); }
 
-    // glass card
+    // glass card + screws
     roundRect(ctx, 36, 36, W - 72, H - 72, 18);
     ctx.fillStyle = "rgba(12,6,4,0.9)"; ctx.fill();
     ctx.strokeStyle = "rgba(255,192,88,0.55)"; ctx.lineWidth = 2; ctx.stroke();
-    // screws
     [[48, 48], [W - 48, 48], [48, H - 48], [W - 48, H - 48]].forEach(function (p) {
       ctx.beginPath(); ctx.arc(p[0], p[1], 4, 0, Math.PI * 2);
       ctx.fillStyle = "#5d4037"; ctx.fill(); ctx.strokeStyle = "rgba(255,192,88,0.4)"; ctx.lineWidth = 1; ctx.stroke();
     });
 
-    // header
+    // header (kept small so the result carries the card)
     ctx.textBaseline = "top";
-    ctx.fillStyle = "#ffc058";
-    ctx.font = "700 15px " + MONO;
-    ctx.letterSpacing = "4px";
-    ctx.fillText("DEPARTMENT OF QUESTIONABLE INVENTIONS", 70, 62);
-    ctx.fillStyle = "#fff8e1";
-    ctx.font = "900 24px " + MONO;
-    ctx.letterSpacing = "3px";
-    ctx.fillText("FIELD EVALUATION  ·  FIVE-QUESTION PREVIEW", 70, 86);
-    // chip
-    ctx.letterSpacing = "2px";
-    ctx.font = "700 13px " + MONO;
-    var chipText = "PROVISIONAL // FILE OPENED";
-    var cw = ctx.measureText(chipText).width + 24;
-    roundRect(ctx, W - 70 - cw, 66, cw, 30, 5);
-    ctx.fillStyle = "rgba(127,224,163,0.12)"; ctx.fill();
-    ctx.strokeStyle = "rgba(127,224,163,0.7)"; ctx.lineWidth = 1; ctx.stroke();
-    ctx.fillStyle = "#7fe0a3"; ctx.fillText(chipText, W - 70 - cw + 12, 74);
-    // divider
-    ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.moveTo(70, 128); ctx.lineTo(W - 70, 128); ctx.stroke();
+    ctx.fillStyle = "#ffc058"; ctx.font = "700 11px " + MONO; spacing(3);
+    ctx.fillText("DEPARTMENT OF QUESTIONABLE INVENTIONS", 70, 60);
+    ctx.fillStyle = "#fff8e1"; ctx.font = "800 15px " + MONO; spacing(2.5);
+    ctx.fillText("FIELD EVALUATION  ·  FIVE-QUESTION PREVIEW", 70, 78);
+    spacing(2.5); ctx.font = "700 13px " + MONO;
+    var chipText = "CLASSIFIED";
+    var cw = ctx.measureText(chipText).width + 26;
+    roundRect(ctx, W - 70 - cw, 60, cw, 30, 5);
+    ctx.fillStyle = "rgba(255,93,93,0.15)"; ctx.fill();
+    ctx.strokeStyle = "rgba(255,93,93,0.7)"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = "#ff6b6b"; ctx.fillText(chipText, W - 70 - cw + 13, 69);
+    ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.moveTo(70, 108); ctx.lineTo(W - 70, 108); ctx.stroke();
 
-    // badge frame
-    var bx = 70, by = 150, bs = 330;
+    // badge frame (left)
+    var bx = 70, by = 128, bs = 350;
     roundRect(ctx, bx, by, bs, bs, 12);
     ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fill();
     ctx.strokeStyle = "rgba(255,192,88,0.45)"; ctx.lineWidth = 1.5; ctx.stroke();
 
-    var tx = bx + bs + 34, tw = W - 70 - tx;
-    ctx.letterSpacing = "3px";
-    ctx.fillStyle = "#ffc058"; ctx.font = "700 14px " + MONO;
-    ctx.fillText("PROVISIONAL CLASSIFICATION", tx, 150);
-    ctx.letterSpacing = "0px";
-    ctx.fillStyle = "#fff8e1"; ctx.font = "900 44px " + SANS;
-    var titleLines = wrapText(ctx, r.best.title, tw);
-    var ty = 172;
-    titleLines.forEach(function (l) { ctx.fillText(l, tx, ty); ty += 50; });
+    // text column (right) with generous spacing
+    var tx = bx + bs + 50, tw = W - 76 - tx, bottom = 498;
+    var ty = 132;
+    spacing(3); ctx.fillStyle = "#ffc058"; ctx.font = "700 13px " + MONO;
+    ctx.fillText("PROVISIONAL CLASSIFICATION", tx, ty); ty += 28;
 
-    // pills
-    ctx.font = "700 14px " + MONO; ctx.letterSpacing = "1.5px";
-    var pills = ["CLEARANCE LEVEL " + r.best.level, "MATCH STRENGTH " + r.strengthPercent + "%"];
+    spacing(0); ctx.fillStyle = "#fff8e1"; ctx.font = "900 40px " + SANS;
+    wrapText(ctx, r.best.title, tw).forEach(function (l) { ctx.fillText(l, tx, ty); ty += 48; });
+    ty += 10;
+
+    ctx.font = "700 13px " + MONO; spacing(1.5);
     var px = tx;
-    pills.forEach(function (p) {
-      var pw = ctx.measureText(p).width + 26;
-      roundRect(ctx, px, ty + 4, pw, 30, 15);
+    ["CLEARANCE LEVEL " + r.best.level, "MATCH STRENGTH " + r.strengthPercent + "%"].forEach(function (p) {
+      var pw = ctx.measureText(p).width + 28;
+      roundRect(ctx, px, ty, pw, 32, 16);
       ctx.fillStyle = "rgba(255,192,88,0.12)"; ctx.fill();
       ctx.strokeStyle = "#ffc058"; ctx.lineWidth = 1.2; ctx.stroke();
-      ctx.fillStyle = "#ffefc9"; ctx.fillText(p, px + 13, ty + 12);
-      px += pw + 10;
+      ctx.fillStyle = "#ffefc9"; ctx.fillText(p, px + 14, ty + 9);
+      px += pw + 12;
     });
-    ty += 48;
+    ty += 32 + 26;
 
-    // description
-    ctx.letterSpacing = "0px";
-    ctx.fillStyle = "#ffebcd"; ctx.font = "italic 500 21px " + SANS;
-    var descLines = wrapText(ctx, r.best.description, tw).slice(0, 5);
-    descLines.forEach(function (l) { ctx.fillText(l, tx, ty); ty += 28; });
-    ty += 8;
+    // traits block is anchored to the bottom of the column; description fills the gap
+    var traitsY = bottom - 50;
+    spacing(0); ctx.fillStyle = "#ffebcd"; ctx.font = "italic 500 19px " + SANS;
+    var LH = 29;
+    var maxLines = Math.max(1, Math.floor((traitsY - 18 - ty) / LH));
+    var desc = wrapText(ctx, r.best.description, tw);
+    if (desc.length > maxLines) {
+      desc = desc.slice(0, maxLines);
+      var last = desc[maxLines - 1];
+      while (last && ctx.measureText(last + "…").width > tw) last = last.replace(/\s*\S+$/, "");
+      desc[maxLines - 1] = last + "…";
+    }
+    desc.forEach(function (l) { ctx.fillText(l, tx, ty); ty += LH; });
 
-    // traits
-    ctx.fillStyle = "#ffc058"; ctx.font = "700 13px " + MONO; ctx.letterSpacing = "2px";
-    ctx.fillText("TRAITS ON RECORD", tx, ty); ty += 20;
-    ctx.letterSpacing = "0px";
-    ctx.fillStyle = "#fff8e1"; ctx.font = "700 19px " + SANS;
-    ctx.fillText(r.topTraits.map(function (t) { return t.name + " +" + t.score; }).join("   ·   "), tx, ty);
+    spacing(2.5); ctx.fillStyle = "#ffc058"; ctx.font = "700 12px " + MONO;
+    ctx.fillText("TRAITS ON RECORD", tx, traitsY);
+    spacing(0); ctx.fillStyle = "#fff8e1"; ctx.font = "700 19px " + SANS;
+    ctx.fillText(r.topTraits.map(function (t) { return t.name + " +" + t.score; }).join("   ·   "), tx, traitsY + 24);
 
     // footer
-    ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.moveTo(70, H - 108); ctx.lineTo(W - 70, H - 108); ctx.stroke();
-    ctx.fillStyle = "#ffebcd"; ctx.font = "500 15px " + SANS;
-    ctx.fillText("Five-question fictional preview. Not the full assessment and not a real psychological evaluation.", 70, H - 96);
-    ctx.fillStyle = "#ffc058"; ctx.font = "700 15px " + MONO; ctx.letterSpacing = "1px";
+    ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.moveTo(70, H - 112); ctx.lineTo(W - 70, H - 112); ctx.stroke();
+    spacing(0); ctx.fillStyle = "#ffebcd"; ctx.font = "500 15px " + SANS;
+    ctx.fillText("Fictional website teaser. The full evaluation is 40 questions. Not a real psychological evaluation.", 70, H - 98);
+    ctx.fillStyle = "#ffc058"; ctx.font = "700 15px " + MONO; spacing(1);
     ctx.fillText(PROJECT_URL.replace(/^https?:\/\//, ""), 70, H - 74);
-    ctx.fillStyle = "#ffebcd"; ctx.font = "600 14px " + MONO; ctx.letterSpacing = "1px";
+    ctx.fillStyle = "#ffebcd"; ctx.font = "600 14px " + MONO;
     ctx.fillText("Independently created by Brok3n by Design.", 70, H - 54);
 
     return Promise.all([loadImage(ASSETS.badge(r.best.title)), loadImage(ASSETS.stamp)]).then(function (imgs) {
       var badge = imgs[0], stamp = imgs[1];
+      ctx.imageSmoothingQuality = "high";
       var scale = Math.min((bs - 24) / badge.width, (bs - 24) / badge.height);
       var bw = badge.width * scale, bh = badge.height * scale;
       ctx.drawImage(badge, bx + (bs - bw) / 2, by + (bs - bh) / 2, bw, bh);
       ctx.save();
       ctx.globalAlpha = 0.85;
-      ctx.translate(W - 150, H - 120);
+      ctx.translate(W - 128, H - 96);
       ctx.rotate(-0.2);
-      ctx.drawImage(stamp, -70, -70, 140, 140);
+      ctx.drawImage(stamp, -52, -52, 104, 104);
       ctx.restore();
       return canvas;
     });
@@ -586,6 +630,11 @@
     document.body.classList.toggle("is-hidden", document.hidden);
     if (document.hidden) {
       try { if (narrationPlayer && !narrationPlayer.paused) narrationPlayer.pause(); } catch (e) {}
+      pauseMusic();
+      pauseTherapist();
+    } else {
+      if (music) startMusic();
+      playTherapist();
     }
   });
 
@@ -609,12 +658,17 @@
     state.soundOn = !state.soundOn;
     updateSoundButton();
     if (!state.soundOn) stopAllAudio();
-    else if (state.screen === "question") narrate(DATA.questions[state.index]);
+    else {
+      startMusic();
+      if (state.screen === "question") narrate(DATA.questions[state.index]);
+    }
   });
   $("foot-project").href = PROJECT_URL;
+  $("dlg-card-updates").href = UPDATES_URL;
   $("link-project").href = PROJECT_URL;
   updateSoundButton();
   showScreen("intro");
+  startMusic(); // succeeds only where the browser allows autoplay; otherwise the first gesture starts it
 
   // Expose a tiny read-only hook for automated tests (no state mutation).
   window.__doqiTeaser = {
@@ -622,7 +676,8 @@
     get index() { return state.index; },
     get answers() { return state.answers.slice(); },
     get result() { return state.result; },
-    get parentOrigin() { return PARENT_ORIGIN; }
+    get parentOrigin() { return PARENT_ORIGIN; },
+    get musicPlaying() { return !!(music && !music.paused); }
   };
 
   emit("ready", { height: docHeight() });

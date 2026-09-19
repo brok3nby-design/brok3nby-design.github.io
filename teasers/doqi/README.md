@@ -20,7 +20,9 @@ teaser/
   js/teaser.js          UI controller, keyboard, sound, copy/PNG export, postMessage
   assets/badges/*.webp  20 archetype badges, 512 px, from the game's art
   assets/traits/*.jpg   13 trait icons, 160 px
-  assets/audio/*.ogg    answer/sign/result sound effects + Dr. Sloan narration for the 5 questions
+  assets/questions/*.webp  the game's scenario art for the 5 questions (shown above each question)
+  assets/video/therapist.mp4  Dr. Sloan's intake loop from the game (first screen)
+  assets/audio/*.ogg    game background music, answer/sign/result effects, Dr. Sloan narration for the 5 questions
   assets/stamp.webp     DOQI seal
   assets/favicon.svg
   embed-example.html    copy-paste iframe snippet with the optional message listener
@@ -35,21 +37,24 @@ All asset paths are relative, so it works at any sub-path (`/teasers/doqi/`, `/d
 
 | Part | Size |
 |---|---|
-| First meaningful load (HTML + CSS + JS + seal) | ~98 KB |
+| First meaningful load (HTML + CSS + JS + seal) | ~100 KB |
+| Therapist video (first screen, loads in parallel) | 578 KB |
+| 5 question images (loaded one ahead) | 794 KB total |
+| Background music (streams after the first click) | 2.3 MB |
 | 20 archetype badges (only the winning one is loaded, ~35–60 KB each) | 1.0 MB total |
 | 13 trait icons (three are loaded on the result screen) | 97 KB total |
-| Sound (only fetched after the visitor turns sound on) | 502 KB total |
+| Narration and effects | 502 KB total |
 | Cover image (not loaded by the page) | 296 KB |
-| **Whole folder** | **~2.0 MB** |
+| **Whole folder** | **~5.6 MB** |
 
 ## Controls
 
 - **Mouse / touch:** tap an answer, then *Next* (or *Submit for review* on question 5). *Back* returns to the previous question with its answer still selected.
 - **Keyboard:** `Tab` moves between controls, the four answers are a native radio group (`Arrow` keys select), `1`–`4` select an answer directly, `Enter` continues, `Esc` closes dialogs.
 - **Restart** (header) clears all answers and returns to the intro. **Retake** (result screen) clears all answers and starts at question 1.
-- **Sound** is off by default. The header toggle turns on the answer click, signing and result sounds and Dr. Sloan's narration for each question. Sound stops when the tab is hidden.
+- **Sound** is on by default, at the owner's request. The game's background music starts as soon as the browser allows it. Browsers block audible autoplay until the visitor interacts, so in practice it starts on the first tap, click or key press, usually "Sign and begin". Dr. Sloan narrates each question and the answer, signing and result effects play. The header toggle mutes everything. Sound pauses while the tab is hidden.
 - **Copy result text** puts a plain-text summary on the clipboard. If the clipboard is blocked (permissions, insecure context, some iframes) a dialog shows the text for manual copying.
-- **Download card (PNG)** renders a 1200×630 branded card on a canvas and opens a preview with a *Save PNG* link (`doqi-teaser-<archetype>.png`). Where downloads are blocked the visitor can right-click / long-press the preview image.
+- **Download card (PNG)** renders a 2400×1260 branded card (1200×630 layout at 2×) and opens a large preview with *Get game updates*, *Save PNG* (`doqi-teaser-<archetype>.png`) and *Close*. *Get game updates* opens the newsletter panel on the studio about page. Where downloads are blocked the visitor can right-click / long-press the preview image.
 
 ## How the five questions were chosen
 
@@ -68,7 +73,10 @@ scenarios were excluded) was brute-forced across all 1,024 answer paths and scor
 
 Selected: game questions **18, 20, 30, 35, 37** (the `CLASSIFIED // SIM-n` chip shows the
 original number). All 20 archetypes are reachable, the most common result wins 19% of
-paths, and the text is verbatim from the game data.
+paths. Question text, answer text, answer order and trait weights are verbatim from
+`ethical_gauntlet_questions_final.json`, which a unit test enforces. Each question shows
+the game's own scenario art above it. The small "CLICK HERE" invention thumbnails are left
+out because the pages they open exist only in the full game.
 
 ## Scoring adaptation
 
@@ -97,11 +105,11 @@ Run from the project root with `node --test teaser-dev/scoring.test.mjs`.
 
 ## Result presentation
 
-Provisional classification (archetype title + badge art), clearance level and
+The card chip reads CLASSIFIED. Provisional classification (archetype title + badge art), clearance level and
 assigned workspace (from the game's level lore), the archetype's in-world description,
 the three strongest traits with their taglines, the runner-up, the tie rule if one
-applied, and a fixed line stating this is a five-question fictional preview, not the
-full assessment and not a real psychological evaluation.
+applied, and a fixed line stating the teaser is fictional, uses five of the full
+evaluation's 40 questions, and is not a real psychological evaluation.
 
 ## Privacy
 
@@ -119,7 +127,7 @@ See `embed-example.html`. Minimal form:
   title="DOQI Field Evaluation — five-question website teaser"
   style="width:100%;max-width:800px;height:760px;border:0;border-radius:14px;background:#832615"
   loading="lazy"
-  allow="clipboard-write"
+  allow="autoplay; clipboard-write"
   sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox"
 ></iframe>
 ```
@@ -156,6 +164,7 @@ Listening side must check `event.origin` and `data.source` (see `embed-example.h
 
 - `projectUrl` — link used in the footer, result screen and PNG card.
 - `parentOrigins` — allowlist for postMessage.
+- `updatesUrl` — target of the *Get game updates* button. Defaults to `https://brok3nbydesign.com/about.html#newsletter`.
 - `fullTestUrl` — `null` hides the "Take the full test" button. Set it only to a verified public HTTPS URL.
 
 ## Rebuilding from the game source (optional)
@@ -176,11 +185,14 @@ Requires Python 3 with Pillow, and Node 18+.
 
 - Answers are a labelled native radio group inside a `fieldset`/`legend`; buttons have visible focus rings; live regions announce the processing step and errors.
 - Text is ≥13 px, colours follow the game's cream-on-red palette with high contrast.
-- `prefers-reduced-motion` disables transitions and the stamp animation and shortens the "filing" interlude to a quarter second.
+- `prefers-reduced-motion` disables transitions and the stamp animation, keeps the therapist video paused on its first frame, and shortens the "filing" interlude to a quarter second.
 - Animations pause and narration stops while the tab is hidden.
 - Layout tested from 320 px wide to desktop; two-column answers appear from 560 px.
 
 ## Limitations
+
+- **Newsletter anchor.** The about page's newsletter panel has no `id` yet, so `#newsletter` currently opens the top of the page. Add `id="newsletter"` to `<div class="newsletter" ...>` on about.html and the button will land on the panel.
+- **Music autoplay.** No browser plays audible sound before the visitor interacts, so music starts on the first click or key press rather than the instant the page opens. Embeds also need `allow="autoplay"` on the iframe.
 
 - **Audio format.** Sound files are the game's OGG Vorbis originals. Safari (macOS/iOS) does not reliably play OGG; there the sound button reads "No sound" and is disabled. Transcoding to MP3/AAC would fix this but no encoder was available in the build environment.
 - **PNG export from `file://`.** Opening `index.html` directly from disk works for the quiz, but Chrome treats local images as cross-origin, so the PNG card cannot be rendered; serve the folder over HTTP (any static host).
