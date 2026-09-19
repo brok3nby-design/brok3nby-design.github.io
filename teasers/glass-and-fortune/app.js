@@ -13,14 +13,14 @@
     SCATTERED:'hand_poor_omen.mp3',PAIR:'hand_pair.mp3',TWINPAIR:'hand_twin_pair.mp3',TRIAD:'hand_triad.mp3',STRAIGHT:'hand_glass_run.mp3',FULLHOUSE:'hand_full_house.mp3',FOURFOLD:'hand_fourfold.mp3',FLUSH:'hand_stained_flush.mp3',SPECTRUM:'hand_full_spectrum.mp3',FIVEFOLD:'hand_five_of_fortune.mp3',NOVA:'hand_perfect_fortune.mp3',SPECTRUM_FIVE:'hand_prismatic_five.mp3',STAINED_STRAIGHT:'hand_stained_run.mp3',SPECTRUM_STRAIGHT:'hand_spectrum_run.mp3',STAINED_FOURFOLD:'hand_stained_fourfold.mp3',SPECTRUM_FOURFOLD:'hand_spectrum_fourfold.mp3',STAINED_FULLHOUSE:'hand_stained_full_house.mp3',SPECTRUM_FULLHOUSE:'hand_spectrum_full_house.mp3',STAINED_TRIAD:'hand_stained_triad.mp3',SPECTRUM_TRIAD:'hand_spectrum_triad.mp3',STAINED_TWINPAIR:'hand_stained_twin_pair.mp3',SPECTRUM_TWINPAIR:'hand_spectrum_twin_pair.mp3',STAINED_PAIR:'hand_stained_pair.mp3',SPECTRUM_PAIR:'hand_spectrum_pair.mp3'
   };
   const steps=[
-    ['Select the Cobalt 2.','You already have two 3s: a Pair. Select the highlighted third die so we can make another 3.'],
+    ['Select the circled Cobalt 2.','You already have two 3s: a Pair. The white circle points to the die to choose; it is not selected yet. Select it so we can make another 3.'],
     ['Press TURN: 2 becomes 3.','TURN raises only the number. Three matching numbers make a Triad. This costs 1 Favour.'],
-    ['Press TINT: Cobalt becomes Jade.','TINT moves one colour to the right in the guide. Five different colours strengthen your Triad.'],
-    ['Select the Amber 5.','RECAST rerolls both number and colour, so it is a gamble. Here, TURN can guarantee a stronger hand. Select the highlighted Amber die.'],
+    ['Press TINT: Cobalt becomes Jade.','You have two Cobalt dice and no Jade. TINT changes the selected Cobalt to Jade, giving you five different colours. Your three 3s stay the same: the Triad becomes a stronger Spectrum Triad.'],
+    ['Select the circled Amber 5.','Now all five colours are different: Garnet, Cobalt, Jade, Amber and Violet. Your score rose from 145 to 583! RECAST is a gamble; TURN can guarantee another improvement. Choose the circled Amber 5.'],
     ['Press TURN: 5 becomes 6.','A second 6 completes a Full House: three 3s and two 6s. All five colours are different too.'],
     ['Press Cast This Hand.','Your hand is worth 678 points. Casting banks all five dice together and completes this practice Reading.']
   ];
-  let frame=0,animation=null,sound=true,voiceEnabled=true,music=null,effect=null,voice=null,voiceQueue=[];
+  let frame=0,animation=null,sound=true,voiceEnabled=true,music=null,effect=null,voice=null,voiceQueue=[],voiceRevision=0;
   const diceButtons=Array.from({length:5},(_,i)=>{
     const el=document.createElement('button');el.className='die';el.type='button';
     el.innerHTML='<span class="sigil" aria-hidden="true"></span><span class="pip" aria-hidden="true"></span><span class="cname" aria-hidden="true"></span>';
@@ -52,9 +52,20 @@
     return [`${describe(game.dice[game.selected])} selected.`,'TURN raises its number. TINT advances its colour. RECAST randomly rolls both. Each costs 1 Favour; cast whenever you are ready.'];
   }
   function guidedTarget(){
-    return ({0:diceButtons[2],1:$('turn'),2:$('tint'),3:diceButtons[3],4:$('turn'),5:$('cast'),6:$('next')})[game.step];
+    return ({0:diceButtons[2],1:$('turn'),2:$('tint'),3:diceButtons[3],4:$('turn'),5:$('cast'),6:$('playtest-link')})[game.step];
   }
   function focusNext(){if(game.mode==='tutorial'&&!game.busy)guidedTarget()?.focus({preventScroll:true});}
+  function updateChoiceMarker(){
+    const marker=$('tutorial-choice-marker'),target=document.querySelector('.tutorial-choice');
+    const hidden=!target||game.mode!=='tutorial'||game.busy;
+    marker.toggleAttribute('hidden',hidden);
+    if(hidden)return;
+    const r=target.getBoundingClientRect();
+    Object.assign(marker.style,{left:`${r.left-7}px`,top:`${r.top-7}px`,width:`${r.width+14}px`,height:`${r.height+14}px`});
+  }
+  addEventListener('resize',updateChoiceMarker);
+  addEventListener('scroll',updateChoiceMarker,{passive:true});
+  new ResizeObserver(updateChoiceMarker).observe($('board'));
   function select(i){
     if(!game.select(i)){if(game.mode==='tutorial'&&!game.busy)announce(coachText().join(' '));return;}
     render();announce(coachText().join(' '));focusNext();
@@ -63,9 +74,9 @@
   function render(){
     $('welcome').hidden=game.mode!=='welcome';$('board').hidden=game.mode==='welcome';
     $('board').dataset.busy=String(game.busy);$('board').dataset.phase=game.phase;$('board').dataset.mode=game.mode;
-    if(game.mode==='welcome')return;
+    if(game.mode==='welcome'){$('tutorial-choice-marker').setAttribute('hidden','');return;}
     const tutorial=game.mode==='tutorial',done=game.phase==='done';
-    $('mode-label').textContent=tutorial?'Guided practice · follow the highlight':'Reading I · website demo';
+    $('mode-label').textContent=tutorial?'Guided practice · Morrow’s table':'Reading I · website demo';
     $('reading-title').textContent=tutorial?'Morrow stacked the glass.':R.FIRST_READING.name;
     $('total').textContent=game.total;$('target').textContent=game.target;
     $('needed').textContent=game.total>=game.target?'Target reached':`${game.target-game.total} needed to pass`;
@@ -110,10 +121,13 @@
     $('outcome').hidden=!done;
     $('outcome-title').textContent=tutorial?'Practice complete · 678 points':game.total>=game.target?'First Omen complete.':'A new fortune is waiting.';
     $('outcome-copy').textContent=tutorial?'You took a Pair worth 51 points to a Spectrum Full House worth 678. Now try First Omen: target 80, up to three casts, three Favour per cast.':`You banked ${game.total} points against a target of ${game.target}. ${game.total>=game.target?'You have learned the rhythm of the table.':'Try again; the next hand may tell a different story.'}`;
+    $('playtest-invite').hidden=!tutorial;
+    $('next').classList.toggle('primary',!tutorial);$('next').classList.toggle('text-button',tutorial);
     $('next').textContent=tutorial?'Play Reading I →':'Play First Omen Again →';
     $('help').hidden=tutorial||done;
-    document.querySelectorAll('.tutorial-target').forEach(el=>el.classList.remove('tutorial-target'));
-    if(tutorial&&!game.busy)guidedTarget()?.classList.add('tutorial-target');
+    document.querySelectorAll('.tutorial-target,.tutorial-choice').forEach(el=>el.classList.remove('tutorial-target','tutorial-choice'));
+    if(tutorial&&!game.busy)guidedTarget()?.classList.add([0,3].includes(game.step)?'tutorial-choice':'tutorial-target');
+    updateChoiceMarker();
   }
   function syncMusic(){
     if(!sound||document.hidden){music?.pause();return;}
@@ -123,6 +137,7 @@
     music.play().catch(()=>{}); // A browser can require the next user gesture; the controls stay usable.
   }
   function stopVoice(){
+    voiceRevision++;
     voiceQueue=[];
     if(voice){voice.pause();voice.currentTime=0;voice=null;}
     if(music&&sound)music.volume=.28;
@@ -130,8 +145,9 @@
   function speak(files){
     const queue=(Array.isArray(files)?files:[files]).filter(Boolean);
     if(!voiceEnabled||document.hidden||!queue.length)return;
-    stopVoice();voiceQueue=queue;
+    stopVoice();voiceQueue=queue;const revision=voiceRevision;
     const next=()=>{
+      if(revision!==voiceRevision)return;
       const file=voiceQueue.shift();
       if(!file){if(music&&sound)music.volume=.28;return;}
       voice=new Audio('assets/voice/'+file);voice.preload='auto';voice.volume=.92;
@@ -170,7 +186,7 @@
     animation.last=now;
     if(animation.elapsed>=animation.duration){
       const token=animation.token,operation=game.pending;clearAnimation();
-      if(game.settle(token)){render();announce(`${coachText().join(' ')} ${game.result.name}. ${game.result.score} points. ${game.remaining} Favour left.`);focusNext();speakAfterSettle(operation);if(game.phase==='done')$('outcome-title').focus({preventScroll:true});}
+      if(game.settle(token)){render();announce(`${coachText().join(' ')} ${game.result.name}. ${game.result.score} points. ${game.remaining} Favour left.`);focusNext();speakAfterSettle(operation);if(game.phase==='done')(game.mode==='tutorial'?$('playtest-link'):$('outcome-title')).focus({preventScroll:true});}
     }else frame=requestAnimationFrame(tick);
   }
   function animate(token,kind){
