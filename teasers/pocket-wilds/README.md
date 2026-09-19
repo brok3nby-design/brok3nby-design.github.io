@@ -10,6 +10,7 @@ A standalone, embeddable sample of the game's dice battle: the level-1 knight ag
 | `index.html` | The page: canvas renderer (the game's own battle layout), intro card, hints bar, end card with **Rematch** and **Play Pocket Wilds** |
 | `rules.js` | The battle rules, ported function-for-function from the game (`index.html` BUILD 21-AUG-EJ). No DOM, injectable RNG — runs in the browser and in node |
 | `assets/` | Keyed boss portrait + 4 stance cutouts, keyed knight avatar, meadow backdrop (~2 MB total) |
+| `assets/vo/` | Mossback's voice: the game's reveal narration and its taunt / attack / wounded / dying lines (10 mp3s, ~550 KB) |
 | `tests/equiv.js` | Equivalence suite: runs inside the real game page and compares the port to the game's functions on identical seeds (130 checks) |
 | `TUNING.md` | Every deliberate difference from the game, with the measured win rates |
 
@@ -30,6 +31,12 @@ tap the tray buttons. Keyboard: `1–4` pick a command, `Enter` confirms, arrows
 tray `1–6` toggle dice, `R` rerolls, `A` allocates, `Enter` strikes. Clicking during a
 message skips it. RESTART (top-left of the canvas, or under it) is available at any moment.
 The fight pauses while the tab is hidden.
+
+**Mobile:** like the game, the fight is landscape-only. On a touch device in portrait the
+TURN YOUR DEVICE gate covers the page and the fight holds until the phone is rotated (the
+intro card is fine upright). Tapping FIGHT also asks for fullscreen and a landscape lock
+where the browser allows it. Mossback speaks with the game's recorded lines; the SOUND
+button mutes voice and effects together.
 
 ## Keeping it in sync with the game
 

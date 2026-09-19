@@ -40,6 +40,15 @@
   #bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--dim);letter-spacing:1px;}
   #bar .btn{font-size:12px;padding:5px 11px;margin:0;}
   .stat{margin:8px 0 4px;font-size:14px;letter-spacing:2px;color:var(--blue);}
+  /* rotate-to-landscape gate, as in the game: touch + portrait, once the fight is on */
+  #rotateMsg{display:none;position:fixed;inset:0;z-index:60;background:#0b0a14;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;color:var(--txt);padding:24px;gap:6px;}
+  body.touch.portrait.needrot #rotateMsg{display:flex;}
+  body.touch .kbd{display:none;}
+  #rotateMsg .rot{font-size:64px;animation:roticon 2s ease-in-out infinite;}
+  @keyframes roticon{0%,40%{transform:rotate(0);}60%,100%{transform:rotate(-90deg);}}
+  #rotateMsg h2{color:var(--gold);font-size:24px;letter-spacing:1px;margin:8px 0 0;text-shadow:2px 2px 0 rgba(0,0,0,.6);}
+  #rotateMsg p{color:var(--dim);font-size:15px;max-width:340px;margin:4px 0;}
   @media (max-width:720px), (max-height:520px){
     .card{padding:12px 14px;} .card h2{font-size:15px;margin-bottom:4px;} .card p{font-size:12px;margin:4px 0;}
     .card ul{font-size:11px;line-height:1.35;margin:6px auto 8px;padding-left:16px;}
@@ -47,6 +56,11 @@
 </style>
 </head>
 <body>
+  <div id="rotateMsg">
+    <div class="rot">&#128241;</div>
+    <h2>TURN YOUR DEVICE</h2>
+    <p>Pocket Wilds is played in <b style="color:var(--gold)">landscape</b>. Rotate your phone sideways to face the beast.</p>
+  </div>
   <h1>POCKET WILDS</h1>
   <p class="sub">Boss fight teaser &mdash; the dice battle, as it is in the game</p>
 
@@ -65,7 +79,7 @@
           <li>Ones are cracked. Too many in one strike and you stumble, or fumble outright.</li>
         </ul>
         <button class="btn gold" id="btnFight">&#9876; FIGHT</button>
-        <p class="sub" style="margin-top:8px">mouse, touch or keyboard &middot; 1&ndash;4 pick a move &middot; enter confirms</p>
+        <p class="sub" style="margin-top:8px">mouse, touch or keyboard<span class="kbd"> &middot; 1&ndash;4 pick a move &middot; enter confirms</span></p>
       </div>
     </div>
 
@@ -135,7 +149,16 @@ const SYN={
   swing(){beep(180,0.06,'sawtooth',0.05,-90);},
   monAtk(){}
 };
-const fx={beep,noise,sfx(n){const f=SYN[n];if(f)f();},smpl(){return false;},say(){}};
+/* the warden's voice: the same vo_<kind>_0_<a|b|c> lines the game plays through
+   playNarr - one line at a time, a new line cuts the old - plus the boss reveal
+   narration (vo_boss_0) the game gives its pre-battle cutscene, once per visit */
+const narr=new Audio(); narr.preload='auto'; let voQueue=[], revealDone=false;
+function voPlay(file){ try{narr.pause();narr.currentTime=0;}catch(e){} if(muted)return; narr.src='assets/vo/'+file+'.mp3'; narr.volume=0.9; Promise.resolve(narr.play()).catch(()=>{}); }
+function voStop(){ voQueue=[]; try{narr.pause();narr.currentTime=0;}catch(e){} }
+narr.addEventListener('ended',()=>{ if(voQueue.length)voPlay(voQueue.shift()); });
+const revealPlaying=()=>!narr.paused&&!narr.ended&&/vo_boss_0/.test(narr.src);
+function say(kind,i){ const f='vo_'+kind+'_0_'+'abcdef'[i]; if(revealPlaying())voQueue.push(f); else voPlay(f); }
+const fx={beep,noise,sfx(n){const f=SYN[n];if(f)f();},smpl(){return false;},say};
 
 /* ---------------- text: the game's 4px-per-char grid, drawn crisp at device res ---------------- */
 const FONT_STACK='"Trebuchet MS","Segoe UI",Verdana,Arial,sans-serif';
@@ -241,6 +264,7 @@ const ok=i=>i&&i.complete&&i.naturalWidth>0;
 /* ---------------- the fight ---------------- */
 let bt=null, B=null, P=null, G=null, ended=false, endT=0, turnsTaken=0;
 function newFight(){
+  voStop(); if(!revealDone){revealDone=true; voPlay('vo_boss_0');}
   bt=PWBattle.createBattle({fx}); B=bt.B; P=bt.P; G=bt.G;
   bt.startBattle(); B=bt.B; ended=false; endT=0; turnsTaken=0;
   ovEnd.hidden=true; hints.textContent=''; refreshHints(true);
@@ -522,13 +546,29 @@ window.addEventListener('keydown',e=>{
 document.getElementById('btnFight').onclick=begin;
 document.getElementById('btnRematch').onclick=()=>newFight();
 document.getElementById('btnRestart').onclick=()=>{ if(bt)newFight(); };
-document.getElementById('btnMute').onclick=function(){ muted=!muted; this.textContent=muted?'🔇 SOUND: OFF':'🔊 SOUND: ON'; };
-function begin(){ ac(); if(AC&&AC.state==='suspended')AC.resume(); ovIntro.hidden=true; stage.classList.remove('pointer'); newFight(); }
+document.getElementById('btnMute').onclick=function(){ muted=!muted; if(muted)voStop(); this.textContent=muted?'🔇 SOUND: OFF':'🔊 SOUND: ON'; };
+function begin(){ ac(); if(AC&&AC.state==='suspended')AC.resume(); ovIntro.hidden=true; stage.classList.remove('pointer'); newFight();
+  if(document.body.classList.contains('touch')){ // phones: ask for fullscreen + landscape (best effort, like a game)
+    try{const p=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); Promise.resolve(p).catch(()=>{});}catch(e){}
+    try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
+  }
+  updateOrientation(); }
+window.addEventListener('touchstart',()=>{document.body.classList.add('touch');updateOrientation();},{once:true,passive:true});
+function needsLandscape(){ return !!bt&&ovIntro.hidden; } // the intro card reads fine upright; the fight does not
+function updateOrientation(){
+  const portrait=window.innerHeight>window.innerWidth;
+  document.body.classList.toggle('portrait',portrait);
+  document.body.classList.toggle('needrot',needsLandscape());
+  gated=document.body.classList.contains('touch')&&portrait&&needsLandscape();
+  if(gated){ if(raf){cancelAnimationFrame(raf);raf=0;} try{narr.pause();}catch(e){} }
+  else if(!raf&&!document.hidden){ last=performance.now(); raf=requestAnimationFrame(loop); }
+}
+let gated=false;
 
 /* ---------------- the clock: pauses when the tab is hidden ---------------- */
 function fit(){ const r=cv.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
   cv.width=Math.max(1,Math.round(r.width*dpr)); cv.height=Math.max(1,Math.round(r.height*dpr)); K=cv.width/VW; }
-window.addEventListener('resize',fit); fit();
+window.addEventListener('resize',()=>{fit();updateOrientation();}); window.addEventListener('orientationchange',()=>setTimeout(()=>{fit();updateOrientation();},120)); fit();
 let last=0, raf=0, paused=false;
 function tick(dt){ // one frame of the fight (the loop calls this; tests can too)
   if(!bt)return;
@@ -544,13 +584,13 @@ function loop(ts){
   tick(dt);
 }
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){ paused=true; cancelAnimationFrame(raf); raf=0; if(bt&&ovIntro.hidden&&ovEnd.hidden)ovPause.hidden=false; }
-  else{ paused=false; ovPause.hidden=true; last=performance.now(); if(!raf)raf=requestAnimationFrame(loop); }
+  if(document.hidden){ paused=true; cancelAnimationFrame(raf); raf=0; try{narr.pause();}catch(e){} if(bt&&ovIntro.hidden&&ovEnd.hidden)ovPause.hidden=false; }
+  else{ paused=false; ovPause.hidden=true; last=performance.now(); if(!raf&&!gated)raf=requestAnimationFrame(loop); }
 });
 raf=requestAnimationFrame(loop);
 // the loop runs from the start so the empty stage still draws its backdrop
 (function drawIdle(){ if(bt)return; ctx.setTransform(K,0,0,K,0,0); ctx.fillStyle='#0f0e1b'; ctx.fillRect(0,0,VW,VH); if(ok(ART.bg)){ctx.drawImage(ART.bg,-8,-8,VW+16,VH+16);} requestAnimationFrame(drawIdle); })();
-window.PWTeaser={get bt(){return bt;},newFight,fx,render,tick,get ended(){return ended;}};
+window.PWTeaser={get bt(){return bt;},newFight,fx,render,tick,narr,updateOrientation,get gated(){return gated;},get ended(){return ended;}};
 })();
 </script>
 </body>

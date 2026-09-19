@@ -29,7 +29,8 @@ identical situations to both implementations and compares every number that come
 | Messages can be **skipped** with a click / Enter / Space | Keeps transitions short for a visitor; the game waits them out | `TUNING.msgSkip` |
 | Victory / defeat end in an **overlay** with Rematch + Play link | The game returns to the overworld | `index.html` |
 | No achievements, stats, saves, leaderboard, vault | Teaser state is fully isolated — it writes nothing | — |
-| Audio is the game's **synth** voices only (no sample files) | Keeps the teaser to a handful of files | `index.html` |
+| Sound effects are the game's **synth** voices (no sample files); the boss's **recorded voice lines** are the game's own (`vo_*_0_*`), and the boss reveal narration plays on the first FIGHT | Keeps the teaser small while the warden still speaks | `index.html`, `assets/vo/` |
+| Landscape-only on touch devices, with the game's TURN YOUR DEVICE gate; the fight holds while gated | Same rule as the game | `index.html` |
 | The in-battle MENU button is a **RESTART** button | The pause menu belongs to the full game | `index.html` |
 
 ## Balance (measured, `scratchpad/sim.js`, 1500 seeded fights each)
