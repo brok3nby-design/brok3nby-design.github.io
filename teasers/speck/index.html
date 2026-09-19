@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Speck Studio website teaser: draw a pixel-art portrait, furniture, decor or tile, then download it as a PNG, a JPG, or an editable Speck design file.">
+  <title>Speck Studio — website teaser</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%230b0d12%22/><rect x=%2230%22 y=%2230%22 width=%2240%22 height=%2240%22 fill=%22%234ade80%22/></svg>">
+  <link rel="stylesheet" href="teaser.css">
+  <script>
+    // Optional: the exact origin of the website page that embeds this teaser.
+    // Leave empty to send no messages at all. Never "*". See README.md.
+    window.SPECK_TEASER_CONFIG = { parentOrigin: '' };
+  </script>
+</head>
+<body>
+  <a class="skip" href="#board">Skip to the canvas</a>
+
+  <header class="top">
+    <div class="brand">
+      <span class="brandDot" aria-hidden="true"></span>
+      <h1>Speck Studio</h1>
+      <span class="badge">website teaser</span>
+    </div>
+    <div class="topBtns">
+      <button class="btn" id="btnTemplates" type="button">🧬 Templates</button>
+      <button class="btn" id="btnOpen" type="button" title="Open a .speck.json design you saved earlier">📂 Open</button>
+      <button class="btn" id="btnRestart" type="button">↻ Restart</button>
+      <button class="btn" id="btnSound" type="button" aria-pressed="false" title="Sound is off. Turn on small clicks and blips.">🔇 Sound off</button>
+      <button class="btn" id="btnHelp" type="button" aria-haspopup="dialog">? Help</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="work" aria-label="Pixel editor">
+      <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+        <div class="tools" id="tools">
+          <button class="tool active" type="button" data-tool="pencil" aria-pressed="true" title="Pencil (P)"><span class="ic" aria-hidden="true">✏️</span><span class="lb">Pencil</span></button>
+          <button class="tool" type="button" data-tool="eraser" aria-pressed="false" title="Eraser — makes pixels transparent (E)"><span class="ic" aria-hidden="true">🩹</span><span class="lb">Eraser</span></button>
+          <button class="tool" type="button" data-tool="fill" aria-pressed="false" title="Fill a connected area (F)"><span class="ic" aria-hidden="true">🪣</span><span class="lb">Fill</span></button>
+          <button class="tool" type="button" data-tool="pick" aria-pressed="false" title="Eyedropper — pick a colour off the canvas (K)"><span class="ic" aria-hidden="true">💧</span><span class="lb">Pick</span></button>
+          <button class="tool" type="button" data-tool="pan" aria-pressed="false" title="Move — drag to pan without painting (H). Two fingers or the space bar also pan."><span class="ic" aria-hidden="true">✋</span><span class="lb">Move</span></button>
+        </div>
+        <div class="tools">
+          <button class="tool" type="button" id="btnUndo" title="Undo (Ctrl+Z)" disabled><span class="ic" aria-hidden="true">↶</span><span class="lb">Undo</span></button>
+          <button class="tool" type="button" id="btnRedo" title="Redo (Ctrl+Y)" disabled><span class="ic" aria-hidden="true">↷</span><span class="lb">Redo</span></button>
+          <button class="tool" type="button" id="btnMirror" aria-pressed="false" title="Mirror — paint both sides at once (M)"><span class="ic" aria-hidden="true">🪞</span><span class="lb">Mirror</span></button>
+          <button class="tool active" type="button" id="btnGrid" aria-pressed="true" title="Grid on or off (G)"><span class="ic" aria-hidden="true">▦</span><span class="lb">Grid</span></button>
+          <button class="tool" type="button" id="btnZoomOut" title="Zoom out (-)"><span class="ic" aria-hidden="true">−</span><span class="lb">Zoom</span></button>
+          <button class="tool" type="button" id="btnZoomIn" title="Zoom in (+)"><span class="ic" aria-hidden="true">+</span><span class="lb">Zoom</span></button>
+          <button class="tool" type="button" id="btnFit" title="Fit the whole drawing on screen (0)"><span class="ic" aria-hidden="true">⤢</span><span class="lb">Fit</span></button>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="board" tabindex="0" role="application"
+          aria-label="Pixel canvas. Arrow keys move the cursor, Enter or Space paints, Delete erases."
+          aria-describedby="boardHelp"></canvas>
+        <div id="boardHelp" class="srOnly">Use the tool buttons above to choose pencil, eraser, fill, eyedropper or move. On a touch screen, one finger paints and two fingers pan or pinch to zoom. Press H to switch to move, then drag with one finger.</div>
+        <div class="stageHint" id="stageHint" aria-hidden="true"></div>
+      </div>
+
+      <div class="paletteRow" aria-label="Colours">
+        <div class="swatches" id="swatches" role="group" aria-label="Palette"></div>
+        <label class="custom">
+          <span class="srOnly">Custom colour</span>
+          <input type="color" id="customColor" value="#4ade80" title="Custom colour">
+        </label>
+      </div>
+      <div class="srOnly" id="live" aria-live="polite"></div>
+    </section>
+
+    <aside class="side" aria-label="Design, preview and downloads">
+      <div class="card">
+        <div class="cardHead">
+          <label for="designName">Name</label>
+          <span class="tiny" id="whatIs"></span>
+        </div>
+        <input id="designName" maxlength="24" spellcheck="false" placeholder="name this design" autocomplete="off">
+        <div class="previewRow">
+          <div class="previewBox">
+            <canvas id="previewNative" width="16" height="16" aria-label="Preview at native size"></canvas>
+            <span class="tiny">actual size</span>
+          </div>
+          <div class="previewBox">
+            <canvas id="previewBig" width="96" height="96" aria-label="Preview enlarged"></canvas>
+            <span class="tiny" id="previewInfo"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="saveCard">
+        <h2>Save &amp; download</h2>
+        <p class="tiny">Three different things. The first is the one Speck can open.</p>
+
+        <div class="exportRow">
+          <canvas class="thumb" id="thumbDesign" width="48" height="48" aria-hidden="true"></canvas>
+          <div class="exportBody">
+            <button class="btn primary" id="btnSaveDesign" type="button">💾 Save editable design</button>
+            <div class="tiny">A <code>.speck.json</code> file: your pixels, palette, transparency, size and template, in the game's own format. Open it here again or import it into Speck. <span id="sizeDesign" class="size"></span></div>
+          </div>
+        </div>
+
+        <div class="exportRow">
+          <canvas class="thumb" id="thumbPng" width="48" height="48" aria-hidden="true"></canvas>
+          <div class="exportBody">
+            <div class="btnLine">
+              <button class="btn" id="btnPng" type="button">🖼 Download PNG</button>
+              <label class="inline"><span class="tiny">size</span>
+                <select id="pngScale" aria-label="PNG scale">
+                  <option value="1">1× native</option>
+                  <option value="4">4×</option>
+                  <option value="8" selected>8×</option>
+                  <option value="16">16×</option>
+                </select>
+              </label>
+            </div>
+            <div class="tiny">Lossless, with transparency. Enlarged sizes stay crisp (no blurring). <span id="sizePng" class="size"></span></div>
+          </div>
+        </div>
+
+        <div class="exportRow">
+          <canvas class="thumb" id="thumbJpg" width="48" height="48" aria-hidden="true"></canvas>
+          <div class="exportBody">
+            <div class="btnLine">
+              <button class="btn" id="btnJpg" type="button">📷 Download JPG</button>
+              <label class="inline"><span class="tiny">size</span>
+                <select id="jpgScale" aria-label="JPG scale">
+                  <option value="4">4×</option>
+                  <option value="8" selected>8×</option>
+                  <option value="16">16×</option>
+                </select>
+              </label>
+              <label class="inline"><span class="tiny">background</span>
+                <input type="color" id="jpgBg" value="#ffffff" aria-label="JPG background colour">
+              </label>
+            </div>
+            <div class="tiny">An ordinary picture for sharing. JPG can't hold transparency, so clear pixels become the background colour. It is <strong>not</strong> the editable Speck file. <span id="sizeJpg" class="size"></span></div>
+          </div>
+        </div>
+        <div id="exportMsg" class="msg" role="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>Open a saved design</h2>
+        <p class="tiny">Reopen a <code>.speck.json</code> you saved here. Files are checked before anything is drawn; nothing in them is run.</p>
+        <button class="btn" id="btnOpen2" type="button">📂 Open .speck.json</button>
+        <input type="file" id="fileInput" accept=".json,application/json" class="srOnly" aria-label="Choose a Speck design file" tabindex="-1">
+        <div id="openMsg" class="msg" role="alert"></div>
+      </div>
+
+      <div class="card storage" id="storageCard" hidden>
+        <strong>Autosave is off.</strong> <span id="storageWhy">This browser is blocking storage, so your draft won't be kept between visits.</span> Use <em>Save editable design</em> to keep your work.
+      </div>
+
+      <footer class="credit">
+        <div>Independently created by Brok3n by Design.</div>
+        <div>This is a website teaser. Full project: <a href="https://brok3nbydesign.com/speck.html" target="_blank" rel="noopener">brok3nbydesign.com/speck.html</a></div>
+        <div class="tiny">Your art stays on this device. Nothing is uploaded.</div>
+      </footer>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- template picker -->
+  <dialog id="dlgTemplates" aria-labelledby="dlgTemplatesTitle">
+    <form method="dialog" class="dlg">
+      <div class="dlgHead">
+        <h2 id="dlgTemplatesTitle">Start from a template</h2>
+        <button class="btn" value="cancel" type="submit" aria-label="Close">✕</button>
+      </div>
+      <p class="tiny">Every design in Speck starts from a template. The template says what a thing <em>is</em> — a chair blocks the way, a rug can be walked over — and your pixels say what it looks like. Pick one, or pick one and start it empty.</p>
+      <div class="chips" id="catChips" role="tablist" aria-label="Kinds of thing"></div>
+      <div class="gallery" id="gallery"></div>
+      <label class="check"><input type="checkbox" id="startBlank"> Start with an empty canvas (keeps the template's size and kind)</label>
+    </form>
+  </dialog>
+
+  <!-- unsaved-work guard -->
+  <dialog id="dlgGuard" aria-labelledby="dlgGuardTitle">
+    <form method="dialog" class="dlg">
+      <h2 id="dlgGuardTitle">Keep this drawing?</h2>
+      <p id="dlgGuardText">You haven't saved this design as an editable file yet.</p>
+      <div class="dlgBtns">
+        <button class="btn primary" value="save" type="submit">💾 Save editable design</button>
+        <button class="btn" value="discard" type="submit">Discard it</button>
+        <button class="btn" value="cancel" type="submit" autofocus>Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- help -->
+  <dialog id="dlgHelp" aria-labelledby="dlgHelpTitle">
+    <form method="dialog" class="dlg">
+      <div class="dlgHead">
+        <h2 id="dlgHelpTitle">How this works</h2>
+        <button class="btn" value="cancel" type="submit" aria-label="Close">✕</button>
+      </div>
+      <dl class="help">
+        <dt>Mouse</dt><dd>Left button paints with the current tool. Right button erases. Wheel zooms. Hold <kbd>Space</kbd> and drag, or use the middle button, to pan.</dd>
+        <dt>Touch</dt><dd>One finger paints. Two fingers pan and pinch to zoom, and a stroke that turns into a pinch is undone. Choose <em>Move</em> to pan with one finger.</dd>
+        <dt>Keyboard</dt><dd>Click or tab to the canvas. Arrows move the cursor, <kbd>Enter</kbd>/<kbd>Space</kbd> paints, <kbd>Delete</kbd> erases. <kbd>P</kbd> pencil, <kbd>E</kbd> eraser, <kbd>F</kbd> fill, <kbd>K</kbd> eyedropper, <kbd>H</kbd> move, <kbd>M</kbd> mirror, <kbd>G</kbd> grid, <kbd>+</kbd>/<kbd>−</kbd> zoom, <kbd>0</kbd> fit, <kbd>Ctrl+Z</kbd>/<kbd>Ctrl+Y</kbd> undo/redo, <kbd>1</kbd>–<kbd>9</kbd> pick a swatch.</dd>
+        <dt>Saving</dt><dd>Your draft autosaves in this browser. <em>Save editable design</em> writes a <code>.speck.json</code> you can reopen here or import into the game's studio. PNG and JPG are pictures only.</dd>
+        <dt>Privacy</dt><dd>Everything happens on your device. Nothing you draw is uploaded.</dd>
+      </dl>
+    </form>
+  </dialog>
+
+  <!-- the real Speck Studio data model, byte-identical to the game's copies -->
+  <script src="specks.js"></script>
+  <script src="props.js"></script>
+  <script src="studio.js"></script>
+  <script src="studio-file.js"></script>
+  <script src="teaser.js"></script>
+</body>
+</html>
