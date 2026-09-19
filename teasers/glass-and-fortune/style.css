@@ -6,8 +6,8 @@
 /* A drawn white circle is a choice cue, never a selected die. It also marks keyboard focus on that target. */
 .tutorial-choice-marker{position:fixed;z-index:30;pointer-events:none;overflow:visible;filter:drop-shadow(0 2px 2px #000)}
 .tutorial-choice-marker path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.tutorial-choice,.tutorial-choice:focus-visible{outline:none!important}
 .die.tutorial-choice,.die.tutorial-choice:hover{transform:none}
-.die.tutorial-choice:focus-visible{outline:none}
 .playtest-invite{max-width:620px;margin:20px auto;padding:18px;border:1px solid #e3bb6c9a;border-radius:10px;background:linear-gradient(145deg,#382b1ee8,#211911f2);box-shadow:0 10px 32px #0006}
 .playtest-invite h3{margin:5px 0 4px;font-size:23px;font-weight:400}.playtest-invite p{margin:0 0 14px!important}.playtest-invite .primary{width:min(100%,390px);margin:auto;text-decoration:none}
 .outcome>#next.text-button{display:block;margin:8px auto 0}
