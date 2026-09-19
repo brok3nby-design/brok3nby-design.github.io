@@ -219,6 +219,23 @@
     .newsletter-form input[type="email"]:focus { outline: none; border-color: var(--accent); }
     .newsletter-form button { cursor: pointer; border: none; font: inherit; font-weight: 600; }
     .newsletter-fine { font-size: .85rem; color: #777; margin: 12px 0 0; }
+    .x-feed-shell {
+      max-width: 720px;
+      min-height: 320px;
+      padding: 18px;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .x-feed-shell .twitter-timeline {
+      display: block;
+      min-height: 280px;
+      padding: 28px;
+      color: var(--accent);
+      text-align: center;
+    }
+    .x-feed-link { margin-top: 16px; }
     .btn {
       display: inline-block;
       padding: 14px 28px;
@@ -468,6 +485,20 @@
         Independently created by Brok3n by Design.
       </p>
     </section>
+    <!-- Latest posts -->
+    <section class="section" aria-labelledby="latest-x-heading">
+      <h2 id="latest-x-heading">Latest from X</h2>
+      <p>Fresh development notes, screenshots, experiments, and whatever is currently taking shape in the studio.</p>
+      <div class="x-feed-shell">
+        <a class="twitter-timeline"
+           data-theme="dark"
+           data-tweet-limit="3"
+           data-chrome="noheader nofooter noborders transparent"
+           data-dnt="true"
+           href="https://twitter.com/brok3nbydesign?ref_src=twsrc%5Etfw">Latest posts from @brok3nbydesign</a>
+      </div>
+      <p class="x-feed-link"><a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">See every post on X →</a></p>
+    </section>
     <!-- Contact -->
     <section class="section">
       <h2>Get in Touch</h2>
@@ -513,6 +544,6 @@
 <!-- STUDIO LINKS END -->
 </footer>
   <!-- Background Music (same as main page) -->
-  
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
