@@ -72,10 +72,10 @@
 .fresh-notes h3 { margin:12px 0; font-size:1.8rem; color:#eee; }
 .fresh-notes time { font: .8rem monospace; color:#91b29e; }
 .fresh-notes p { color:#acb8b0; }
-.demo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr)); gap:14px; }
+.demo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:20px; }
 .demo-card { display:flex; flex-direction:column; overflow:hidden; border:1px solid #354039; border-radius:10px; background:#111713; }
 .demo-card:hover { border-color:var(--demo-accent,#00ff9f); transform:translateY(-3px); box-shadow:0 16px 36px rgba(0,0,0,.24); }
-.demo-card img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; border-bottom:1px solid #354039; }
+.demo-card img { display:block; width:100%; height:120px; object-fit:cover; border-bottom:1px solid #354039; }
 .demo-card-body { display:flex; flex:1; flex-direction:column; padding:16px; }
 .demo-card-body .eyebrow { color:var(--demo-accent,#00ff9f); font-size:.68rem; }
 .demo-card-body h3 { margin:4px 0 8px; color:#f1f5f2; font-size:1.4rem; }
@@ -83,7 +83,7 @@
 .demo-card-body .btn { min-height:38px; margin-top:auto; padding:8px 10px; font-size:.82rem; }
 .demo-card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
 .demo-card-actions .btn { flex:1 1 130px; margin-top:0; }
-@media (max-width:520px) { .demo-grid { grid-template-columns:1fr; } }
+@media (max-width:520px) { .demo-card img { height:105px; } }
 .upcoming-section .section-intro { margin-bottom:26px; }
 .passport-banner { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px; padding:28px; border:1px solid #516749; background:linear-gradient(115deg,#20281b,#101613); border-radius:8px; }
 .passport-banner .passport-mark { font:3rem monospace; color:#d4e597; }
