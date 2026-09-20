@@ -273,20 +273,64 @@
       footer.prepend(fireflies);
     }
 
+    // J.E.F.F. is deliberately uncommon: an easter egg should feel discovered, not decorative.
+    if (Math.random() <= .18) {
+    const jeffLines = [
+      'You found me. Congratulations on winning absolutely nothing.',
+      'I was testing the footer. It failed the vibe check.',
+      'You click tiny robots. I catalogue bold life choices.',
+      'This site has a lot of detail. You noticed the robot. Respect.',
+      'I am J.E.F.F. Please pretend that stands for something impressive.',
+      'I have reviewed your browsing technique. It is aggressively human.',
+      'Do not worry. I only report the funny parts.',
+      'I was built for quality assurance. Then I saw the internet.',
+      'You seem lost. That is a valid navigation style.',
+      'The games are evolving. Unlike my pay grade.',
+      'I have no hands, yet somehow I am carrying this whole footer.',
+      'Good click. Strong click. Almost professional.',
+      'I was told to be helpful. Nobody defined helpful.',
+      'Please enjoy the details. They were made on purpose.',
+      'A hidden robot is still more available than most customer support.',
+      'I patrol this footer for bugs. The metaphorical kind. Mostly.',
+      'You have excellent taste in obscure clickable objects.',
+      'I am not judging. I am recording. There is a difference.',
+      'This is an easter egg. Try not to make it weird.',
+      'J.E.F.F. online. Expectations carefully lowered.'
+    ];
+    let remainingLines = [];
+    const nextJeffLine = () => {
+      if (!remainingLines.length) remainingLines = jeffLines.slice().sort(() => Math.random() - .5);
+      return remainingLines.pop();
+    };
     const bot = document.createElement('button');
     bot.type = 'button';
     bot.className = 'b3d-footer-bot';
-    bot.setAttribute('aria-label', 'A tiny wandering robot');
-    bot.dataset.tooltip = 'A tiny robot. It seems busy.';
+    bot.setAttribute('aria-label', 'J.E.F.F., a tiny wandering robot');
+    bot.dataset.tooltip = 'J.E.F.F. is on patrol.';
     bot.addEventListener('click', () => {
       bot.style.animationPlayState = 'paused';
-      bot.setAttribute('aria-label', 'A happy tiny wandering robot');
+      bot.setAttribute('aria-label', 'J.E.F.F. has something to say');
+      let speech = footer.querySelector('.b3d-jeff-speech');
+      if (!speech) {
+        speech = document.createElement('p');
+        speech.className = 'b3d-jeff-speech';
+        speech.setAttribute('role', 'status');
+        footer.appendChild(speech);
+      }
+      const footerBounds = footer.getBoundingClientRect();
+      const botBounds = bot.getBoundingClientRect();
+      const speechLeft = Math.max(36, Math.min(footer.clientWidth - 220, botBounds.left - footerBounds.left + 30));
+      speech.style.left = `${speechLeft}px`;
+      speech.textContent = nextJeffLine();
+      speech.classList.remove('is-visible');
+      window.requestAnimationFrame(() => speech.classList.add('is-visible'));
       if (window.B3DAchievements) {
-        window.B3DAchievements.unlock('robot', 'ROBOT WHISPERER', 'Interrupted a very important patrol.');
+        window.B3DAchievements.unlock('robot', 'ROBOT WHISPERER', 'Got a sarcastic field report from J.E.F.F.');
       }
       window.setTimeout(() => { bot.style.animationPlayState = ''; }, 2200);
     });
     footer.appendChild(bot);
+    }
 
     if (/home\.html$/i.test(window.location.pathname)) {
       const door = document.createElement('button');

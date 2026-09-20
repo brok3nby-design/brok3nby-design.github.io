@@ -219,7 +219,7 @@ footer.b3d-ambient-footer {
   padding: 0;
   background: transparent;
   color: #8b958f;
-  animation: b3d-bot-walk 30s linear 5s infinite;
+  animation: b3d-bot-walk 52s linear 7s 1 both;
 }
 
 .b3d-footer-bot::before {
@@ -251,6 +251,39 @@ footer.b3d-ambient-footer {
   animation-play-state: paused;
   outline: none;
 }
+
+.b3d-jeff-speech {
+  position: absolute;
+  left: max(42px, 7vw);
+  bottom: 30px;
+  z-index: 4;
+  max-width: min(310px, calc(100% - 70px));
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--b3d-fx-accent);
+  border-radius: 8px;
+  background: #101713;
+  color: #dfeae3;
+  font: 13px/1.45 Inter, system-ui, sans-serif;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.b3d-jeff-speech::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid var(--b3d-fx-accent);
+  border-bottom: 1px solid var(--b3d-fx-accent);
+  background: #101713;
+  transform: rotate(45deg);
+}
+
+.b3d-jeff-speech.is-visible { opacity: 1; transform: translateY(0); }
 
 .b3d-secret-door {
   right: 9px;
