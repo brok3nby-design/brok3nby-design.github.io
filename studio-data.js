@@ -10,3 +10,16 @@ globalThis.B3DProjects = [
   {id:'juicebox',title:'Juicebox',category:'experiments',status:'Film experiment',hook:'Small format. Strange possibilities.',description:'An experimental short film in early development, exploring character, voice, and self-contained stories.',image:'images/studio/juicebox.svg',accent:'#ff9eab'},
   {id:'doqi',title:'DOQI',category:'experiments',status:'Prototype · on hold · teaser live',hook:'Your answers have been filed.',description:'The Department of Questionable Inventions: a satirical personality game about ridiculous decisions and their consequences.',image:'images/doqi/doqi_01.jpg',accent:'#a4c9ff',teaser:'teasers/doqi/',teaserCta:'Try five-question teaser'}
 ];
+// Content remaining is an asset/content estimate, not overall game completion.
+const progressReports = {
+  'glass-and-fortune': {remaining:15, testing:'Steam & itch demo · within 2 months', release:'Q1–Q2 2027', hours:'Approx. 30 hours'},
+  'bid-and-buried': {remaining:50, testing:'Q1–Q2 2027', release:'Q4 2027', hours:'Approx. 30–40 hours'},
+  'speck': {remaining:65, testing:'Q1–Q2 2027', release:'Q4 2027', hours:'Approx. 24 hours'},
+  'wrfm': {remaining:85, testing:'Not for sale', release:'Free to play · Q1–Q2 2027', hours:'Approx. 60 hours'},
+  'pocket-wilds': {remaining:65, testing:'Q1–Q2 2027', release:'Q3–Q4 2027', hours:'Approx. 30 hours'},
+  'doqi': {remaining:40, testing:'2028', release:'2028', hours:'Approx. 60 hours'},
+  'macabre-dolls': {remaining:25, testing:'No ETA', release:'No ETA', hours:'Approx. 40 hours'}
+};
+const projectOrder = ['glass-and-fortune','bid-and-buried','speck','wrfm','pocket-wilds','doqi','macabre-dolls','labyrinth-fate','juicebox'];
+globalThis.B3DProjects.sort((a,b)=>projectOrder.indexOf(a.id)-projectOrder.indexOf(b.id));
+for (const project of globalThis.B3DProjects) project.progress = progressReports[project.id] || {remaining:null, testing:'No ETA', release:'No ETA', hours:'Not yet reported'};
