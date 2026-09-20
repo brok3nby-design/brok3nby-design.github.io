@@ -236,6 +236,8 @@
       text-align: center;
     }
     .x-feed-link { margin-top: 16px; }
+    .x-feed-loading,.x-feed-fallback { margin:0; padding:28px; text-align:center; color:var(--muted); }
+    .x-feed-fallback a { color:var(--accent); }
     .btn {
       display: inline-block;
       padding: 14px 28px;
@@ -334,6 +336,8 @@
   <script src="site-effects.js?v=20260912-titles" defer></script>
 <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/studio.jpg">
 <link rel="canonical" href="https://brok3nbydesign.com/about.html">
+<link rel="stylesheet" href="site-music.css">
+<script src="site-music.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -489,13 +493,8 @@
     <section class="section" aria-labelledby="latest-x-heading">
       <h2 id="latest-x-heading">Latest from X</h2>
       <p>Fresh development notes, screenshots, experiments, and whatever is currently taking shape in the studio.</p>
-      <div class="x-feed-shell">
-        <a class="twitter-timeline"
-           data-theme="dark"
-           data-tweet-limit="3"
-           data-chrome="noheader nofooter noborders transparent"
-           data-dnt="true"
-           href="https://twitter.com/brok3nbydesign?ref_src=twsrc%5Etfw">Latest posts from @brok3nbydesign</a>
+      <div class="x-feed-shell" id="x-feed" aria-live="polite">
+        <p class="x-feed-loading">Loading posts from X…</p>
       </div>
       <p class="x-feed-link"><a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">See every post on X →</a></p>
     </section>
@@ -544,6 +543,6 @@
 <!-- STUDIO LINKS END -->
 </footer>
   <!-- Background Music (same as main page) -->
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script src="x-feed.js" defer></script>
 </body>
 </html>
