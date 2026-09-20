@@ -10,13 +10,8 @@
   audio.volume = Number.isFinite(saved.volume) ? Math.max(0, Math.min(1, saved.volume)) : 0.25;
   let enabled = saved.enabled === true;
   let time = Number.isFinite(saved.time) && saved.time >= 0 ? saved.time : 0;
-  const control = document.createElement('div');
-  control.className = 'site-music';
-  control.setAttribute('role', 'group');
-  control.setAttribute('aria-label', 'Background music');
-  control.innerHTML = '<button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label>';
-  const nav = document.querySelector('.studio-nav');
-  if (nav) nav.after(control); else document.body.prepend(control);
+  const control = document.getElementById('site-music-control');
+  if (!control) return;
   const button = control.querySelector('button');
   const volume = control.querySelector('input');
   volume.value = Math.round(audio.volume * 100);

@@ -376,7 +376,7 @@
 
       const link = card.querySelector('a[href$=".html"]');
       if (!link) return;
-      link.addEventListener('click', event => {
+      const playCartridgeSound = event => {
         if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         if (window.B3DPreferences?.get('sound')) {
           try {
@@ -387,6 +387,11 @@
         if (window.B3DAchievements) {
           window.B3DAchievements.unlock('cartridge', 'BLOW ON IT FIRST', 'Inserted a suspiciously browser-shaped cartridge.');
         }
+      };
+      link.addEventListener('click', playCartridgeSound);
+      card.addEventListener('pointerup', event => {
+        if (event.target.closest('a, button, summary, input, label')) return;
+        playCartridgeSound(event);
       });
     });
   }

@@ -1,6 +1,7 @@
-.site-music { display:flex; align-items:center; justify-content:center; gap:12px; padding:12px 20px; background:#101713; border-top:1px solid #354039; color:#dfeae3; font:13px/1.4 Inter,system-ui,sans-serif; }
+.site-music { position:fixed; right:18px; bottom:18px; z-index:1000; display:flex; align-items:center; justify-content:center; gap:10px; padding:7px 10px; border:1px solid #536259; border-radius:999px; background:#101713ee; box-shadow:0 8px 22px #0006; color:#dfeae3; font:13px/1.4 Inter,system-ui,sans-serif; backdrop-filter:blur(8px); }
 .site-music button { min-height:40px; padding:8px 14px; border:1px solid #536259; border-radius:20px; color:inherit; background:#18221d; font:inherit; cursor:pointer; }
 .site-music button:hover { border-color:#00ff9f; }
-.site-music input { width:80px; accent-color:#00ff9f; }
+.site-music input { width:66px; accent-color:#00ff9f; }
 .site-music :focus-visible { outline:2px solid #00ff9f; outline-offset:4px; }
 .site-music .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+@media (max-width:520px) { .site-music { right:10px; bottom:10px; } .site-music input { width:54px; } }

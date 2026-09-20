@@ -27,6 +27,8 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
   <script src="intro.js" defer></script>
 <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/studio.jpg">
 <link rel="canonical" href="https://brok3nbydesign.com/">
+<link rel="stylesheet" href="site-music.css">
+<script src="site-music.js" defer></script>
 </head>
 <body>
 
@@ -41,5 +43,6 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
     <p id="intro-note" role="status"></p>
   </div>
 </main>
+<div class="site-music" id="site-music-control" role="group" aria-label="Background music"><button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div>
 </body>
 </html>
