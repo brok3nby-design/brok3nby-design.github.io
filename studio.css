@@ -110,6 +110,8 @@
 .demo-card-body h3 { margin:4px 0 8px; color:#f1f5f2; font-size:1.4rem; }
 .demo-card-body p:not(.eyebrow) { margin:0 0 16px; color:#acb8b0; font-size:.84rem; line-height:1.55; }
 .demo-card-body .btn { display:inline-flex; align-items:center; justify-content:center; align-self:flex-start; flex:0 0 auto; width:auto; min-height:36px; height:auto; box-sizing:border-box; margin-top:auto; padding:8px 14px; font-size:.82rem; line-height:1.25; text-align:center; }
+.demo-project-link { align-self:flex-start; margin-top:9px; color:#b7c4bb; font-size:.78rem; text-decoration:none; }
+.demo-project-link:hover { color:var(--demo-accent,#00ff9f); text-decoration:underline; text-underline-offset:3px; }
 .demo-card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
 .demo-card-actions .btn { flex:0 1 auto; margin-top:0; }
 @media (max-width:520px) { .demo-card img { height:105px; } }
