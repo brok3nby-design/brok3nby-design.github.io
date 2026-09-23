@@ -8,6 +8,7 @@ globalThis.B3DProjects = [
   {id:'labyrinth-fate',title:'The Maze',category:'development',status:'In development',hook:'The world remembers the roll.',description:'A narrative dice game about choices, chance, and the consequences you carry through a hostile maze.',image:'images/studio/labyrinth-fate.svg',accent:'#bd9bda'},
   {id:'macabre-dolls',title:'Macabre Dolls',category:'experiments',status:'Concept · not developed',hook:'Every doll has a past.',description:'A collection of haunting artwork and card-game ideas. A concept archive, with no playable game or teaser.',image:'images/dolls/creepy-dolls_1.jpg',accent:'#e0a6b0'},
   {id:'juicebox',title:'Juicebox',category:'experiments',status:'Film experiment',hook:'Small format. Strange possibilities.',description:'An experimental short film in early development, exploring character, voice, and self-contained stories.',image:'images/studio/juicebox.svg',accent:'#ff9eab'},
+  {id:'graffiti',title:'Graffiti',category:'development',status:'In development · public wall coming soon',hook:'Draw something small. Leave it behind.',description:'A shared pixel-art guestbook where every visitor can draw, sign, and leave a permanent mark on the wall.',image:'images/graffiti/graffiti_logo.png',accent:'#ff5b38'},
   {id:'doqi',title:'DOQI',category:'experiments',status:'Prototype · on hold · teaser live',hook:'Your answers have been filed.',description:'The Department of Questionable Inventions: a satirical personality game about ridiculous decisions and their consequences.',image:'images/doqi/doqi_01.jpg',accent:'#a4c9ff',teaser:'teasers/doqi/',teaserCta:'Try five-question teaser'}
 ];
 // Content remaining is an asset/content estimate, not overall game completion.
@@ -20,6 +21,6 @@ const progressReports = {
   'doqi': {remaining:40, testing:'2028', release:'2028', hours:'Approx. 60 hours'},
   'macabre-dolls': {remaining:25, testing:'No ETA', release:'No ETA', hours:'Approx. 40 hours'}
 };
-const projectOrder = ['glass-and-fortune','bid-and-buried','speck','wrfm','pocket-wilds','doqi','macabre-dolls','labyrinth-fate','juicebox'];
+const projectOrder = ['glass-and-fortune','bid-and-buried','speck','wrfm','pocket-wilds','doqi','macabre-dolls','labyrinth-fate','juicebox','graffiti'];
 globalThis.B3DProjects.sort((a,b)=>projectOrder.indexOf(a.id)-projectOrder.indexOf(b.id));
 for (const project of globalThis.B3DProjects) project.progress = progressReports[project.id] || {remaining:null, testing:'No ETA', release:'No ETA', hours:'Not yet reported'};
