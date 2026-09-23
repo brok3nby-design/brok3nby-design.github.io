@@ -31,6 +31,10 @@
   Store.set = (k, v) => { mem[k] = String(v); return true; };
   Store.remove = (k) => { delete mem[k]; };
   G.demo = 'teaser';
+  // no pause menu (faders, MOTION, the seed, DEV ROOM, save & quit): Escape only ever backs out of a card here,
+  // and the header's menu icon is not drawn. No Ledger either: the game's books are the game's.
+  Object.defineProperty(G, 'paused', { get: () => false, set() {}, configurable: true });
+  openCodex = function () {};
 
   // ---- the parent page, if any (README: Embedding). Counts only, one exact origin, never "*". ----
   const embedded = (() => { try { return window.parent && window.parent !== window; } catch (e) { return false; } })();

@@ -43,7 +43,7 @@ Copy the whole `teaser/` folder to the site as `/teasers/bid-and-buried/`.
 | Folder | What | Size |
 |---|---:|---:|
 | `index.html`, `teaser.css` | the page and the one embed setting | ~15 KB |
-| `js/` | the game (30 files) plus `teaser.js` | ~1.7 MB |
+| `js/` | the game (28 files, no dev room) plus `teaser.js` | ~1.7 MB |
 | `fonts/` | VT323, Rubik regular and bold | ~0.5 MB |
 | `backgrounds/` | the auction and the dig | ~0.6 MB |
 | `npcs/` | Ed (portrait and cutout), Buzz (still and talking) | ~3.3 MB |
@@ -131,7 +131,7 @@ a passport, an account or the game's progression, and none of that is live.
   as in the game. The page's own buttons are real buttons.
 - Animation runs at the game's frame rate; a hidden tab keeps its clock (the game ticks a
   hidden tab itself) so a sale finishes even if you look away.
-- Storage blocked: nothing changes; the teaser stores nothing anyway.
+- No pause menu, no Ledger, no dev room, no saving: Escape only backs out of a card. Storage blocked: nothing changes; the teaser stores nothing anyway.
 - Missing art: the game draws its own stand-ins (Ed's card without his cutout is still a card).
 - No reduced-motion mode of its own: the game's MOTION setting is not exposed here; the run
   has no motion clips, only the game's ordinary screen animation.

@@ -1027,16 +1027,20 @@ const PAPER_KICKER = {
 };
 // briefs: one-line items at the foot of the page, in the paper's own voice
 const TOWN_BRIEFS = {
-  dustyFlats: ['Deposits the raccoon was seen carrying a small wrench. Purpose unknown.', 'The water tower will be repainted "eventually," council confirms.',
+  dustyFlats: ['Deposits the raccoon was seen carrying a small wrench. Purpose unknown.',
+    'The yard raccoon has been in the bins again. Staff note he leaves the clean ones alone and takes the sticky.',
+    'Advice from the office: anything sweet, put it away at night. He is not fussy about whose.', 'The water tower will be repainted "eventually," council confirms.',
     "Roy's Diner pie of the week is the same pie. Nobody minds.", 'A lawn chair was left at the yard. It has been there four days. It is comfortable.',
     'Somebody keeps feeding the raccoon. Somebody knows who they are.', 'Ed was seen buying a second notebook. The first is not full. He is "planning."',
     'Sal has been banned from the diner counter, not the diner. He sits in a booth and stares at the counter.', 'Bart\'s truck has been washed. This has not happened before. Something is coming.'],
-  saltLick: ['The scale at the feed store still reads heavy. Pruitt still uses it.', 'Free salt behind the yard. Bring your own lick. This is the whole notice.',
+  saltLick: ['The scale at the feed store still reads heavy. Pruitt still uses it.',
+    'A raccoon has been working the yard at night. The Shopper understands he is after the copper.', 'Free salt behind the yard. Bring your own lick. This is the whole notice.',
     'Bev has counted her boxes again. The number went up.', 'Row C moved another inch east in the wind. The manager has stopped measuring.',
     'A coupon in last week\'s Shopper was for a store in another town. It was honored anyway.',
     'The lick rock has a new lick mark, higher than a cow can reach. The Shopper is not asking.', 'Pruitt weighed a box of Bev\'s. Bev has not spoken to him since. That was Tuesday.',
     'The Shopper is free. The Shopper is also, this week, late. Both are true.'],
-  redMesa: ['The Ledger stands by Tuesday\'s unit number, mostly.', 'Vera was seen with a city buyer. Or a city buyer was seen with Vera.',
+  redMesa: ['The Ledger stands by Tuesday\'s unit number, mostly.',
+    'Two units reported a raccoon this week. Both had left food out. Neither will say what kind.', 'Vera was seen with a city buyer. Or a city buyer was seen with Vera.',
     'Tuck said a word on Thursday. Witnesses disagree on which.', 'The overlook is closed for "reasons." The reasons are goats.',
     'A locksmith from out of town asked directions to the yard. He was given three.',
     'The Ledger has verified one fact this week. It is on page four. It is about weather.', 'The Silver Dollar\'s foundation has been fenced. Somebody keeps leaving guitar picks on it.',
@@ -1218,6 +1222,7 @@ function foreshadowPaper(worldSeed, day, world) {
   return render(fs.printed);
 }
 function rivalName(id) {
+  if (id === 'crowd') return 'somebody in the crowd';      // the back row takes one home now and then
   const n = NPCS.find((x) => x.id === id) || EXTRA_NPCS[id] || (typeof DUO_HALVES !== 'undefined' && DUO_HALVES[id]);
   return n ? n.name : 'somebody';
 }

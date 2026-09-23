@@ -282,7 +282,7 @@ function drawWalk(dt) {
     const talkImg = _npcImg.buzz_talk, speaking = cur && cur.rec && !voIdle();
     px(g, pxx - 2, pyy - 2, ps + 4, ps + 4, speaking ? PAL.yellow : '#5a6488');
     px(g, pxx, pyy, ps, ps, '#1a1626');
-    if (speaking && talkImg && talkImg.length && Math.floor(G.time * 6) % 2) drawPhotoFit(talkImg[0], pxx, pyy, ps, ps);
+    if (speaking && talkImg && talkImg.length && mouthOpen(G.time)) drawPhotoFit(keyedFace(talkImg[strHash('buzztalk_' + w.i) % talkImg.length]), pxx, pyy, ps, ps);
     else drawPortrait('buzz', pxx, pyy, ps, ps);
     if (cur && cur.started !== false && w.sayI < w.say.length) {
       const bx = 460, bw = pxx - 14 - bx;

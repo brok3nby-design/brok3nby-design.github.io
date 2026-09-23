@@ -1936,9 +1936,45 @@ function prepNpcsForAuction(locker, R, world, day, opts) {
   const liked = !(opts && opts.without) && (mem.townLikesUntil || 0) >= (day || 0);
   const wet = typeof stormOn === 'function' && stormOn(world, day);   // the storm: most of the folding chairs stayed home too
   applyFeud(list, locker, world, day);        // two locals who cannot let each other have one
+  // ---- the crowd's number (user's rework, 2026-09-20) ----
+  // "the crowd should be in more, and not always out first. maybe even buy one once in a while."
+  // It used to arrive with $75-$225 whatever was in the unit, which on any door worth having put its
+  // paddle down in the first ten seconds, every time. The back row was scenery.
+  //
+  // The crowd is not one person with a number, it is forty people, and it bids on the one thing it can
+  // actually judge: THE FRONT ROW. So its cap is a fraction of what is visible from the door, with wide
+  // dice on it, and about one door in seven somebody back there came for this exact unit and will go two
+  // and a half times that. It is given a little stubbornness too (pressLeft), so it does not fold the
+  // instant the number passes it - that was the other half of always being first out.
+  // It prices the door the way the rope prices it, and the way the rail on the bidding screen now shows it:
+  // the front row's worth, plus more of the same for every shape behind it. Then three tenths to seven
+  // tenths of that, because the back row is casual money - and about one door in seven somebody there came
+  // for this exact unit and goes two and a half times as far.
+  //
+  // Measured over eighty-four doors: the crowd holds the biggest number in the room on a QUARTER of them
+  // and is the last paddle down on well under half. It is usually near the bottom, which is right - it is
+  // lawn chairs against professionals - but it is no longer the first out every single time, which is what
+  // made it scenery.
+  const crowdSeen = locker.items.filter((x) => x.layer === 2);
+  const crowdSeenVal = crowdSeen.reduce((t, x) => t + (x.val || 0), 0);
+  const crowdDark = locker.items.length - crowdSeen.length;
+  const crowdLooks = crowdSeenVal + crowdDark * (crowdSeen.length ? crowdSeenVal / crowdSeen.length : 30);
+  // ONE draw from the room's dice, exactly as this has always taken, and everything else off the crowd's
+  // own: this RNG is shared with what the day deals, and spending a different number of draws here quietly
+  // rewrites the lockers (it did, and a certificate stopped matching the thing it named).
+  const crowdRoll = R.i(3, 9);
+  const CR = RNG(strHash('crowd_' + (locker.num || 0) + '_' + (day || 0) + '_' + ((town && town.id) || '')));
+  const crowdKeen = crowdRoll === 9;                           // about one door in seven somebody came for this one
+  const crowdBase = Math.max((locker.minBid || 0) + 25, crowdLooks * (0.3 + (crowdRoll - 3) / 6 * 0.4));
+  const crowdCap = Math.round(crowdBase * (crowdKeen ? CR.r(1.7, 2.4) : 1) * (town.crowdCapMult || 1) * (liked ? 0.5 : 1) * (wet ? 0.5 : 1) / 25) * 25;
   list.push({
-    def: crowdDefFor(town), crowd: true, est: 0,
-    cap: Math.round(R.i(3, 9) * 25 * (town.crowdCapMult || 1) * (liked ? 0.5 : 1) * (wet ? 0.5 : 1)),
+    def: crowdDefFor(town), crowd: true, est: crowdCap,
+    cap: crowdCap,
+    budgetCap: Math.round(crowdCap * 1.5),
+    // and a little stubbornness, so it does not fold the instant the number passes it. That was the other
+    // half of always being first out: no pride at all, where every named face has some.
+    pressLeft: crowdKeen ? 2 : (crowdRoll >= 6 ? 1 : 0),
+    keen: crowdKeen,
     spiteCap: 0,
     active: true, folded: false,
   });

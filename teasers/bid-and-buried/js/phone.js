@@ -310,6 +310,7 @@ function bribeCallFor(w, day) {
   const roster = (typeof NPCS !== 'undefined' ? NPCS.map((n) => n.id) : []).concat(town.rivals || []);
   const pool = FAVOUR_FACES.filter((id) => roster.includes(id)
     && !(typeof awayOn === 'function' && awayOn(id, w, day + 1))      // not around tomorrow: nothing to pay for
+    && !callerRecently(id, w, day)                                    // and nobody rings you two days running
     && standingOf(id) > -3);                                          // somebody with it in for you does not ring
   if (!pool.length) return null;
   const R = RNG(strHash('bribecall_' + G.worldSeed + '_' + day));
@@ -322,6 +323,7 @@ function bribeCallFor(w, day) {
 // Buzz, with something to sell about tomorrow's row
 function buzzCallFor(w, day) {
   if (w.travelTo) return null;                                         // you are leaving: his tip is about a row you will not see
+  if (callerRecently('buzz', w, day)) return null;
   const last = w.arcs.buzzCallLast;
   if (last != null && day - last < BUZZ_CALL_GAP) return null;
   const R = RNG(strHash('buzzcall_' + G.worldSeed + '_' + day));
@@ -332,6 +334,7 @@ function buzzCallFor(w, day) {
 // the clerk, with a job for the office
 function clerkCallFor(w, day) {
   if (w.travelTo) return null;                                         // the job is here tomorrow, and you will not be
+  if (callerRecently('clerk', w, day)) return null;
   const last = w.arcs.clerkCallLast;
   if (last != null && day - last < CLERK_CALL_GAP) return null;
   const R = RNG(strHash('clerkcall_' + G.worldSeed + '_' + day));
@@ -348,7 +351,7 @@ function buyerCallFor(w, day) {
   const R = RNG(strHash('buyercall_' + G.worldSeed + '_' + day));
   if (!R.chance(BUYER_CALL_CHANCE)) return null;
   const cold = w.arcs.buyerCold || {};
-  const pool = SPECIALISTS.filter((b) => !((cold[b.id] || 0) >= day));
+  const pool = SPECIALISTS.filter((b) => !((cold[b.id] || 0) >= day) && !callerRecently(b.id, w, day));
   if (!pool.length) return null;
   const b = R.pick(pool);
   // something in their trade you have not already got, and that is not already wanted
@@ -419,7 +422,7 @@ function buzzSoreNow() { const m = (G.world && G.world.rivalMem) || {}; return (
 function callFor(w, day) {
   if (!w || w.noArcs || G.demo) return null;
   const fv = favourLive(w);
-  if (fv && fv.via === 'phone') return favourCallFor(fv);          // somebody asked for something: it rings
+  if (fv && fv.via === 'phone') { noteCaller(fv.who, w, day); return favourCallFor(fv); }   // somebody asked for something: it rings
   const st = callState(w);
   if (st.day === day && !st.answer) return st;
   if (st.day === day) return null;                                    // one a night
@@ -432,16 +435,17 @@ function callFor(w, day) {
   }
   // Buzz first, then the clerk, each on their own dice, so the tenant and the bribe below roll exactly as they always have
   const z = buzzCallFor(w, day);
-  if (z) { w.arcs.buzzCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, z); return w.arcs.call; }
+  if (z) { w.arcs.buzzCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, z); noteCaller('buzz', w, day); return w.arcs.call; }
   const ck = clerkCallFor(w, day);
-  if (ck) { w.arcs.clerkCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, ck); return w.arcs.call; }
+  if (ck) { w.arcs.clerkCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, ck); noteCaller('clerk', w, day); return w.arcs.call; }
   const by = buyerCallFor(w, day);
-  if (by) { w.arcs.buyerCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, by); return w.arcs.call; }
+  if (by) { w.arcs.buyerCallLast = day; w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, by); noteCaller(by.who, w, day); return w.arcs.call; }
   // the tenant is the one that is about something YOU did, so it wins a tie more often than not
   const t = tenantCallFor(w, day), b = bribeCallFor(w, day);
   const pick = (t && b) ? (RNG(strHash('callkind_' + G.worldSeed + '_' + day)).chance(0.6) ? t : b) : (t || b);
   if (!pick) return null;
   w.arcs.call = Object.assign({ day, lastDay: day, everRang: true }, pick);
+  noteCaller(pick.who || pick.kind, w, day);
   return w.arcs.call;
 }
 
@@ -718,7 +722,7 @@ function vmMissed(c) {
 function vmTick() {
   if (G.mode !== 'sell' || G.vm || G.call || !(G.vmQueue && G.vmQueue.length)) return false;
   if (G.modal || G.homeInspect || G.pendingUnpack || G.holdNotice || G.bayNotice || G.cardQueued) return false;
-  G.vm = { list: G.vmQueue.splice(0), i: -1, t: 0, started: false, back: 'sell' };
+  G.vm = { list: G.vmQueue.splice(0), i: -1, t: 0, started: false, back: 'sell', intro: true, it: 0 };
   G.mode = 'voicemail';
   _musicDuck = 0.3;
   return true;
@@ -749,12 +753,31 @@ function vmNext() {
   if (v.i >= v.list.length) { vmEnd(); return; }
   vmPlay();
 }
+const VM_KEEP = 6;                                  // the tape holds the last half-dozen
+function vmSaved() { const w = G.world; if (!w) return []; w.arcs = w.arcs || {}; return (w.arcs.vmTape = w.arcs.vmTape || []); }
 function vmEnd() {
   const v = G.vm;
   if (typeof voFlush === 'function') voFlush(true);
+  // what it played stays on the tape, so the phone on the wall can play it again
+  if (v && v.list && !v.replay) {
+    const tape = vmSaved();
+    for (const m of v.list) tape.push({ from: m.from, name: m.name || null, slot: m.slot || null, text: m.text, note: typeof m.note === 'function' ? m.note() : (m.note || null), day: G.day });
+    if (tape.length > VM_KEEP) tape.splice(0, tape.length - VM_KEEP);
+  }
   G.vm = null;
   _musicDuck = 1;
   G.mode = (v && v.back) || 'sell';
+}
+// the phone on the garage wall: pick it up whenever you like (user, 2026-09-20)
+function vmOpen() {
+  const waiting = (G.vmQueue || []).length;
+  if (waiting) { vmTick(); return true; }
+  const tape = vmSaved();
+  if (!tape.length) { toast('Nothing on the machine.', PAL.gray); return false; }
+  G.vm = { list: tape.slice().reverse(), i: 0, t: 0, started: false, back: G.mode || 'sell', replay: true };   // no "you have new messages": you asked for these
+  G.mode = 'voicemail';
+  _musicDuck = 0.3;
+  return true;
 }
 function vmFromName(m) {
   if (m.from === 'clerk') return 'THE CLERK';
@@ -795,9 +818,46 @@ function drawVmLeft(m) {
   T(x0 + w0 / 2, y0 + h0 + 14, fl.lines[0], PAL.white, fl.fs, 'center', true);
   T(x0 + w0 / 2, y0 + h0 + 42, 'left a message', PAL.gray, 13, 'center');
 }
+// ---- the walk to the wall (user, 2026-09-21) ----
+// "when arriving at home, there should be another little cutscene about checking the answering machine."
+// The garage in the dark, the machine's red light going, and the count of what is on it. Press PLAY, or
+// stand there long enough and it plays itself - the machine is not waiting on you.
+const VM_IN_AUTO = 4.6;          // it starts by itself after this long
+function vmIntroDone(v) { v.intro = false; v.it = 0; }
+function drawVmArrival(dt, v) {
+  v.it = (v.it || 0) + dt;
+  const t = v.it;
+  if (!drawBG()) px(g, 0, 0, W, H, '#151220');
+  px(g, 0, 0, W, H, 'rgba(6,6,12,' + (0.9 - 0.12 * clamp(t / 1.4, 0, 1)).toFixed(3) + ')');
+  drawHeader('HOME');
+  const blink = Math.floor(t * 2.4) % 2 === 0;
+  const cx = W / 2, cy = 232;
+  // a little glow off the light, so the eye lands on it before the words do
+  if (blink) {
+    for (let r = 3; r >= 1; r--) { g.globalAlpha = 0.05 * r; px(g, cx - 150 - r * 14, cy - 60 - r * 10, 300 + r * 28, 120 + r * 20, PAL.red); }
+    g.globalAlpha = 1;
+  }
+  drawVmMachine(cx, cy, 2.6, blink);
+  if (t > 0.5) {
+    g.globalAlpha = clamp((t - 0.5) / 0.4, 0, 1);
+    const n = v.list.length;
+    T(cx, cy + 96, n + (n === 1 ? ' NEW MESSAGE' : ' NEW MESSAGES'), blink ? PAL.red : '#7a2b2b', 26, 'center', true);
+    T(cx, cy + 128, 'the light was going when you came in', PAL.gray, 15, 'center');
+    g.globalAlpha = 1;
+  }
+  if (t > 1.1) {
+    g.globalAlpha = clamp((t - 1.1) / 0.35, 0, 1);
+    button(cx - 110, H - 96, 220, 42, 'PRESS PLAY', () => vmIntroDone(v), { col: PAL.dgreen, fs: 17 });
+    T(cx, H - 42, 'or leave it running', PAL.dgray, 12, 'center');
+    g.globalAlpha = 1;
+  }
+  hot(0, 0, W, H, () => vmIntroDone(v), { focusable: false, label: 'the machine' });
+  if (t > VM_IN_AUTO) vmIntroDone(v);
+}
 function drawVoicemail(dt) {
   const v = G.vm;
   if (!v) { G.mode = 'sell'; return; }
+  if (v.intro) { drawVmArrival(dt, v); return; }
   if (!v.started) vmPlay();
   v.t += dt;
   const m = vmCur();
@@ -813,7 +873,7 @@ function drawVoicemail(dt) {
   const read = VM_READ(text);
   const done = v.rec ? (v.t > 0.9 && voIdle() && v.speakAt == null) : v.t > (v.i < 0 ? 1.8 : read);
   if (v.i < 0) {
-    T(RX + 6, 50, 'THE MACHINE  ·  ' + v.list.length + ' NEW', PAL.yellow, 14, 'left', true);
+    T(RX + 6, 50, 'THE MACHINE  ·  ' + v.list.length + (v.replay ? ' ON THE TAPE' : ' NEW'), PAL.yellow, 14, 'left', true);
     drawVmMachine(RX + RW / 2, 170, 1.4, true);
     T(RX + RW / 2, 250, '"' + text + '"', PAL.white, 20, 'center', true);
     if (done) { vmNext(); return; }

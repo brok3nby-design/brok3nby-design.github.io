@@ -22,7 +22,25 @@ function openCodex(tab) {
   G.paused = false;
   G.mode = 'codex';
 }
-function closeCodex() { G.mode = G.codexBack || 'yard'; G.codexBack = null; }
+// ---- THE PEOPLE, from the main menu (user, 2026-09-20) ----
+// "create a spot in main menu to look at all the rivals and their info. Perhaps general info and it has more
+// that can be unlocked." The Ledger's PEOPLE page already is exactly that - the whole cast on one page
+// whether or not you have met them, with what you have learned about each filled in as you learn it - and it
+// was only ever reachable from inside a run. From the title it reads the SAVE, so a career's worth of
+// learning is there between sessions; with no save it is the whole cast, locked, which is a fair advert for
+// what is in there. Nothing on the page writes, so the borrowed world is handed straight back on the way out.
+function openCodexFromTitle() {
+  if (G.mode === 'codex') return;
+  const d = (typeof readSave === 'function') ? readSave() : null;
+  G.codexPeek = { world: G.world, day: G.day };
+  if (d && d.world) { G.world = d.world; G.day = d.day || 1; }
+  openCodex('people');
+}
+function closeCodex() {
+  if (G.codexPeek) { G.world = G.codexPeek.world; G.day = G.codexPeek.day; G.codexPeek = null; }
+  G.mode = G.codexBack || 'yard';
+  G.codexBack = null;
+}
 
 // what the player has run into — kept on the world so it saves
 function codexMet(id) { return (G.world.met || []).includes(id); }
@@ -61,7 +79,11 @@ function codexCard(x, y, w, h, known, title, lines, face) {
   const flat = [];
   for (const l of lines) { if (!l.t) continue; for (const ln of wrapText(l.t, maxCh)) flat.push({ s: ln, c: l.c }); }
   let ly = y + 24;
-  for (const l of flat.slice(0, rows)) { T(tx, ly, l.s, known ? (l.c || PAL.gray) : '#3f465c', 12); ly += 14; }
+  const shown = flat.slice(0, rows);
+  // a card with more to say than room to say it ends on an ellipsis: it used to stop dead mid-word, which
+  // reads as a bug rather than as a card that is full (2026-09-20)
+  if (flat.length > shown.length && shown.length) shown[shown.length - 1] = { s: shown[shown.length - 1].s.replace(/[\s,;:+]+$/, '') + '\u2026', c: shown[shown.length - 1].c };
+  for (const l of shown) { T(tx, ly, l.s, known ? (l.c || PAL.gray) : '#3f465c', 12); ly += 14; }
 }
 // little pictures for the things that have no sprite: a van, a laminated card
 function codexIcon(kind, x, y, known) {
@@ -92,9 +114,10 @@ function drawCodex() {
   if (!drawBG()) px(g, 0, 0, W, H, '#111320');
   px(g, 0, 0, W, 36, PAL.ink);
   px(g, 0, 34, W, 2, PAL.slate);
-  T(16, 6, 'THE LEDGER', PAL.yellow, 24, 'left', true, LOGO_FONT);
+  T(16, 6, G.codexPeek ? 'THE PEOPLE' : 'THE LEDGER', PAL.yellow, 24, 'left', true, LOGO_FONT);
   let tx = 190;
-  for (const [id, label] of CODEX_TABS) {
+  // from the menu there is no run to have unlocks, places, a TV guide or books in, so there is one page
+  for (const [id, label] of (G.codexPeek ? CODEX_TABS.filter(([i]) => i === 'people') : CODEX_TABS)) {
     const on = G.codexTab === id;
     const shut = id === 'books' && G.day < BOOKS_OPEN_DAY;
     button(tx, 5, 118, 26, label, () => { G.codexTab = id; G.codexScroll = 0; }, { col: on ? PAL.blue : (shut ? '#2e3244' : PAL.slate), fs: 12 });
@@ -137,6 +160,7 @@ function booksRows() {
     ['boxes opened', String(c.boxes)],
     ['times Ed fooled you', String(c.edFooled)],
     ['raccoon losses', String(c.raccoon)],
+    ...(typeof racCount === 'function' && racCount() ? [['the raccoon\'s account', racCount() + ' of ' + RAC_SET_N]] : []),
     ['bags of actual garbage bought', String(c.garbage)],
     ['things crushed on Route 9', String(c.crushed)],
     ["Pete's take", fmt$(c.petesTake)],
@@ -306,15 +330,31 @@ function drawCodexPeople() {
   for (let i = 0; i < rivals.length; i++) {
     const d = rivals[i];
     const met = d.id === 'crowd' || codexMet(d.id);
-    const home = d.id === 'crowd' ? 'every yard' : (TOWN_ORDER.filter((tid) => (TOWNS[tid].rivals || []).includes(d.id)).map((tid) => TOWNS[tid].name).join(', ') || 'Dusty Flats and the road');
+    const homeTowns = d.id === 'crowd' ? ['every yard'] : TOWN_ORDER.filter((tid) => (TOWNS[tid].rivals || []).includes(d.id)).map((tid) => TOWNS[tid].name);
+    const home = homeTowns.join(', ') || 'Dusty Flats and the road';
+    // a card is three rows of twenty-four characters, and the full list of towns ate all three of them
+    const homeShort = homeTowns.length > 2 ? homeTowns[0] + ' +' + (homeTowns.length - 1) : (homeTowns.join(' & ') || 'Dusty Flats + the road');
     const known = (typeof tellKnown === 'function') ? tellKnown(d.id) : null;
     // what the Ledger has learned about the face outranks where it drinks: the tell line goes second
     const tellLine = known === 'honest' ? 'tell: sweats when close.' : (known === 'act' ? 'tell: nerves are an act.' : '');
     const spentNow = (met && d.id !== 'crowd' && typeof rivalSpentToday === 'function') ? rivalSpentToday(d.id) : 0;
     const ruleM = ((G.world.rivalMem || {}).rules || {})[d.id];
     const ruleLine = (typeof ruleLearned === 'function' && ruleLearned(d.id)) ? ruleShort(d.id) + ' ' + ruleM.right + '/' + (ruleM.right + ruleM.wrong) : '';
-    const lines = met ? [{ t: rivalTagNow(d), c: PAL.orange }, { t: ruleLine, c: PAL.cyan }, { t: spentNow > 0 ? 'spent ' + fmt$(spentNow) + ' today' : '', c: PAL.yellow }, { t: tellLine, c: PAL.lblue }, { t: 'seen around ' + home + (d.budget ? '  \u00b7  wallet about ' + fmt$(d.budget) : '') }]
-      : [{ t: 'bids at ' + home + '. you have not shared a yard yet.' }];
+    // what is still to come. A card only has room for three rows, so a face you have learned nothing about
+    // spends one of them SAYING there is something to learn - that is the part the menu is advertising.
+    const toLearn = [];
+    if (d.id !== 'crowd' && !tellLine) toLearn.push('their tell');
+    if (d.id !== 'crowd' && RIVAL_RULES[d.id] && !ruleLine) toLearn.push('how they bid');
+    // one row is what is left after what they are doing today and what you already know, so two things to
+    // learn are counted rather than listed
+    const learnLine = toLearn.length > 1 ? 'to learn: ' + toLearn.length + ' things' : (toLearn.length ? 'to learn: ' + toLearn[0] : '');
+    // what your own notebook says about them, which outranks what is still to learn (2026-09-22)
+    const bookL = (typeof bookLine === 'function' && d.id !== 'crowd') ? bookLine(d.id) : '';
+    const lines = met ? [{ t: rivalTagNow(d), c: PAL.orange }, { t: bookL, c: PAL.paper }, { t: ruleLine, c: PAL.cyan }, { t: spentNow > 0 ? 'spent ' + fmt$(spentNow) + ' today' : '', c: PAL.yellow }, { t: tellLine, c: PAL.lblue },
+      { t: learnLine, c: PAL.dgray },
+      { t: 'seen around ' + home + (d.budget ? '  \u00b7  wallet about ' + fmt$(d.budget) : '') }]
+      // not met: what they are, where they bid, and that you have not stood next to them yet
+      : [{ t: d.tag || '' }, { t: 'bids at ' + homeShort }, { t: 'not met yet' }];
     const rx = 24 + (i % 4) * 230, ry = y + Math.floor(i / 4) * 78;
     codexCard(rx, ry, 222, 70, met, met ? d.name : '? ? ?', lines, { portrait: d.id });
     if (met && d.id !== 'crowd') hot(rx, ry, 222, 70, () => { play('ui_click', 0.5); npcIntroShow(d.id, 'codex'); });

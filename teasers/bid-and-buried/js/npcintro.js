@@ -49,19 +49,33 @@ function npcRegularBeat(npcs) {
 }
 
 // queue one or more new faces before the bidding actually opens
+// the cards are about to draw these faces, so their cutouts go to the front of the image queue: without
+// this the first card of the day can slam in as the drawn sprite and swap to the painted figure a second
+// later, which is what the first cast video caught (2026-09-21)
+function npcIntroPrefetch(list) {
+  if (typeof askCutout !== 'function') return;
+  for (const id of list) askCutout(id, true);
+}
 function npcIntroQueue(ids, back) {
   const list = (ids || []).filter((id) => npcIntroDef(id));
   if (!list.length) return false;
+  npcIntroPrefetch(list);
   G.npcIntro = { ids: list, i: 0, back: back || G.mode, replay: false, t: 0 };
   G.mode = 'npcIntro';
+  // HARD flush: a soft one only clears what is waiting, so Buzz carried on asking for the opening bid
+  // underneath the first card (user, 2026-09-20: "buzz asked about the locker opening bid when the rival
+  // splashs came up. It shouldnt till its time to bid"). The card stops the room; the room resumes after it.
+  voFlush(true);
   speak(['auc_intro_' + list[0]], true);
   return true;
 }
 // pull one rival's card back up on demand — a click during bidding, or from the ledger
 function npcIntroShow(id, back) {
   if (!npcIntroDef(id)) return;
+  npcIntroPrefetch([id]);
   G.npcIntro = { ids: [id], i: 0, back: back || G.mode, replay: true, t: 0 };
   G.mode = 'npcIntro';
+  voFlush(true);
   speak(['auc_intro_' + id], true);
 }
 function npcIntroNext() {
@@ -140,8 +154,13 @@ function npcStatRows(d) {
 const _cutImg = {};
 // only the rivals get a splash card, so only the rivals get a cutout slot
 const NPC_CUT_IDS = NPCS.map((n) => n.id).concat(Object.keys(EXTRA_NPCS)).filter((id) => id !== 'crowd');
-function keyOut(im) {
-  if (im._cut !== undefined) return im._cut;
+// `plain`: the figure alone, with no white sticker edge baked round it. The edge is for the splash card,
+// where the cutout stands on a colour sweep with nothing else round it; a face card has its own frame and
+// the sticker read as a white halo on it (2026-09-20). Cached in its own slot, so one picture can be used
+// both ways without keying twice.
+function keyOut(im, plain) {
+  const slot = plain ? '_cutPlain' : '_cut';
+  if (im[slot] !== undefined) return im[slot];
   if (!im.width || !im.height) return null;             // not decoded yet — ask again next frame
   const w = im.width, h = im.height;
   let src = im;
@@ -165,7 +184,7 @@ function keyOut(im) {
     // draw them through a colour filter, which needs no readback — so key the magenta that way.
     src = keyOutFiltered(im);
     if (!src) {
-      im._cut = null;                                   // no filter either: the framed portrait, and say why once
+      im[slot] = null;                                  // no filter either: the framed portrait, and say why once
       if (!keyOut.warned) {
         keyOut.warned = true;
         console.warn('cutouts: this page cannot read image pixels (' + location.protocol + ') and has no SVG filter to key with. Serve the game over http://, or export the cutout with real transparency. Using the framed portrait.');
@@ -173,6 +192,7 @@ function keyOut(im) {
       return null;
     }
   }
+  if (plain) { im[slot] = src; return src; }           // the figure, nothing round it
   // bake a white sticker edge, so the figure reads against any colour behind it
   const o = document.createElement('canvas');
   o.width = w + 16; o.height = h + 16;
@@ -183,7 +203,7 @@ function keyOut(im) {
   q.fillRect(0, 0, o.width, o.height);
   q.globalCompositeOperation = 'source-over';
   q.drawImage(src, 8, 8);
-  im._cut = o;
+  im[slot] = o;
   return o;
 }
 // ---- keying without reading a pixel ----

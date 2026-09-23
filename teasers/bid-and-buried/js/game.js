@@ -263,6 +263,7 @@ const AUC_VO = [
   'auc_big_spender',                                                // postures: you won LOUD yesterday, the office opens you higher
   'auc_peek_open', 'auc_peek_timesup',
   'auc_open_ready', 'auc_open_howmuch', 'auc_start_needbid',
+  'auc_open_lower',        // nobody will start it: he takes a step off the opening price, once (2026-09-20)
   'auc_chant_igot', 'auc_chant_wouldyougive', 'auc_chant_now',
   'auc_pressure',
   'auc_react_big', 'auc_react_min', 'auc_react_war', 'auc_react_back',   // the size and shape of a bid gets a comment
@@ -908,7 +909,7 @@ const MOTION_BG = new Set(['bg_title', 'bg_title_owned', 'bg_credits', 'bg_house
 const OPENING_CLIP_RATE = 0.75;                                       // the cold open's clips run a little slow — it is a film, not a loop
 const MODE_BG = {
   title: 'bg_title', seedpick: 'bg_title', yard: 'bg_yard', peek: 'bg_yard', walkdown: 'bg_yard',
-  auction: 'bg_auction', dig: 'bg_dig', reveal: 'bg_dig', sell: 'bg_home', phone: 'bg_home', summary: 'bg_summary',
+  auction: 'bg_auction', dig: 'bg_dig', reveal: 'bg_dig', sell: 'bg_home', phone: 'bg_home', voicemail: 'bg_home', summary: 'bg_summary',
   map: 'bg_map', tv: 'bg_home', credits: 'bg_credits', drivehome: 'bg_house',
 };
 // a town's light, washed over the yard, the peek and the auction before the UI goes on
@@ -984,20 +985,32 @@ function queueImage(src, onload, onerror, front, resuming) {
     im.onerror = () => done(() => onerror());
     im.src = src;
   };
+  job.src = src;                       // so promoteImages() can find it again while it waits
   const q = front ? _imgQNow : _imgQ;
   if (resuming) q.unshift(job); else q.push(job);
+  imgPump();
+}
+// move everything still waiting whose name starts with `prefix` to the front of the queue. A picture the
+// screen is about to draw should not sit behind two hundred probes it does not need (2026-09-21).
+function promoteImages(prefix) {
+  for (let i = _imgQ.length - 1; i >= 0; i--) {
+    if (_imgQ[i].src && _imgQ[i].src.indexOf(prefix) === 0) _imgQNow.unshift(_imgQ.splice(i, 1)[0]);
+  }
   imgPump();
 }
 // the title screen's own art goes to the wire first (the logo, then its backdrop); the
 // several hundred other probes wait a beat so they never queue in front of it
 const _bg = {};
+// a background nothing answered to: no file of that name, so the screen's own drawn stand-in IS the picture
+// and there is nothing to wait for. Filled by the probes below; empty means "still on its way".
+const _bgMiss = {};
 const VIDEO_EXTS = ['mp4', 'webm'];
 const _bgVid = {}, _cmVid = {};          // key -> { el, used }
 // the first morning's four frames: openings/op_<id>.jpg, with clips over them
 const _opImg = {}, _opVid = {};
 let _motion = Store.get('plMotion') !== '0';
 loadLogo();
-loadImageVariants('backgrounds/bg_title', 'bg_title', _bg);
+loadImageVariants('backgrounds/bg_title', 'bg_title', _bg, null, false, false, () => { _bgMiss.bg_title = true; });
 loadVideo('backgrounds/bg_title', 'bg_title', _bgVid);
 // ---- the menu's line-up, chosen before any art is asked for ----
 // The cutouts sit near the end of loadArtLater behind every background, photo and portrait, and they are
@@ -1008,19 +1021,29 @@ const TITLE_CAST_N = 4;
 const TITLE_CAST_IDS = RNG((Math.random() * 1e9) | 0).shuf(NPC_CUT_IDS.slice()).slice(0, TITLE_CAST_N);
 const _cutAsked = {};
 function askCutout(id, front) {
-  if (_cutAsked[id]) return;
+  if (_cutAsked[id]) {
+    // asked for already, but a card wants it NOW and it is still in the slow queue: promote it rather
+    // than ask twice, which would push a second copy of the same picture into the variant list
+    if (front && !(_cutImg[id] || []).length) { promoteImages('npcs/npc_' + id + '_cut'); promoteImages('npcs/reactions/npc_' + id + '_cut'); }
+    return;
+  }
   _cutAsked[id] = true;
-  loadImageVariants('npcs/npc_' + id + '_cut', id, _cutImg, ['png'], false, front);
+  loadImageVariants('npcs/npc_' + id + '_cut', id, _cutImg, ['png'], false, front,
+    () => loadImageVariants('npcs/reactions/npc_' + id + '_cut', id, _cutImg, ['png'], false, front));
 }
 if (!(typeof window !== 'undefined' && window.BB_TEASER)) for (const id of TITLE_CAST_IDS) askCutout(id, true);   // the teaser has no title screen
 setTimeout(loadArtLater, 300);
 function loadArtLater() {
   if (typeof window !== 'undefined' && window.BB_TEASER) { if (typeof window.BB_TEASER.loadArt === 'function') window.BB_TEASER.loadArt(); return; }   // the teaser ships a short list and asks for only that
-  for (const b of BG_NAMES) if (b !== 'bg_title') { loadImageVariants('backgrounds/' + b, b, _bg); if (MOTION_BG.has(b)) loadVideo('backgrounds/' + b, b, _bgVid); }
+  for (const b of BG_NAMES) if (b !== 'bg_title') { loadImageVariants('backgrounds/' + b, b, _bg, null, false, false, () => { _bgMiss[b] = true; }); if (MOTION_BG.has(b)) loadVideo('backgrounds/' + b, b, _bgVid); }
   for (const c of COMMERCIALS) for (let f = 1; f <= c.frames; f++) loadVideo('commercials/cm_' + c.id + '_' + f, c.id + '_' + f, _cmVid);
   for (const b of NP_IMAGE_IDS) loadImageVariants('newspaper/np_' + b, b, _npImg);
   for (const tid of TOWN_ORDER) loadImageVariants('towns/tn_' + tid, tid, _townImg, ['png', 'jpg']);
-  for (const id of Object.keys(PORTRAITS)) loadImageVariants('npcs/npc_' + id, id, _npcImg, ['png', 'jpg']);   // a remade .png wins over the old .jpg
+  // a remade .png wins over the old .jpg - and an idle saved in npcs\reactions\ is found there too, the same
+  // way a reaction saved in npcs\ is (user, 2026-09-23: Ed's idle went in with his reactions and his card fell
+  // back to the drawn sprite). Neither folder is the wrong one now.
+  for (const id of Object.keys(PORTRAITS)) loadImageVariants('npcs/npc_' + id, id, _npcImg, ['png', 'jpg'], false, false,
+    () => loadImageVariants('npcs/reactions/npc_' + id, id, _npcImg, ['png', 'jpg']));
   for (const a of Object.values(AUCTIONEERS)) loadImageVariants('npcs/npc_' + a.face + '_talk', a.face + '_talk', _npcImg);   // the gavel, mouth open
   for (const f of AUC_UI_ART) loadImageVariants('ui/' + f.replace(/\.\w+$/, ''), f.replace(/\.\w+$/, ''), _uiImg, [f.split('.').pop()], true);   // optional auction screen art
   for (const id of NPC_CUT_IDS) askCutout(id);                                                                              // background-free, for the splash card (the menu's four are already away)
@@ -1056,9 +1079,10 @@ function loadImageVariants(pathPrefix, key, store, exts, lean, front, onNone) {
       probe(sufs[i], (ok) => { if (ok) chain(n + 1); else trySuf(i + 1); });
     })(0);
   }
-  // `onNone` (lean only): nothing answered to the name at all, so the caller may look somewhere else
+  // `onNone`: nothing answered to the name at all, so the caller may look somewhere else (lean), or
+  // write the slot off as unpainted (the backgrounds, so a screen knows to stop waiting for one)
   if (lean) { probe('', (ok) => { if (ok) chain(1); else probe('_01', (ok1) => { if (ok1) chain(2); else if (onNone) onNone(); }); }); return; }
-  probe('', () => {});
+  probe('', (ok) => { if (!ok && onNone) onNone(); });
   chain(1);
 }
 
@@ -1092,6 +1116,15 @@ function useVideo(store, key) {
   rec.used = G.time;
   if (el.paused) { el.preload = 'auto'; el.play().catch(() => {}); }
   return el.readyState >= 2 ? el : null;
+}
+// ---- a mouth that reads as speech (user, 2026-09-20: "you have his flipping back and forth and it looks odd") ----
+// Swapping the shut frame for the open one on a fixed beat is a metronome, and at three flips a second the
+// eye reads it as a glitch rather than a man talking. A mouth is open MOST of the time and shuts briefly,
+// unevenly, between words. Three sines that do not divide into each other give that for nothing, and it
+// needs no new art — though a second talk frame (npc_<face>_talk_02) makes it better for free.
+function mouthOpen(t) {
+  const s = Math.sin(t * 8.7) + 0.7 * Math.sin(t * 5.1 + 1.3) + 0.5 * Math.sin(t * 2.3 + 0.7);
+  return s > -0.62;
 }
 function hasArt(name) { return !!((_bg[name] && _bg[name].length) || _bgVid[name]); }
 // clips nobody has drawn for half a second stop decoding
@@ -1207,19 +1240,27 @@ function drawPhotoFill(img, x, y, w, h) {
 // portrait in sprites.js is the fallback, so the game never waits on art.
 const _npcImg = {};
 // Cody and Kaylee's week apart: until npcs\npc_cody.jpg and npc_kaylee.jpg exist, each card is their own half of the
-// pair's portrait, a square around the face (Cody is the left of the frame, Kaylee the right)
-const PORTRAIT_HALF = { cody: { from: 'duo', x: 0.02, y: 0.16, s: 0.54 }, kaylee: { from: 'duo', x: 0.52, y: 0.27, s: 0.48 } };
-// A face saved as a .png on flat magenta (user, 2026-09-19: "I am going to redo npc_ed to have a magenta
-// background so it fits with the reactions better") is keyed like a cutout, so the magenta never shows on a card.
-// A .jpg is drawn as it is. keyOut caches the result on the image and hands back null until it has decoded.
-// Only a picture whose top CORNERS are magenta is keyed (npc_ed.png, 2026-09-19: his shirt fills the bottom two): the reactions already made sit on painted backgrounds, and
-// keying those would punch holes through anything pink in them (a shirt, a sign).
+// pair's portrait, a square around the face (Cody is the left of the frame, Kaylee the right).
+// Measured again on 2026-09-20: the user remade npc_duo on magenta and it came back LANDSCAPE (1397x1126,
+// where it had been 1126x1397), so the old squares pointed at the wrong part of the picture — Cody's took
+// in half of Kaylee. `s` is a square of `s * width` pixels; x is a fraction of the width, y of the height.
+const PORTRAIT_HALF = { cody: { from: 'duo', x: 0.26, y: 0.13, s: 0.30 }, kaylee: { from: 'duo', x: 0.505, y: 0.155, s: 0.295 } };
+// EVERY rival's idle portrait is a figure on flat magenta. That is the user's standing rule, said again on
+// 2026-09-20 ("as i said several times, the idle image for all the rivals will be magenta background"), and
+// it is why the file's name is not the test any more: it used to key .png only, so an idle saved as a .jpg
+// would have carried its magenta onto every card. The test is the TOP TWO CORNERS (a face runs off the
+// bottom edge by design, so the bottom two are shirt). A reaction painted on a room background fails that
+// test and is drawn as it is, which is what stops the key punching holes through anything pink inside a
+// picture — a shirt, a sign, a sunset.
+// Keyed PLAIN: no white sticker edge. That edge belongs to the splash cutout, which stands on a colour
+// sweep with nothing round it; a face card already has a frame, and the sticker read as a halo on it.
+// keyOut caches the result on the image and hands back null until it has decoded.
 function keyedFace(im) {
-  if (!im || !/\.png(\?|$)|^data:image\/png/i.test(im.src || '') || typeof keyOut !== 'function') return im;
+  if (!im || typeof keyOut !== 'function') return im;
   if (im._onMagenta === undefined) {
     const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
     if (!w || !h) return im;                                            // not decoded yet: ask again next frame
-    let hits = 0;
+    let hits = 0, unreadable = false;
     try {
       const c = document.createElement('canvas'); c.width = 1; c.height = 1;
       const x = c.getContext('2d');
@@ -1228,19 +1269,72 @@ function keyedFace(im) {
         const d = x.getImageData(0, 0, 1, 1).data;
         if (d[3] < 40 || (d[0] > 180 && d[2] > 180 && d[1] < 90)) hits++;   // magenta, or already see-through
       }
-    } catch (e) { hits = 0; }
-    im._onMagenta = hits === 2;
+    } catch (e) { unreadable = true; }
+    // A file:// page taints the canvas the moment a local picture is drawn into it, so getImageData throws
+    // and we cannot look at the corners at all. That used to mean "not on magenta", which is why every idle
+    // portrait kept its magenta background when the game was opened by double-clicking index.html, while the
+    // splash cutouts - which go through keyOut's SVG-filter path - keyed perfectly (user, 2026-09-21: "why
+    // are the idle images, still showing the magenta?"). Unreadable is NOT an answer: hand it to keyOut,
+    // whose filter removes magenta and leaves everything else exactly as it was.
+    im._onMagenta = unreadable || hits === 2;
   }
   if (!im._onMagenta) return im;
   let cut = null;
-  try { cut = keyOut(im); } catch (e) { cut = null; }
+  try { cut = keyOut(im, true); } catch (e) { cut = null; }
   return cut || im;
+}
+// ---- a face drawn small in its own frame (user, 2026-09-20: "Sal is a little to small in his idle pose ...
+// enlarge sals idle to match ed size. Its ok if you cutt off sholders, the breakout is where it shines") ----
+// The idle portraits are framed by whoever drew them and they do not all sit at the same size: Ed fills his
+// frame from 14% down, Sal starts at 28% and his head is a fifth smaller, so on a card he read as standing
+// further back than everybody else. Rather than touch the user's file (never), the card shows a WINDOW of
+// the picture: [x, y, size] as fractions of the source, the size being the same fraction of both sides so
+// the picture's own shape is kept and the fitted box does not move. Sal's window puts the top of his cap
+// exactly where the top of Ed's beanie is and makes his head the same height; his shoulders run out of the
+// sides, which is what the breakout pictures are for.
+// [x, y, width] keeps the picture's own shape (a plain zoom); [x, y, width, height] takes a window of a
+// DIFFERENT shape, which is what a wide picture needs to fill a nearly square card. Cody and Kaylee's
+// portrait came back landscape, so fitted whole it sat in a letterbox and the pair — and every breakout
+// lined up on them — came out small (user, 2026-09-20: "cody and kaylee break outs are not properly
+// sized, they shrink"). Their window is the pair, cut to the card's own shape.
+const PORTRAIT_CROP = {
+  sal: [0.102, 0.170, 0.797],
+  dutch: [0.0815, 0.0902, 0.837],
+  duo: [0.082, 0.0611, 0.791, 0.937],
+};
+function cropW(c) { return c ? c[2] : 1; }
+function cropH(c) { return c ? (c[3] == null ? c[2] : c[3]) : 1; }
+// the window of a portrait a card shows, in source pixels
+function portraitWindow(id, iw, ih) {
+  const c = PORTRAIT_CROP[id];
+  if (!c || !iw || !ih) return { sx: 0, sy: 0, sw: iw, sh: ih, s: 1 };
+  const sw = iw * cropW(c), sh = ih * cropH(c);
+  return { sx: clamp(iw * c[0], 0, iw - sw), sy: clamp(ih * c[1], 0, ih - sh), sw, sh, s: cropW(c) };
+}
+// the shape of what the card actually draws: the picture's own, or its window's
+function cardAspect(id) {
+  const c = PORTRAIT_CROP[id], pa = portraitAspect(id);
+  return c ? pa * (cropW(c) / cropH(c)) : pa;
 }
 function drawPortrait(id, x, y, w, h) {
   const list = _npcImg[id];
-  if (list && list.length) { drawPhotoFit(keyedFace(list[strHash(id + '_' + G.day) % list.length]), x, y, w, h); return; }
+  if (list && list.length) {
+    const im = keyedFace(list[strHash(id + '_' + G.day) % list.length]);
+    const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+    if (PORTRAIT_CROP[id] && iw && ih) {
+      const win = portraitWindow(id, iw, ih);
+      const sc = Math.min(w / win.sw, h / win.sh), dw = win.sw * sc, dh = win.sh * sc;
+      g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+      g.drawImage(im, win.sx, win.sy, win.sw, win.sh, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+      g.imageSmoothingEnabled = false;
+      return;
+    }
+    drawPhotoFit(im, x, y, w, h);
+    return;
+  }
   const half = PORTRAIT_HALF[id], hl = half && _npcImg[half.from];
-  const im = hl && hl.length ? hl[strHash(half.from + '_' + G.day) % hl.length] : null;
+  // keyed like any other idle: the pair's portrait is on magenta too, and a square cut out of it is still magenta
+  const im = hl && hl.length ? keyedFace(hl[strHash(half.from + '_' + G.day) % hl.length]) : null;
   const iw = im ? (im.naturalWidth || im.width) : 0, ih = im ? (im.naturalHeight || im.height) : 0;
   if (iw && ih) {
     const s = Math.min(iw, ih, Math.round(half.s * iw));
@@ -1313,6 +1407,17 @@ function reactAlign(file) {
   const t = (typeof window !== 'undefined' && window.REACT_ALIGN) || {};
   return t[file] || REACT_ALIGN_DEFAULT;
 }
+// has this picture actually been lined up, or is the default shape standing in? The default assumes a
+// breakout framed exactly to the prompt, and the user's do not always come back that way — their tool crops
+// the sides, so they leave room and let the line-up sort it out (2026-09-20). A breakout whose line-up is
+// only a guess is not shown in the GAME: the head would sit somewhere confident and wrong, which is worse
+// than the ordinary reaction it falls back to. The dev room draws it regardless, so it can be lined up
+// there (AUTO, or the arrows) and saved, and from that moment it plays.
+function reactAligned(file) {
+  if (_boEdits[file]) return true;
+  const t = (typeof window !== 'undefined' && window.REACT_ALIGN) || {};
+  return !!t[file];
+}
 function portraitAspect(id) {
   const l = _npcImg[id], im = l && l[0];
   const iw = im && (im.naturalWidth || im.width), ih = im && (im.naturalHeight || im.height);
@@ -1321,12 +1426,19 @@ function portraitAspect(id) {
 // where a breakout picture lands, given the box its plain portrait would be fitted into
 function breakoutDest(id, im, x, y, w, h) {
   const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
-  const pa = portraitAspect(id);
-  const dh = Math.min(h, w / pa), dw = dh * pa;                 // the plain portrait, fitted, as drawPhotoFit does
+  const pa = cardAspect(id);
+  const dh = Math.min(h, w / pa), dw = dh * pa;                 // what the card draws, fitted, as drawPortrait does
   const Dx = x + (w - dw) / 2, Dy = y + (h - dh) / 2;
+  // REACT_ALIGN says where the WHOLE portrait picture sits inside the breakout, so the sum has to be done
+  // against the whole picture. A card that crops in on its portrait (PORTRAIT_CROP) shows only a window of
+  // it, so work out where the whole one would be at that magnification and line the breakout up with that.
+  // Whatever the window's shape, the whole portrait keeps its own: Fw/Fh comes back to the picture's aspect.
+  const c = PORTRAIT_CROP[id];
+  const Fw = dw / cropW(c), Fh = dh / cropH(c);
+  const Fx = Dx - (c ? c[0] : 0) * Fw, Fy = Dy - (c ? c[1] : 0) * Fh;
   const [rx, ry, rw] = reactAlign(imgFileName(im));
-  const k = dw / (rw * iw);
-  return { x: Dx - rx * iw * k, y: Dy - ry * ih * k, w: iw * k, h: ih * k, portrait: { x: Dx, y: Dy, w: dw, h: dh } };
+  const k = Fw / (rw * iw);
+  return { x: Fx - rx * iw * k, y: Fy - ry * ih * k, w: iw * k, h: ih * k, portrait: { x: Dx, y: Dy, w: dw, h: dh } };
 }
 let _breakouts = [];
 // inside the box now; the rest after every card has been drawn
@@ -1367,7 +1479,11 @@ function loadReactions(id) {
     const name = 'npc_' + id + '_' + k;
     loadImageVariants('npcs/reactions/' + name, id + '_' + k, _reactImg, null, true, true,
       () => loadImageVariants('npcs/' + name, id + '_' + k, _reactImg, null, true, true));
-    if (BREAKOUT_KEYS.includes(k)) loadImageVariants('npcs/reactions/' + name + '_out', id + '_' + k + '_out', _reactImg, ['png', 'jpg'], true, false);
+    // ...and a breakout saved beside the portraits is found too. It was not, until 2026-09-20: the plain
+    // reactions had this fallback and the _out pictures did not, so fourteen of the sixteen the user had
+    // made - every one of Sal's, Dutch's and the duo's, saved in npcs\ - never loaded in the game at all.
+    if (BREAKOUT_KEYS.includes(k)) loadImageVariants('npcs/reactions/' + name + '_out', id + '_' + k + '_out', _reactImg, ['png', 'jpg'], true, false,
+      () => loadImageVariants('npcs/' + name + '_out', id + '_' + k + '_out', _reactImg, ['png', 'jpg'], true, false));
   }
 }
 // a face reacts: quick ones fade after `hold`; sticky ones (the hammer) stay for the rest of the sale
@@ -1415,7 +1531,8 @@ function drawReaction(id, key, x, y, w, h, salt, opts) {
   loadReactions(id);
   if (opts && opts.breakout && key) {
     const bl = _reactImg[id + '_' + key + '_out'];
-    if (bl && bl.length && drawBreakout(id, bl[strHash(id + '_' + key + '_' + salt) % bl.length], x, y, w, h)) return;
+    const bim = bl && bl.length ? bl[strHash(id + '_' + key + '_' + salt) % bl.length] : null;
+    if (bim && reactAligned(imgFileName(bim)) && drawBreakout(id, bim, x, y, w, h)) return;
   }
   const list = key && _reactImg[id + '_' + key];
   if (list && list.length) drawPhotoFit(keyedFace(list[strHash(id + '_' + key + '_' + salt) % list.length]), x, y, w, h);
@@ -1453,7 +1570,7 @@ function drawGavelPortrait(x, y, w, h) {
   const talk = _npcImg[face + '_talk'];
   px(g, x - 2, y - 2, w + 4, h + 4, talking ? PAL.yellow : '#5a6488');
   px(g, x, y, w, h, '#1a1626');
-  if (talking && talk && talk.length) drawPhotoFit(talk[strHash(face + '_' + G.day) % talk.length], x, y, w, h);
+  if (talking && talk && talk.length) drawPhotoFit(keyedFace(talk[strHash(face + '_' + G.day) % talk.length]), x, y, w, h);
   else drawPortrait(face, x, y - (talking && ((G.time * 8) | 0) % 2 ? 1 : 0), w, h);
   T(x + w / 2, y + h + 3, a.name, talking ? PAL.yellow : PAL.gray, 11, 'center');
 }
@@ -1518,6 +1635,13 @@ function loadLogo() {
 }
 
 let _bgPick = { mode: null, img: null };
+// A painted backdrop is a big .jpg and the first seconds after boot are the busiest the download lanes ever
+// get, so the title used to draw its pixel-art stand-in — a row of drawn lockers — and then swap the photo in
+// over it a second later (user, 2026-09-20: "the old pixel background shows for a second before the real one
+// does"). Now a screen whose art has not landed yet, and has not been written off as unpainted, simply holds
+// on black for the first few seconds of a session and fades the picture up when it arrives. Nothing flashes.
+const BG_WAIT = 6, BG_FADE = 0.4;
+const _bgHeld = {};
 let _onArt = false;                 // a painted backdrop is up: text gets a shadow this frame
 // fill the screen keeping the source's own aspect, cropping the overflow from
 // the middle. A 16:9 file lands exactly; a generator's taller clip (the title
@@ -1536,12 +1660,21 @@ function drawBG() {
   if (want === 'bg_title' && titleOwned() && hasArt('bg_title_owned')) want = 'bg_title_owned';   // the yard on the title screen is yours
   const list = want && _bg[want];
   const clip = want && useVideo(_bgVid, want);
-  if ((!list || !list.length) && !clip) return false;
+  if ((!list || !list.length) && !clip) {
+    // still on the wire: hold on black rather than flashing the drawn stand-in under it
+    if (want && !_bgMiss[want] && G.time < BG_WAIT) { _bgHeld[want] = G.time; px(g, 0, 0, W, H, '#07080c'); _onArt = false; return true; }
+    return false;
+  }
+  const held = _bgHeld[want];
+  const fade = held == null ? 1 : clamp((G.time - held) / BG_FADE, 0, 1);
+  if (fade >= 1) delete _bgHeld[want]; else px(g, 0, 0, W, H, '#07080c');
+  g.globalAlpha = fade;
   if (list && list.length) {
     if (_bgPick.mode !== want) _bgPick = { mode: want, img: list[(Math.random() * list.length) | 0] };
     drawCoverBG(_bgPick.img, _bgPick.img.naturalWidth, _bgPick.img.naturalHeight);
   } else px(g, 0, 0, W, H, '#07080c');
   if (clip) drawCoverBG(clip, clip.videoWidth, clip.videoHeight);   // the still moves
+  g.globalAlpha = 1;
   // a touch of dusk so the UI reads over bright skies
   px(g, 0, 0, W, H, G.mode === 'title' ? 'rgba(6,8,16,0.14)' : 'rgba(6,8,16,0.26)');
   _onArt = true;
@@ -1682,19 +1815,28 @@ function slider(x, y, w, label, bus, col) {
   button(bx + 28 + bw + 4, y, 24, 22, '>', () => setVol(bus, v + 0.1), { fs: 15, col: PAL.slate, disabled: v >= 1 });
 }
 // hover info in its own little panel — never text draped over an edge
+// A hint is a sentence, sometimes three of them (the three ways in at the door, 2026-09-20). It used to be set
+// on ONE line whatever its length, so anything past about eighty characters ran off both edges of the screen.
+// It wraps by measure now and the box grows to what it holds.
+const TIP_MAX_W = 560, TIP_MAX_LINES = 5;
 function drawTooltip(cx, topY, text, col) {
-  g.font = '14px ' + FONT;
   let fs = 14;
-  let tw = Math.ceil(g.measureText(text).width) + 22;
-  if (tw > 560) { fs = 12; g.font = '12px ' + FONT; tw = Math.ceil(g.measureText(text).width) + 20; }
-  tw = Math.min(tw, 640);
+  let lines = wrapPx(text, TIP_MAX_W - 22, fs);
+  if (lines.length > 2) { fs = 12; lines = wrapPx(text, TIP_MAX_W - 20, fs); }
+  if (lines.length > TIP_MAX_LINES) { lines = lines.slice(0, TIP_MAX_LINES); lines[TIP_MAX_LINES - 1] = lines[TIP_MAX_LINES - 1].replace(/[\s,;:]+$/, '') + '…'; }
+  const step = fs + 5;
+  g.font = textSize(fs) + 'px ' + FONT;
+  let tw = 0;
+  for (const l of lines) tw = Math.max(tw, Math.ceil(g.measureText(l).width));
+  tw = Math.min(tw + 22, TIP_MAX_W);
+  const th = 8 + lines.length * step;
   const x = clamp(Math.round(cx - tw / 2), 8, W - tw - 8);
-  const y = Math.max(42, topY - 32);
-  px(g, x - 2, y - 2, tw + 4, 28, PAL.ink);
-  px(g, x, y, tw, 24, '#2c3044');
+  const y = clamp(topY - 8 - th, 42, H - th - 8);
+  px(g, x - 2, y - 2, tw + 4, th + 4, PAL.ink);
+  px(g, x, y, tw, th, '#2c3044');
   px(g, x, y, tw, 2, '#404663');
-  T(x + tw / 2, y + (fs === 14 ? 5 : 6), text, col || PAL.white, fs, 'center');
-  px(g, clamp(Math.round(cx) - 3, x + 6, x + tw - 12), y + 24, 7, 3, PAL.ink);   // pointer nub
+  for (let i = 0; i < lines.length; i++) T(x + tw / 2, y + 4 + i * step, lines[i], col || PAL.white, fs, 'center');
+  px(g, clamp(Math.round(cx) - 3, x + 6, x + tw - 12), y + th, 7, 3, PAL.ink);   // pointer nub
 }
 // hovering a tiny 24px icon (the found-items row in LOOK CLOSER): a bigger look,
 // same pixel-art cap as the grid (drawIcon never upscales past 2x), plus its name
@@ -1835,8 +1977,8 @@ function toastTime(text, ttl) {
 // time left, that one comes back when the short one is gone, with the time it had left. The same message
 // fired again does not restart or stack; it just stays up. (2026-09-18)
 const TOAST_RESUME = 2.5;          // an interrupted message is worth bringing back if it had this long left
-function toast(text, col, ttl) {
-  const cur = G.toast, next = { text, col: col || PAL.white, ttl: toastTime(text, ttl) };
+function toast(text, col, ttl, who) {
+  const cur = G.toast, next = { text, col: col || PAL.white, ttl: toastTime(text, ttl), who: who || null, age: 0 };
   if (cur && cur.text === text) { cur.ttl = Math.max(cur.ttl, next.ttl); return; }
   // one level of memory: the message this one cut off, or the one the last short message was already holding
   const keep = cur && cur.ttl > TOAST_RESUME && next.ttl < cur.ttl ? cur : (cur && cur.back) || null;
@@ -2246,20 +2388,95 @@ function processRestorations() {
 }
 
 // exactly-once-per-real-day bookkeeping, then the sun comes up
+// ---- what the raccoon is after (user's design, 2026-09-21; docs/RACCOON.md) ----
+// "What if there is an item or two that is junk, it's worthless, but if you have it in your inventory at
+// night... the raccoon likes a certain junk, the player won't know this... you collect them, and you need
+// to make sort of a junk set for the raccoon."
+//
+// He does not want a BASE - he wants a THING. Whether this particular one is sticky is a hash of its uid,
+// so: no new items, no change to any pool, and not one extra draw in the generator (a draw there would
+// have moved every locker of every seed). About one thing in a door or two qualifies, and the card says so
+// in the same sensory voice everything else uses. Nothing anywhere says what it is for.
+//
+// The whole loop runs on verbs that already exist: things in the HAUL are out; things in the STASH are
+// behind the latch he has never worked out. Leaving a sticky thing out is the entire move.
+const RAC_SET_N = 5;                       // five, and you are square with him
+const RAC_WANT_ODDS = 7;                   // one uid in this many, among cheap small junk: about one door in four or five
+const RAC_COME = 0.85;                     // he does not miss one that is out
+const RAC_LINES_WANT = [
+  'sticky. not with paint.',
+  'it smells faintly of something sweet.',
+  'somebody spilled something on this, a long time ago.',
+];
+function racWantsIt(it) {
+  if (!it || it.loot || it.legendary || it.setComplete || it.leaveOnly) return false;
+  if ((it.val || 0) > 14 || (it.size || 1) > 3) return false;
+  return strHash('rac' + (it.uid || it.base || '')) % RAC_WANT_ODDS === 0;
+}
+function racWantLine(it) {
+  return RAC_LINES_WANT[strHash('racline' + (it.uid || '')) % RAC_LINES_WANT.length];
+}
+function racArcs() { const w = G.world; if (!w) return {}; w.arcs = w.arcs || {}; return w.arcs; }
+function racCount() { return racArcs().racSet || 0; }
+function racSquare() { return racCount() >= RAC_SET_N; }
+// the ordinary night's roll, in its own stream so the evening can ask the same question the night will
+function racNightRoll(day) { return RNG(strHash('racroll' + G.worldSeed + '_' + (day == null ? G.day : day))); }
+// is he coming tonight? Asked by the night, and by the drive home three hours earlier
+function racComingTonight() {
+  if (!G.world || G.demo) return false;
+  if (G.stash && G.stash.some(racWantsIt)) return true;         // something he wants is sitting out
+  if (racSquare()) return false;                                // square with you: he leaves your things alone
+  return racNightRoll().chance(0.025);
+}
+
 // Deposits the raccoon has seniority, a vest, and no scruples
+// Two kinds of night. One: something he WANTS is out in the haul, and he comes for it - that is the set,
+// and it is the only thing that counts toward it. Two: an ordinary night, the old one-in-forty, and he
+// takes whatever small thing is lying about. Once you are square (RAC_SET_N) the second kind stops: he
+// does not steal from a man who has been leaving things out for him.
 function raccoonVisit() {
   const R = RNG(strHash('raccoon' + G.worldSeed + '_' + G.day));
-  if (!R.chance(0.025)) return null;
+  const take = (it, gift) => {
+    G.stash.splice(G.stash.indexOf(it), 1);
+    const vest = makeItem('tinyVest', R);
+    vest.searched = true;
+    G.stash.push(vest);
+    recordEvent('raccoon', { name: dName(it), base: it.base, val: it.val, gift: !!gift });
+    bump('raccoon');
+    if (gift) {
+      const a = racArcs();
+      a.racSet = Math.min(RAC_SET_N, (a.racSet || 0) + 1);
+      a.racLast = G.day;
+      recordEvent('racGift', { name: dName(it), n: a.racSet });
+    }
+    return dName(it);
+  };
+  const wanted = racSquare() ? [] : G.stash.filter(racWantsIt);    // square: he leaves your things where they are
+  if (wanted.length) {
+    if (!R.chance(RAC_COME)) return null;              // once in a while he has a night off
+    return take(R.pick(wanted), true);
+  }
+  if (racSquare()) return null;
+  if (!racNightRoll().chance(0.025)) return null;
   const small = G.stash.filter((it) => it.size <= 2 && !it.setComplete && !it.loot);
   if (!small.length) return null;
-  const it = R.pick(small);
-  G.stash.splice(G.stash.indexOf(it), 1);
-  const vest = makeItem('tinyVest', R);
-  vest.searched = true;
-  G.stash.push(vest);
-  recordEvent('raccoon', { name: dName(it), base: it.base, val: it.val });
-  bump('raccoon');
-  return dName(it);
+  return take(R.pick(small), false);
+}
+// ---- what being square with him is worth (late, rare, and never a certainty) ----
+// Something goes over in the dark at the back of the room and the man who was leading loses his place:
+// he misses one turn. Sometimes the crowd just laughs and he bids anyway - the roll decides, once a sale.
+function racHelpRoll(au) {
+  if (!au || au.done || au.racTried || !racSquare() || G.demo) return;
+  if (!au.leader || au.leader === 'you' || !au.leader.def || au.leader.crowd) return;
+  au.racTried = true;
+  const R = RNG(strHash('rachelp' + G.worldSeed + '_' + G.day + '_' + (G.cur ? G.cur.num : 0)));
+  if (!R.chance(0.16)) return;                           // a sale in six or so, and a quarter of those come to nothing
+  if (R.chance(0.25)) {                                  // it happens, and it does not work
+    roomEvent('raccoon', 'Something goes over at the back of the room. The crowd laughs. ' + shortRivalName(au.leader.def) + ' does not look up.');
+    return;
+  }
+  au.racSkip = true;
+  roomEvent('raccoon', 'Something goes over in the dark at the back. Every head in the room turns, and ' + shortRivalName(au.leader.def) + ' loses the thread.');
 }
 
 // inventory pressure: your own unit isn't free either
@@ -2294,6 +2511,7 @@ function rentUnit() {
   spend(UNIT_RENT);
   G.world.unit = { num, town: G.world.town, items: [], since: G.day, owed: 0, dueSince: 0 };
   play('coin');
+  clerkSay('unit');
   toast('Unit ' + num + ' is yours, ' + fmt$(UNIT_RENT) + ' a week on the bill. The clerk writes your name in pencil.', PAL.cyan, 4);
   recordEvent('unitRented', { unit: num });
   return true;
@@ -2322,7 +2540,7 @@ function unitPut(it) {
 function unitFetch(it) {
   const u = unitHere();
   if (!u || !it) return false;
-  if (vanUsed() + it.size > vanCapNow()) { play('denied'); toast('The van will not take it. Go home and unload first.', PAL.red, 3); return false; }
+  if (vanUsed() + it.size > vanCapNow()) { play('denied'); clerkPop('The van will not take it. Go home and unload first.', PAL.red, 3); return false; }
   if (!u.fetchedToday) {
     if (G.daylight < UNIT_FETCH_ENERGY) { play('denied'); toast('Not enough energy for the drive out there.', PAL.red, 3); return false; }
     G.daylight -= UNIT_FETCH_ENERGY; sunCheck();
@@ -2439,8 +2657,13 @@ function advanceDay() {
   if (stolen) {
     // the raccoon's calling card escalates: a vest, an ironed vest, a receipt, a bidder number
     const n = countEvents('raccoon');
-    const tail = n <= 1 ? 'A tiny vest was left, neatly folded.' : (n === 2 ? 'The vest was ironed this time.' : (n === 3 ? 'He left a receipt.' : 'The receipt has a bidder number on it. 89.'));
-    toast('The ' + stolen + ' is gone. ' + tail, PAL.orange, 4);
+    const gifts = racCount();
+    const took = countEvents('racGift') > 0 && (G.world.arcs || {}).racLast === G.day - 1;
+    const tail = took
+      ? (gifts >= RAC_SET_N ? 'The receipt says PAID IN FULL. There is no more room on it.'
+        : 'A tiny vest was left in its place. The receipt has ' + ['one', 'two', 'three', 'four', 'five'][gifts - 1] + ' marks on it now.')
+      : (n <= 1 ? 'A tiny vest was left, neatly folded.' : (n === 2 ? 'The vest was ironed this time.' : (n === 3 ? 'He left a receipt.' : 'The receipt has a bidder number on it. 89.')));
+    toast('The ' + stolen + ' is gone. ' + tail, took ? PAL.cyan : PAL.orange, 4);
   } else if (firstVisit) { /* the arrival scene carries the clerk's line */ }
   else if (arrived && arrived.arrival) {
     // the clerk's greeting keeps count of you
@@ -2743,8 +2966,10 @@ function drawHeader(sub) {
   const hx = Math.round(EX - ew - 20);
   _sunHover = G.mode !== 'title' && inRect(mouse.x, mouse.y, hx, 4, EX + 180 - hx, 30);
   if (sub) T(844, 10, sub, PAL.gray, 16, 'right');
-  px(g, 860, 11, 18, 3, PAL.gray); px(g, 860, 17, 18, 3, PAL.gray); px(g, 860, 23, 18, 3, PAL.gray);
-  hot(854, 6, 28, 26, () => { if (G.mode !== 'title') G.paused = !G.paused; });
+  if (!(typeof window !== 'undefined' && window.BB_TEASER)) {   // the website teaser has no pause menu, so no icon for one
+    px(g, 860, 11, 18, 3, PAL.gray); px(g, 860, 17, 18, 3, PAL.gray); px(g, 860, 23, 18, 3, PAL.gray);
+    hot(854, 6, 28, 26, () => { if (G.mode !== 'title') G.paused = !G.paused; });
+  }
   drawSpeakerIcon(896, 10);
   hot(892, 6, 22, 24, () => toggleMute());
   // fullscreen moved to the pause menu (it already has its own button there) —
@@ -2820,6 +3045,11 @@ function drawTitle() {
   by += 54;
   if (hasSave()) { button(W / 2 - 130, by, 260, 46, 'CONTINUE  (DAY ' + (peekSaveDay() || '?') + ')', () => { if (loadGame()) { startDay(); applyResume(); } }, { fs: 20, col: PAL.dgreen }); by += 54; }
   button(W / 2 - 130, by, 260, 40, 'QUIT', () => quitGame(), { fs: 18, col: PAL.slate });
+  // the cast, from the menu: who you will be bidding against, and what a career teaches you about them
+  button(W / 2 - 254, by, 114, 40, 'THE PEOPLE', () => openCodexFromTitle(), { fs: 14, col: PAL.slate });
+  // he is up on the office roof in the owned yard's art, where he has been silent since the day it was
+  // painted. The rect is measured off the picture: about a sixth across, a fifth down (2026-09-21).
+  if (titleOwned() && hasArt('bg_title_owned')) hot(132, 92, 52, 50, () => racSay('rac_roof'), { label: 'the raccoon', focusable: false });
   if (titleOwned()) button(W / 2 + 140, by, 110, 40, 'CREDITS', () => { if (hasSave()) loadGame(); startCredits('title'); }, { fs: 15, col: PAL.slate });   // the yard is yours: the credits are too
   by += 50;
   const sd = titleSeed();
@@ -3211,8 +3441,10 @@ function peekHint(it) {
 // (that shape is exactly what the dark is keeping), never the want-ad's thing (it has its own ring already),
 // seeded per unit so a door always points at the same things, once per door a day, and it stops the instant
 // you move the mouse — you looking for yourself is the whole point of it.
-// 2.1s a thing, up from 1.3: the first look was going by too fast to read (user, 2026-09-16)
-const PEEK_TOUR_HOLD = 2.1, PEEK_TOUR_MAX = 3, PEEK_TOUR_FADE = 0.32;
+// 1.55s a thing: 1.3 was too fast to read (user, 2026-09-16), and the 2.1 that fixed it made the first
+// six seconds at every door a wait (user, 2026-09-20: "the initial 3 peak phase is a little slow"). This
+// is between them, and the whole tour is under five seconds — still yours to end with one twitch of the mouse.
+const PEEK_TOUR_HOLD = 1.55, PEEK_TOUR_MAX = 3, PEEK_TOUR_FADE = 0.26;
 // which things in the front row the eye goes to, in order. Pulled out of peekTourStart so the walk down the
 // row (walkdown.js) points at the SAME first thing the peek will — a door never contradicts itself.
 function peekTourPick(lk) {
@@ -3259,12 +3491,115 @@ function peekTourFade() {
 // Everything here is drawn from the SAME 100 energy that pulling things out of the unit costs later, so
 // buying certainty at the door means digging less afterwards. That is the squeeze, and it needs no timer.
 // One of each per door, and JOIN (5) is the threshold out of the phase and into the bidding.
+// ---- the three ways in, as a choice you can read (the user's rework, 2026-09-20; docs/AUCTION_REDESIGN.md §1) ----
+// "The joining loud and quiet and regular is still not very clear. The buttons are ugly. I don't like that it
+// shows the energy and the stuff on there either - that needs to go on a hover." So: three cards, one under the
+// other, each with a name, ONE line about the room you are about to walk into, and its energy as a chip. The
+// rule, the cost in words and what it costs you ride on the hover. The line is read from the room `startAuction`
+// will actually deal (roomPreview, the same seed), so which card is right changes with the morning - a face who
+// is sore at you, one who would push you if they knew, a yard that has you down as money.
+const STANCES = [
+  { id: 'join', title: 'IN THE CROWD', col: PAL.dgreen,
+    rule: 'The middle of the crowd. Some see you, some do not. You read every face, and nobody has a reason to single you out.',
+    cost: 5 },
+  { id: 'loud', title: 'UP FRONT', col: '#8a5a20',
+    rule: 'Where everybody can see you. You look like money and you look serious: nervous paddles fold, and jump bids land harder. But the yard marks you as money for the day, nobody believes a word you say, and a face you push will happily leave the door with you.',
+    cost: 8 },   // 5 + POSTURES.loud.cost, spelled out: POSTURES is declared further down (a check keeps them equal)
+  { id: 'quiet', title: 'AT THE BACK', col: PAL.navy,
+    rule: 'A paddle and no face. Nobody knows who is bidding, so pushing costs you nothing and nobody comes for you after. But you cannot read a face from back there, Buzz can miss you at the wire, and down to the last two they find out anyway.',
+    cost: 10 },  // 5 + POSTURES.quiet.cost
+];
+// the room this door will actually deal, worked out once and kept on the door
+let _roomPeek = { key: null, list: [] };            // kept here, not on the door: the door is saved, and a room is not
+function roomPreview(lk) {
+  if (!lk || G.demo) return [];
+  const key = G.day + '_' + lk.num + '_' + (G.world ? G.world.town : '');
+  if (_roomPeek.key === key) return _roomPeek.list;
+  let list = [];
+  try {
+    const R = RNG(strHash('auction' + G.worldSeed + '_' + G.day + '_' + lk.num));
+    list = prepNpcsForAuction(lk, R, G.world, G.day).filter((n) => n.active && !n.crowd);
+  } catch (e) { list = []; }
+  _roomPeek = { key, list };
+  return list;
+}
+function stanceName(id) { const s = STANCES.find((x) => x.id === id); return s ? s.title : id; }
+// one line about today's room for a card, or the plain truth when the room has nothing to add
+// (not stanceLine: that name belongs to the rivals' own stance lines in memory.js)
+function stanceToday(lk, id) {
+  const room = roomPreview(lk);
+  const sore = room.filter((n) => standingOf(n.def.id) <= -2);
+  const mem = (G.world && G.world.rivalMem) || {};
+  const owed = room.filter((n) => (mem.owedPush || {})[n.def.id] != null && G.day - mem.owedPush[n.def.id] <= (typeof PUSHBACK_DAYS === 'number' ? PUSHBACK_DAYS : 3));
+  const n = room.length;
+  if (id === 'join') {
+    if (!n) return 'Nobody much is out for this one.';
+    if (sore.length) return 'You read every face — and ' + (sore.length === 1 ? shortRivalName(sore[0].def) + ' is sore at you' : sore.length + ' of them are sore at you') + '.';
+    return 'You read every face. Nobody singles you out.';
+  }
+  if (id === 'loud') {
+    if (G.today && G.today.markedMoney) return 'The yard already has you down as money today.';
+    if (room.some((x) => x.def.id === 'sal')) return 'Sal is out for this one, and Sal loves an audience.';
+    if (n >= 4) return n + ' faces to lean on. Some of them lean back.';
+    return 'They see the money. The nervous ones fold early.';
+  }
+  if (owed.length) return (owed.length === 1 ? shortRivalName(owed[0].def) + ' owes you a push' : owed.length + ' of them owe you a push') + ' — and cannot pay it to a stranger.';
+  if (sore.length) return (sore.length === 1 ? shortRivalName(sore[0].def) + ' is sore at you' : sore.length + ' here are sore at you') + ', and cannot see who is bidding.';
+  return 'A paddle, not a face. You cannot read them either.';
+}
+function stanceHint(lk, s, canJoin) {
+  const short = s.cost + ' energy. ';
+  if (!canJoin) return short + s.rule;
+  if (G.daylight < s.cost) return 'not enough energy: it takes ' + s.cost + '. ' + s.rule;
+  return short + s.rule;
+}
+// a card: the name, what it means this morning, and the energy as a chip in the corner
+// ---- the peek's buttons, given some weight (user, 2026-09-20: "they need some love they are ugly") ----
+// A flat rectangle with a word in it is a placeholder, not a button. These are stamped tin: an ink edge all
+// round, a lit line along the top and a dark one under the bottom so the face stands proud, and a colour
+// stripe down the left saying what KIND of thing it is. Hovering lights the top edge; a spent one sinks flat
+// and greys. Nothing here is new art - it is four one-pixel rectangles and the right colours.
+function drawChunky(x, y, w, h, o) {
+  const live = !o.off && !o.done;
+  const face = o.done ? '#232736' : (live ? (o.over ? '#38415c' : '#282f45') : '#1b1d27');
+  px(g, x, y, w, h, PAL.ink);
+  px(g, x + 1, y + 1, w - 2, h - 2, face);
+  px(g, x + 1, y + 1, w - 2, 1, live ? (o.over ? '#63709a' : '#454e6d') : '#232733');   // the light on top
+  px(g, x + 1, y + h - 2, w - 2, 1, '#14161f');                                         // the shadow under
+  if (o.col) px(g, x + 1, y + 1, 4, h - 2, live ? o.col : '#2a2e3c');                   // whose kind of thing it is
+}
+// a price, stamped into the face rather than written in the sentence
+function drawCostChip(x, y, w, h, n, col, sub) {
+  px(g, x, y, w, h, '#14161f');
+  px(g, x + 1, y + 1, w - 2, h - 2, '#1e2130');
+  T(x + w / 2, y + (sub ? 3 : Math.round((h - 15) / 2)), String(n), col, 14, 'center', true);
+  if (sub) T(x + w / 2, y + h - 12, sub, PAL.dgray, 9, 'center');
+}
+function drawStanceCard(lk, s, x, y, w, h, canJoin) {
+  const enough = G.daylight >= s.cost;
+  const on = canJoin && enough;
+  const over = inRect(mouse.x, mouse.y, x, y, w, h);
+  drawChunky(x, y, w, h, { over, off: !on, col: s.col });
+  T(x + 14, y + 2, s.title, on ? PAL.white : PAL.dgray, 14, 'left', true);
+  const line = fitLines(stanceToday(lk, s.id), w - 62, [11, 11], 1);
+  T(x + 14, y + 16, line.lines[0], on ? PAL.gray : PAL.dgray, line.fs, 'left');
+  drawCostChip(x + w - 38, y + 3, 32, h - 6, s.cost, enough ? (on ? PAL.yellow : PAL.dgray) : PAL.red, 'nrg');
+  buttonHot(x, y, w, h, s.title, () => {
+    if (s.id === 'join' && Math.random() < 0.5) speak(['auc_peek_timesup'], true);
+    joinDoor(lk, s.id === 'join' ? undefined : s.id);
+  }, { disabled: !on, hint: stanceHint(lk, s, canJoin) }, over);
+}
 const INTEL = {
-  look: { label: 'LOOK AGAIN', short: 'LOOK AGAIN', cost: 3, hint: 'what the front row is worth, near enough' },
-  deep: { label: 'A LONG LOOK', short: 'LONG LOOK', cost: 6, hint: 'the row behind the front one, properly: what each thing is, not just its shape' },
-  ed: { label: 'WATCH ED', short: 'WATCH ED', cost: 4, hint: "whatever Eagle Ed's face says about this door" },
+  look: { label: 'LOOK AGAIN', short: 'LOOK AGAIN', cost: 3, col: '#3f6fa8', hint: 'what the front row is worth, near enough' },
+  deep: { label: 'A LONG LOOK', short: 'LONG LOOK', cost: 6, col: '#2f8a7a', hint: 'the row behind the front one, properly: what each thing is, not just its shape' },
+  ed: { label: 'WATCH ED', short: 'WATCH ED', cost: 4, col: '#8a5a20', hint: "whatever Eagle Ed's face says about this door" },
 };
 const INTEL_ORDER = ['look', 'deep', 'ed'];
+// The peek draws the unit shorter than the other screens do (user, 2026-09-20: "make the locker a little
+// smaller so the text below fits better"). It is the same door drawn the same size - everything inside is
+// placed off the FLOOR, so a shorter frame only lowers the ceiling. Nothing moves and nothing is scaled;
+// the tallest thing in the game is 176px and still clears it by a good margin.
+const PEEK_FRAME_H = 262;
 function intelState(lk) { return (lk.intel = lk.intel || {}); }
 function intelDone(lk, id) { return !!(lk && intelState(lk)[id]); }
 function intelCan(lk, id) {
@@ -3310,6 +3645,11 @@ function intelBuy(lk, id) {
 }
 
 function drawPeek() {
+  const wasFrameH = LK.frameH;
+  LK.frameH = PEEK_FRAME_H;
+  try { drawPeekBody(); } finally { LK.frameH = wasFrameH; }
+}
+function drawPeekBody() {
   if (!drawBG()) px(g, 0, 0, W, H, '#171a24');
   drawTint();
   drawHeader('UNIT ' + G.cur.num + '  ·  ' + (G.cur.sizeLabel || '10x10'));
@@ -3391,12 +3731,18 @@ function drawPeek() {
       hot(p.x, p.y, p.w, p.h, () => { G.cur.loupeLine = loupeRead(hov); });
     } else tip = { cx: acx, top: atop, t: peekHint(hov), c: PAL.yellow };
   }
-  stripT(lx, ly + LK.frameH + 18, hasTool('flashlight') ? "It's dark past the front row. Point the flashlight into it." : "You can look from the door. It's dark past the front row.", PAL.gray, 15);
+  stripT(lx, ly + LK.frameH + 6, hasTool('flashlight') ? "It's dark past the front row. Point the flashlight into it." : "You can look from the door. It's dark past the front row.", PAL.gray, 13);
 
-  panel(24, 416, 560, 112, '#20222e');
+  // ---- the two panels under the door (user's rework, 2026-09-20) ----
+  // "the info panel below it, make it only about the locker. any rival info put in a notification bubble or
+  // the right side." So the left panel is THE DOOR and nothing else - the owner, the tenant, what your own
+  // eyes and tools make of it, why it matters this morning - and everything the yard is DOING moves to its
+  // own panel on the right, over the three ways in. They are two different kinds of knowing and they were
+  // fighting for the same four rows.
+  panel(24, 352, 560, 118, '#20222e');
   // the door gets a person's name on it, in the header, where it costs none of the four info rows below
   const tenant = tenantFor(G.cur);
-  T(40, 421, 'UNIT ' + G.cur.num + (tenant ? '  \u00b7  ' + tenant.name : ''), PAL.yellow, 15, 'left', true);
+  T(40, 357, 'UNIT ' + G.cur.num + (tenant ? '  \u00b7  ' + tenant.name : ''), PAL.yellow, 15, 'left', true);
   // Four lines fit and the door usually has more than four things to say, so the order here decides
   // what you actually get to read. It used to be the order the lines happened to be written in, which
   // put the owner's flavour first and every instrument last. Measured 2026-09-16 over 1,200 doors with
@@ -3414,13 +3760,16 @@ function drawPeek() {
   const early = od && od <= 2;
   src(0, '"' + G.cur.flavor + '"  —  ' + G.cur.owner, PAL.white);   // the door has to speak first
   if (tenant) src(0, tenant.short, PAL.gray);                       // and then whoever it was before it was a number
+  { const e = eyeRead(G.cur); src(1, e, PAL.gold); }                // names a thing: the best line at the door
+  // what the ROOM is doing goes to its own panel on the right; none of it is about what is in there
+  const room = [];
+  const roomSrc = (text, col) => { if (text) room.push({ t: text, c: col }); };
   const tell = edTell(G.cur, G.world, G.day);
-  src(1, tell || (edNotebookGone(G.world, G.day) ? 'Eagle Ed is not writing anything down. He keeps patting his pockets.' : null), tell ? PAL.cyan : PAL.gray);
-  { const e = eyeRead(G.cur); src(2, e, PAL.gold); }                // names a thing: the best line at the door
-  src(3, early ? null : rivalTell(G.cur, G.world, G.day), PAL.orange);
+  roomSrc(tell || (edNotebookGone(G.world, G.day) ? 'Eagle Ed is not writing anything down. He keeps patting his pockets.' : null), tell ? PAL.cyan : PAL.gray);
+  if (!early) roomSrc(rivalTell(G.cur, G.world, G.day), PAL.orange);
+  if (hasTool('edNotes')) roomSrc(edNotesLine(G.cur), PAL.gray);
   if (G.cur.loupeLine) src(4, 'Loupe: ' + G.cur.loupeLine, PAL.yellow);
   if (hasTool('catalog')) src(5, catalogLine(G.cur), PAL.yellow);
-  if (hasTool('edNotes')) src(6, edNotesLine(G.cur), PAL.gray);
   if (hasTool('metalDetector')) src(7, detectorLine(G.cur), PAL.lblue);
   const reasonW = reasonShown(G.cur) ? reasonWords(G.cur.reason) : (FORMAT_WORDS[G.cur.format] || null);   // why this door, of the three, matters this morning
   if (reasonW) src(8, reasonW.peek, reasonW.col);
@@ -3430,9 +3779,8 @@ function drawPeek() {
   if (G.cur.photoBase) src(9, 'This is the room in your photograph. The ' + (BASE_BY_ID[G.cur.photoBase] || {}).name.toLowerCase() + ' is in here somewhere, and it will not be near the door.', PAL.gold);
   if (G.cur.setPeek && !(od && od < 4)) src(9, G.cur.setPeek, PAL.gray);
   if (G.cur.flavor2) src(10, '"' + G.cur.flavor2 + '"', PAL.gray);   // a second voice from the same door
-  // four lines, not six: the intel phase sits under them INSIDE this panel (x 24..584, y 416..528), and
-  // that panel is exactly what the buttons were sitting on top of before (user, 2026-09-16).
-  const INFO_ROWS = 4;
+  // five rows: the door got a row back when the room moved out, and the unit above is drawn shorter
+  const INFO_ROWS = 5;
   sources.sort((a, b) => a.p - b.p);
   const infoLines = [], total = sources.reduce((n, s) => n + s.lines.length, 0);
   // Decide how many rows each source gets first, then print them in rank order, each source's rows
@@ -3451,46 +3799,78 @@ function drawPeek() {
       infoLines.push({ t, c: sources[i].c });
     }
   }
-  let yy = 440;
+  let yy = 378;
   // when there is more than will fit, say so — but in the header, where there is empty room, rather
-  // than spending one of the four lines on a note about the lines you cannot have
-  if (total > INFO_ROWS) T(568, 424, '+' + (total - INFO_ROWS) + ' more said at this door', PAL.dgray, 12, 'right');
-  for (const l of infoLines) { T(40, yy, l.t, l.c, 13); yy += 14; }
+  // than spending one of the rows on a note about the rows you cannot have
+  if (total > INFO_ROWS) T(568, 360, '+' + (total - INFO_ROWS) + ' more said at this door', PAL.dgray, 12, 'right');
+  for (const l of infoLines) { T(40, yy, l.t, l.c, 13); yy += 15; }
+
+  // ---- THE ROOM: everything the yard is doing, on the right where the ways in are ----
+  {
+    const RX = 600, RY = 352, RW = 336, RH = 56;
+    panel(RX, RY, RW, RH, '#22202c');
+    T(RX + 12, RY + 5, 'THE ROOM', PAL.dgray, 11, 'left', true);
+    const lines = [];
+    for (const r of room) for (const t of wrapPx(r.t, RW - 24, 12)) lines.push({ t, c: r.c });
+    if (!lines.length) lines.push({ t: 'Nobody is giving anything away this morning.', c: PAL.dgray });
+    const SHOW = 2;
+    for (let i = 0; i < Math.min(SHOW, lines.length); i++) {
+      let t = lines[i].t;
+      if (i === SHOW - 1 && lines.length > SHOW) t = t.replace(/[\s,;:]+$/, '') + '…';
+      T(RX + 12, RY + 21 + i * 15, t, lines[i].c, 12, 'left');
+    }
+    // the rest is a hover away, so a busy morning never eats the panel
+    if (lines.length > SHOW) {
+      const more = lines.length - SHOW;
+      const mx = RX + RW - 78, my = RY + 4;
+      const over = inRect(mouse.x, mouse.y, mx, my, 72, 16);
+      px(g, mx, my, 72, 16, over ? '#3a3350' : '#2a2638');
+      T(mx + 36, my + 2, '+' + more + ' more', over ? PAL.yellow : PAL.gray, 11, 'center', true);
+      if (over) tip = { cx: mx + 36, top: my, t: room.map((r) => r.t).join('  ·  '), c: PAL.orange };
+    }
+  }
 
   // the intel phase: what you spend here you cannot dig with later. No clock (IDEAS_TODO 12).
   {
-    // The door's own six info lines own the left column from y=440 down to 523, and the JOIN column owns
-    // x>=616. So the phase lives in its own column between them, stacked, and takes nothing away from either.
-    // What you bought is said in a toast rather than printed, for the same reason.
+    // Out of the info panel and into a row of their own (user, 2026-09-20): they are things you DO, not
+    // things the door said. The cost is a chip on the right of each button, never part of the name.
+    T(32, 478, 'BEFORE YOU BID', PAL.dgray, 11, 'left', true);
     for (let i = 0; i < INTEL_ORDER.length; i++) {
       const id = INTEL_ORDER[i], def = INTEL[id];
       const done = intelDone(G.cur, id), can = intelCan(G.cur, id);
-      // inside the info panel, under its four lines: 32..576 across, 498..524 down, all within 24..584 / 416..528
-      button(32 + i * 182, 498, 176, 26, done ? def.short + ' \u2713' : def.short + ' (' + def.cost + ')', () => intelBuy(G.cur, id),
-        { disabled: done || !can, col: done ? PAL.slate : PAL.navy, fs: 12, hint: can ? def.hint : intelWhy(G.cur, id) });
+      const bx0 = 32 + i * 182, by0 = 490, bw0 = 176, bh0 = 28;
+      const over = inRect(mouse.x, mouse.y, bx0, by0, bw0, bh0);
+      drawChunky(bx0, by0, bw0, bh0, { over, off: !can, done, col: def.col });
+      T(bx0 + 14, by0 + 7, done ? def.short + ' \u2713' : def.short, done ? PAL.dgray : (can ? PAL.white : PAL.dgray), 13, 'left', true);
+      if (!done) drawCostChip(bx0 + bw0 - 36, by0 + 4, 30, bh0 - 8, def.cost, G.daylight >= def.cost ? (can ? PAL.yellow : PAL.dgray) : PAL.red);
+      buttonHot(bx0, by0, bw0, bh0, def.short, () => intelBuy(G.cur, id), { disabled: done || !can, hint: can ? def.cost + ' energy. ' + def.hint : intelWhy(G.cur, id) }, over);
     }
   }
   const isUp = doorIsUp(G.cur);
   const canJoin = isUp && G.daylight >= 5 && G.money >= G.cur.minBid;
-  if (!isUp) { const upD = nextDoor(); stripT(776, 404, 'not up yet' + (upD ? ' — unit ' + upD.num + ' sells first' : ''), PAL.orange, 15, 'center'); }
-  else if (!canJoin) stripT(776, 404, G.money < G.cur.minBid ? 'not enough cash!' : 'not enough energy — joining costs 5!', PAL.red, 15, 'center');
-  else {
-    // more in there than the van can take, and until Pete's standing offer the rest is a bill, not a gift.
-    // Priced off bulk, which is the one thing a doorway shows you honestly — so it warns without telling.
-    const est = dumpFeeEstimate(G.cur);
-    if (est > 0) stripT(776, 404, 'more than the van holds — about ' + fmt$(est) + ' to clear the rest', PAL.orange, 13, 'center');
+  // one line above the cards: why you cannot go in, or what going in is going to cost you at the far end
+  T(600, 412, 'HOW YOU GO IN', PAL.dgray, 11, 'left', true);
+  {
+    // the one thing worth saying beside that label, kept short enough to sit next to it (the long version is
+    // on the card hints and the yard card): why you cannot go in, or what the van cannot carry out
+    let warn = null, wc = PAL.orange;
+    if (!isUp) { const upD = nextDoor(); warn = upD ? 'unit ' + upD.num + ' sells first' : 'not up yet'; }
+    else if (!canJoin) { warn = G.money < G.cur.minBid ? 'not enough cash' : 'not enough energy'; wc = PAL.red; }
+    else {
+      // more in there than the van can take, and until Pete's standing offer the rest is a bill, not a gift.
+      // Priced off bulk, which is the one thing a doorway shows you honestly — so it warns without telling.
+      const est = dumpFeeEstimate(G.cur);
+      if (est > 0) warn = 'over the van: ~' + fmt$(est) + ' to clear';
+    }
+    if (warn) { const wf = fitLines(warn, 230, [11, 10], 1); T(936, 413, wf.lines[0], wc, wf.fs, 'right'); }
   }
-  // three ways in (docs/AUCTION_OVERHAUL_2.md step 4): as you are, LOUD, or QUIET — each a way of spending the day
-  button(616, 424, 152, 52, 'JOIN  (5 ENERGY)', () => {
-    if (Math.random() < 0.5) speak(['auc_peek_timesup'], true);
-    joinDoor(G.cur);
-  }, { disabled: !canJoin, col: PAL.dgreen, fs: 19 });
-  button(774, 424, 78, 52, 'LOUD +' + POSTURES.loud.cost, () => joinDoor(G.cur, 'loud'), { disabled: !canJoin || G.daylight < 5 + POSTURES.loud.cost, col: '#8a5a20', fs: 13, hint: 'LOUD: ' + POSTURES.loud.hint });
-  button(858, 424, 78, 52, 'QUIET +' + POSTURES.quiet.cost, () => joinDoor(G.cur, 'quiet'), { disabled: !canJoin || G.daylight < 5 + POSTURES.quiet.cost, col: PAL.navy, fs: 13, hint: 'QUIET: ' + POSTURES.quiet.hint });
+  // the three ways in, one under the other (docs/AUCTION_REDESIGN.md §1)
+  for (let i = 0; i < STANCES.length; i++) drawStanceCard(G.cur, STANCES[i], 600, 424 + i * 30, 336, 28, canJoin);
   if (isUp) {
-    button(616, 484, 150, 38, 'BACK TO THE ROW', () => { G.mode = 'yard'; }, { col: PAL.slate, fs: 14 });
-    button(774, 484, 162, 38, 'LET IT SELL', () => { if (letItSell(G.cur)) G.mode = 'yard'; }, { col: PAL.dgray, fs: 14, label: doorWaits(G.cur) ? 'the clerk holds it to the end of the row' : 'it sells to the room without you, out of tonight\'s money' });
-  } else button(616, 484, 320, 38, 'BACK TO THE ROW', () => { G.mode = 'yard'; }, { col: PAL.slate, fs: 17 });
+    button(600, 516, 162, 18, 'BACK TO THE ROW', () => { G.mode = 'yard'; }, { col: PAL.slate, fs: 11 });
+    button(770, 516, 166, 18, 'LET IT SELL', () => { if (letItSell(G.cur)) G.mode = 'yard'; }, { col: PAL.dgray, fs: 11,
+      hint: doorWaits(G.cur) ? 'the clerk holds it to the end of the row' : 'it sells to the room without you, out of tonight\'s money' });
+  } else button(600, 516, 336, 18, 'BACK TO THE ROW', () => { G.mode = 'yard'; }, { col: PAL.slate, fs: 11 });
   if (!tip && tourIt) {                       // the tour's word, exactly what hovering it would have said
     const tp2 = itemDrawPos(lx, ly, tourIt);
     tip = { cx: tp2.x + tp2.w / 2, top: tp2.y, t: peekHint(tourIt), c: PAL.yellow };
@@ -3529,7 +3909,7 @@ function officeRows() {
   rows.push({ id: 'alone', label: 'A MINUTE ALONE', text: 'One favour. The shapes past the front row of one door, before anybody else.', ok: !owed && f > 0 && open.some((d) => !d.alone) });
   return rows;
 }
-function openOffice() { G.modal = { title: 'The office.', draw: drawOffice }; }
+function openOffice() { clerkSay('window'); G.modal = { title: 'The office.', draw: drawOffice }; }
 function drawOffice() {
   const rows = officeRows(), w = G.world;
   const mw = 720, rh = 46, mx = Math.round((W - mw) / 2);
@@ -3562,6 +3942,7 @@ function officeDo(id) {
   if (id === 'unitdrop') { G.modal = null; giveUpUnit(); return; }
   if (id === 'coffee') {
     G.modal = null; spend(10); G.today.coffee = true; bump('coffees');
+    clerkSay('coffee');
     toast('"Coffee\'s on the new face." The yard warms up a degree.', PAL.cyan, 3);
     return;
   }
@@ -3570,6 +3951,7 @@ function officeDo(id) {
     G.today.askedAround = true;
     G.officeDay = G.day;
     G.officeText = clerkRumour(false) || G.officeText;
+    clerkSay('ask');
     return;
   }
   if (id === 'whole') {
@@ -3577,6 +3959,7 @@ function officeDo(id) {
     G.today.wholeOfIt = true;
     G.officeDay = G.day;
     G.officeText = clerkRumour(true) || G.officeText;
+    clerkSay('whole');
     return;
   }
   if (id === 'word') {
@@ -3585,6 +3968,7 @@ function officeDo(id) {
     G.today.quietWord = best.num;
     G.officeDay = G.day;
     G.officeText = 'The clerk lowers his voice. "Unit ' + best.num + '. The tenant cried at the gate when we cut the lock."';
+    clerkSay('word');
     return;
   }
   // a door to choose: move it to the front, or have a minute alone with it
@@ -3602,6 +3986,7 @@ function moveDoor(lk) {
   spendFavour();
   row.splice(i, 1); row.unshift(lk);
   G.today.movedDoor = lk.num;
+  clerkSay('swap');
   toast('The clerk swaps two cards on the board. Unit ' + lk.num + ' sells first.', PAL.cyan, 3);
   return true;
 }
@@ -3612,6 +3997,7 @@ function minuteAlone(lk) {
   if (limit && !peeked.includes(lk.num)) peeked.push(lk.num);
   G.cur = lk; G.peekT = 0; G.mode = 'peek'; G.peekTour = null;
   play('door_roll');
+  clerkSay('minute');
   toast('"One minute. I am counting." The clerk is counting.', PAL.cyan, 3);
 }
 // ---- a partner for a big door: halves, one bidder, they pick first ----
@@ -3779,6 +4165,298 @@ function standBy(a) {
   }
   return true;
 }
+// ---- what the room reads on YOU (docs/AUCTION_SPEC.md; 2026-09-22) ----
+// The spec's best line, and the one thing this room could not do: "The player also leaks. NPCs can read
+// the player." Every rival has a tell; you had none. So: a heat that is yours, hidden, this door only.
+//
+// It rises on the things that show a man wants something - bidding the moment the door opens, jumping in
+// steps of more than one, standing down the front, and hardest of all the quiet man at the back who says
+// nothing all sale and then bids at the count. It falls while you hold off. Nothing is ever drawn as a
+// meter: what you see is a face turning to look at you and a line in the log.
+const PH_MARK = 58, PH_FADE = 34, PH_MAX = 100;
+const PH = {
+  join_loud: 10,            // you stood up as you walked in
+  raise_loud: 8,
+  raise_steady: 4,
+  raise_quiet_early: 3,
+  raise_quiet_late: 12,     // the sniper, at the count, after a whole sale of nothing
+  jump: 6,                  // more than one step at a time
+  first: 5,                 // you opened the door yourself
+  hold: -6,                 // you let it go round without you
+  look: -3,                 // a man taking a proper look is not a man in a hurry
+};
+function pHeat(au) { return (au && au.pheat) || 0; }
+function pHeatAdd(au, n) {
+  if (!au || au.done || !n) return;
+  au.pheat = clamp((au.pheat || 0) + n, 0, PH_MAX);
+}
+// who is actually reading you: nerve, or history. The nervous ones are watching the door like everyone else.
+// (whether they are in this sale at all is the caller's business - this is only about the kind of person)
+function readsYou(a) {
+  if (!a || a.crowd || !a.def) return false;
+  if ((a.def.press || 0) >= 2) return true;
+  const id = a.def.id;
+  if (typeof standingOf === 'function' && Math.abs(standingOf(id)) >= 2) return true;   // you two have history
+  return typeof tellKnown === 'function' && !!tellKnown(id);                            // a face you have learned learns back
+}
+const MARK_LINES = [
+  '{name} stops watching the door and starts watching you.',
+  '{name} has worked out which one of these you came for.',
+  '{name} looks at you, then at the door, then at you again.',
+  '{name} is not bidding on the locker any more. {name} is bidding on you.',
+];
+const UNMARK_LINES = [
+  '{name} loses interest in you and goes back to the door.',
+  '{name} decides you are not the story after all.',
+];
+// the room's turn: who has noticed, and what it costs you
+function pHeatTick(au) {
+  if (!au || au.done || !au.npcs) return;
+  const seen = !quietHidden(au);
+  for (const a of au.npcs) {
+    if (!a || a.crowd || !a.def) continue;
+    if (a.marked) {
+      // it fades when you stop feeding it: a man who has gone quiet is not worth watching
+      if (pHeat(au) <= PH_FADE) {
+        a.marked = false;
+        if (a.markCap) { a.cap = Math.max(0, a.cap - a.markCap); a.markCap = 0; }
+        qLine(RNG(strHash('unmark' + G.worldSeed + '_' + G.day + '_' + a.def.id)).pick(UNMARK_LINES).replace(/\{name\}/g, shortRivalName(a.def)), PAL.gray);
+      }
+      continue;
+    }
+    if (!seen || a.markedOnce || pHeat(au) < PH_MARK || !readsYou(a) || !a.active || a.folded) continue;
+    // one of them, not all of them: the first reader to notice takes the mark this sale
+    a.marked = true; a.markedOnce = true;
+    // a door somebody wants is a door worth having: they find a little more for it, and never past the wallet
+    const room = Math.max(0, (a.budgetCap == null ? Infinity : a.budgetCap) - a.cap);
+    a.markCap = Math.min(Math.round(a.cap * 0.15), room === Infinity ? Math.round(a.cap * 0.15) : room);
+    a.cap += a.markCap;
+    setReact(a.def.id, 'glare');
+    bookWrite(a.def.splitFrom || a.def.id, 'counter', 'watches you when you bid like you want it', false);
+    qLine(RNG(strHash('mark' + G.worldSeed + '_' + G.day + '_' + a.def.id)).pick(MARK_LINES).replace(/\{name\}/g, shortRivalName(a.def)), PAL.orange);
+    roomEvent('marked', shortRivalName(a.def) + ' is watching you.', a.def.id);
+    bump('marked');
+    break;
+  }
+}
+
+// ---- THE BOOK (docs/AUCTION_SPEC.md; 2026-09-22) ----
+// Three slots a face and no more: what they WANT, their TELL, and their COUNTER - the thing they do back
+// to you. Filled by standing in the room, never handed over, never a number. A slot says how sure you are
+// (1..3) and goes up when the same thing happens again; a thing you SEE overwrites a thing you were TOLD,
+// and a rumour never overwrites a sighting. The paper can poison a slot, and the first time it should be
+// able to burn you: a want you read about reads exactly like a want you watched.
+const BOOK_SLOTS = ['want', 'tell', 'counter'];
+const BOOK_TELL_REPEAT = 2;
+function bookAll() {
+  const w = G.world;
+  if (!w) return {};
+  w.arcs = w.arcs || {};
+  return (w.arcs.book = w.arcs.book || {});
+}
+function bookOf(id) { const b = bookAll(); return (b[id] = b[id] || {}); }
+function bookHas(id) { const e = bookAll()[id]; return !!e && BOOK_SLOTS.some((k) => e[k]); }
+function bookWrite(id, slot, text, poisoned) {
+  if (!id || !text || BOOK_SLOTS.indexOf(slot) < 0) return null;
+  const e = bookOf(id), cur = e[slot];
+  if (cur && cur.t === text) {                       // the same thing again: you are surer of it
+    cur.conf = Math.min(3, (cur.conf || 1) + 1);
+    if (!poisoned) cur.poisoned = false;
+    return cur;
+  }
+  if (cur && !cur.poisoned && poisoned) return cur;   // you watched it happen; the paper does not get a vote
+  if (cur && !cur.poisoned && (cur.conf || 1) > 1) { cur.conf -= 1; return cur; }   // one contradiction is not a rewrite
+  e[slot] = { t: text, conf: 1, poisoned: !!poisoned, day: G.day };
+  return e[slot];
+}
+// what a door is mostly made of, in the one word a person would use
+function bookDoorWord(lk) {
+  if (!lk || !lk.items) return null;
+  const by = {};
+  for (const it of lk.items) by[it.cat] = (by[it.cat] || 0) + (it.val || 0);
+  let best = null;
+  for (const c in by) if (!best || by[c] > by[best]) best = c;
+  return best && CATS[best] ? CATS[best].label.toLowerCase() : null;
+}
+const BOOK_WANT = (word) => 'wants the ' + word;          // short: the Ledger card has one row for this
+const BOOK_TELLS = { honest: 'sweats when he is near his number', act: 'the nerves are an act' };
+// at the hammer: who wanted what, and did you see it happen
+function bookAfterSale(au) {
+  if (!au || !G.cur || G.demo) return;
+  const seen = !quietHidden(au);
+  const word = bookDoorWord(G.cur);
+  for (const a of au.npcs || []) {
+    if (!a || a.crowd || !a.def || !a.def.id) continue;
+    const id = a.def.splitFrom || a.def.id;
+    if (seen && word && a.needs && a.active) bookWrite(id, 'want', BOOK_WANT(word), false);
+    const known = typeof tellKnown === 'function' ? tellKnown(id) : null;
+    if (known && BOOK_TELLS[known]) bookWrite(id, 'tell', BOOK_TELLS[known], false);
+  }
+}
+// ---- what the paper reckons somebody collects, which is not the same as knowing ----
+const BOOK_RUMOUR_WORDS = ['tools', 'furniture', 'jewelry', 'electronics', 'antiques', 'collectibles'];
+function bookRumour(worldSeed, day, town) {
+  if (!town) return null;
+  const R = RNG(strHash('bookrum' + worldSeed + '_' + day + '_' + town.id));
+  if (!R.chance(0.3)) return null;
+  // the town's own faces if it has any (Dusty Flats lists none: the roster IS its room), never the crowd
+  const pool = (town.rivals && town.rivals.length ? town.rivals : NPCS.map((n) => n.id)).filter((x) => x !== 'crowd');
+  if (!pool.length) return null;
+  const id = R.pick(pool.slice());
+  const d = typeof rivalDef === 'function' ? rivalDef(id) : null;
+  if (!d) return null;
+  const word = R.pick(BOOK_RUMOUR_WORDS.slice());
+  return { id, word, line: 'They say ' + shortRivalName(d) + ' has been buying nothing but ' + word + ' lately.' };
+}
+// and it only gets into your book if you actually read the paper
+function bookReadPaper() {
+  if (!G.today || G.demo) return null;
+  const r = bookRumour(G.worldSeed, G.day, curTown());
+  if (!r || G.today.bookRumourRead) return null;
+  G.today.bookRumourRead = true;
+  bookWrite(r.id, 'want', BOOK_WANT(r.word), true);
+  return r;
+}
+// the one line the Ledger has room for: the surest thing you know about them
+function bookLine(id) {
+  const e = bookAll()[id];
+  if (!e) return '';
+  let best = null, bestSlot = null;
+  for (const k of BOOK_SLOTS) if (e[k] && (!best || (e[k].conf || 1) > (best.conf || 1))) { best = e[k]; bestSlot = k; }
+  if (!best) return '';
+  const dots = '\u25cf'.repeat(Math.max(1, Math.min(3, best.conf || 1)));
+  // 'wants the tools' and 'runs you up when you push him' are sentences already; only a tell needs saying
+  return (bestSlot === 'tell' ? 'tell: ' : '') + best.t + ' ' + dots;
+}
+
+// ---- LAST LOOK: the one play at the wire (docs/AUCTION_SPEC.md, the Knock; 2026-09-22) ----
+// One energy, once a sale, and only while the gavel is counting. It buys one true sentence about the man
+// who is leading - where the price sits against the number he walked in with, in words - and a beat and a
+// half of held count to do something about it. Then the count carries on exactly where it was: a play, not
+// a pause button. The room can still take the door off you while you are admiring what you learned.
+const LASTLOOK_COST = 1, LASTLOOK_HOLD = 1.6;
+const LASTLOOK_BANDS = [
+  [0.98, '{name} is at the end of it. One more and they are out.', 'sweat'],
+  [0.85, '{name} is close to whatever number they came in with.', 'sweat'],
+  [0.65, '{name} has a little left and does not love spending it.', 'pride'],
+  [0, '{name} has plenty left. They would go again twice over.', 'glare'],
+];
+function lastLookReady(au) {
+  return !!au && !au.done && !au.lastLook && !!au.closing && !!au.leader && au.leader !== 'you' && !au.dutch && !au.sealed;
+}
+// what the price says about the man leading it - and what an act can still hide
+function lastLookRead(au, a) {
+  const cap = Math.max(1, a.cap || 0);
+  let r = (au.bid || 0) / cap;
+  // a face that is performing reads a band the wrong way, unless you have learned him or looked at him
+  const fooled = a.tellMode && a.tellMode !== 'honest' && !lookKnows(au, a.def.id) && tellKnown(a.def.id) !== 'act';
+  if (fooled) r = r >= 0.85 ? 0.5 : Math.min(1.2, r + 0.4);
+  for (const [at, text, react] of LASTLOOK_BANDS) if (r >= at) return { text: text.replace(/\{name\}/g, shortRivalName(a.def)), react, fooled };
+  return { text: shortRivalName(a.def) + ' gives you nothing at all.', react: 'glare', fooled };
+}
+// from the back you cannot see his face, so you read the room: is anybody else going to answer that?
+function lastLookRoom(au) {
+  const others = au.npcs.filter((n) => n !== au.leader && n.active && !n.folded && !n.crowd && (n.cap || 0) > (au.bid || 0));
+  return others.length
+    ? { text: 'Somebody back here is still holding a paddle. That number is not the end of it.', react: null }
+    : { text: 'Nobody in here is going to answer that. It is between you and the gavel.', react: null };
+}
+function takeLastLook() {
+  const au = G.auction;
+  if (!lastLookReady(au)) { play('denied'); return false; }
+  if (G.daylight < LASTLOOK_COST) { play('denied'); toast('Nothing left in you for one more look.', PAL.red); return false; }
+  G.daylight -= LASTLOOK_COST; sunCheck();
+  au.lastLook = true;
+  // the crowd has no face to read, and from the back you cannot see the one there is: either way you read
+  // the ROOM instead - whether anybody else in here is going to answer that number
+  const blind = quietHidden(au) || !!au.leader.crowd || !au.leader.def;
+  const read = blind ? lastLookRoom(au) : lastLookRead(au, au.leader);
+  if (read.react && !blind) setReact(au.leader.def.id, read.react);
+  au.lookHold = LASTLOOK_HOLD;                    // the count holds its breath while you decide
+  play('ui_click', 0.5);
+  qLine(read.text, PAL.lblue);
+  bump('lastLooks');
+  return true;
+}
+
+// ---- THE LOOK: one look a door, and where you stand decides what it shows you ----
+// (docs/AUCTION_SPEC.md slice 1, 2026-09-22.) The postures were three ways to be SEEN; this is the half
+// that was missing - three ways to SEE. It costs energy, it happens before the first bid, and it can be
+// wrong, like every other thing in this game that tells you something.
+const LOOK_COST = { steady: 2, loud: 2, quiet: 1 };
+const LOOK_RIGHT = { loud: 0.85, steady: 0.62, quiet: 0.6 };      // how often it is true, by where you stood
+const LOOK_KIND = { loud: 'unit', steady: 'face', quiet: 'field' };
+const LOOK_UNIT_TRUE = [
+  'That cabinet at the back is not particle board.',
+  'Water line up the left wall. Something got wet in here, once.',
+  'The boxes at the back are labelled, and labelled the same. Somebody packed this one on purpose.',
+  'There is a tool chest in the shadow with a real name on it.',
+  'Everything at the back is wrapped. Wrapped is somebody who meant to come back.',
+];
+const LOOK_UNIT_FALSE = [
+  'Looks like a clean household unit. Nothing in the dark worth the walk.',
+  'Somebody has been in here before the lock went on. It is picked over.',
+  'It is all flat pack and bin bags past the front row.',
+];
+const LOOK_FIELD_WORDS = ['Nobody in here', 'One of them', 'Two of them', 'Three of them', 'Four of them', 'Five of them', 'Half the room'];
+function lookField(n) {
+  const w = LOOK_FIELD_WORDS[Math.max(0, Math.min(LOOK_FIELD_WORDS.length - 1, n))];
+  return n <= 0 ? 'Nobody in here means it. You are bidding against the room\'s manners.'
+    : w + ' mean' + (n === 1 ? 's' : '') + ' it. This will not be cheap.';
+}
+// the one worth naming: whoever wants this door most, or - for a false read - somebody who does not
+function lookFace(au, R, right) {
+  const live = au.npcs.filter((a) => a.active && !a.crowd && a.def);
+  if (!live.length) return null;
+  const keen = live.filter((a) => a.needs), idle = live.filter((a) => !a.needs);
+  const pick = right ? (keen.length ? R.pick(keen) : R.pick(live)) : (idle.length ? R.pick(idle) : R.pick(live));
+  const nm = shortRivalName(pick.def);
+  const wants = right ? !!pick.needs : !pick.needs;                // what the note CLAIMS, true or not
+  return { id: pick.def.id, text: wants
+    ? nm + ' came for this one. Watch what they do when it gets to the money.'
+    : nm + ' looked once and stopped looking. They are here out of habit.' };
+}
+// You can look for as long as you have not put your own hand up. The room opening the bidding does not
+// close it - it is your first raise that does, because from then on you are in it and looking at nothing
+// (2026-09-22: the first cut closed the window at the room's first bid and it was gone in two seconds).
+function lookReady(au) {
+  return !!au && !au.done && !au.look && !au.dutch && !au.sealed && !au.closing && !(au.pbids > 0) && !au.runUp;
+}
+// what a look costs where you are standing now
+function lookCost(au) { return LOOK_COST[(au && au.posture) || 'steady'] || 2; }
+function takeLook() {
+  const au = G.auction;
+  if (!lookReady(au)) { play('denied'); return false; }
+  const posture = au.posture || 'steady';
+  const cost = lookCost(au);
+  if (G.daylight < cost) { play('denied'); toast('Not enough energy left to look properly.', PAL.red); return false; }
+  G.daylight -= cost; sunCheck();
+  const R = RNG(strHash('look_' + G.worldSeed + '_' + G.day + '_' + (G.cur ? G.cur.num : 0)));
+  // tired eyes are worse eyes (the spec's own note): a long day costs you a step of reliability
+  const right = R.chance((LOOK_RIGHT[posture] || 0.6) - (G.daylight < 20 ? 0.12 : 0));
+  const kind = LOOK_KIND[posture] || 'face';
+  let note = null;
+  if (kind === 'unit') {
+    note = { kind, right, text: R.pick(right ? LOOK_UNIT_TRUE : LOOK_UNIT_FALSE) };
+    G.cur.lookTight = right ? 1 : -1;                    // the guess tightens - round the truth, or not
+  } else if (kind === 'field') {
+    const keen = au.npcs.filter((a) => a.active && !a.crowd && a.needs).length;
+    const n = right ? keen : Math.max(0, keen + R.pick([-2, -1, 1, 2]));
+    note = { kind, right, n, text: lookField(n) };
+  } else {
+    const f = lookFace(au, R, right);
+    note = f ? { kind, right, id: f.id, text: f.text } : { kind, right, text: 'Nothing on any of them. They are all pretending, or none of them are.' };
+  }
+  au.look = note;
+  pHeatAdd(au, PH.look);                             // a man taking a proper look is not a man in a hurry
+  play('ui_click', 0.5);
+  qLine('You take a proper look. ' + note.text, PAL.lblue);
+  bump('looks');
+  return true;
+}
+// a face you looked at reads honest for the rest of this sale: an act shows as an act
+function lookKnows(au, id) { return !!(au && au.look && au.look.right && au.look.kind === 'face' && au.look.id === id); }
+
 function setPosture(p, atDoor) {
   const au = G.auction;
   if (!au || au.done || !POSTURES[p] || au.posture === p) return false;
@@ -3791,6 +4469,7 @@ function setPosture(p, atDoor) {
   if (p !== 'quiet') au.quietLeft = 0;
   if (p === 'loud') {
     if (G.today) G.today.markedMoney = true;
+    pHeatAdd(au, PH.join_loud);
     bump('loudSales');
     qLine('You stand up, and you stay standing. The whole yard can hear your paddle.', PAL.cyan);
   } else if (p === 'quiet') {
@@ -3914,7 +4593,7 @@ function sniperCall(au) {
 // the room will not open at its price stays on the row ('passed'). Authored doors (a story, a
 // myth, a rare day, the opening's dealt doors) never sell without you: they wait.
 const ORDER_WORDS = ['first', 'second', 'third'];
-function rivalDef(id) { return NPCS.find((x) => x.id === id) || EXTRA_NPCS[id] || DUO_HALVES[id] || (id === 'phone' ? PHONE_DEF : null); }
+function rivalDef(id) { return NPCS.find((x) => x.id === id) || EXTRA_NPCS[id] || DUO_HALVES[id] || (id === 'phone' ? PHONE_DEF : (id === 'crowd' ? crowdDefFor(curTown()) : null)); }
 function doorWaits(d) { return !!(d.story || d.seededLegend || d.provPlant || d.rare || d.opening || d.contract === 'mythHole'); }
 // THE ROW IS WALKED IN ORDER (user, 2026-09-18: "should a player be able to start an auction on the 3rd locker
 // when the 2nd or 1st hasn't sold yet? It doesn't seem to matter what you start with, even though it says up next.")
@@ -3946,8 +4625,8 @@ function letItSell(lk) {
     lk.shut = true;
     toast('Unit ' + lk.num + ' stays shut today. The clerk puts the file away.', PAL.gray);
   } else if (doorWaits(lk)) {
-    if (others) { lk.heldBack = true; toast('"That one\'s got paperwork," says the clerk. Unit ' + lk.num + ' goes to the end of the row.', PAL.cyan); }
-    else { lk.shut = true; toast('Unit ' + lk.num + ' stays shut today. The clerk puts the file away.', PAL.gray); }
+    if (others) { lk.heldBack = true; clerkSay('paperwork'); toast('"That one\'s got paperwork," says the clerk. Unit ' + lk.num + ' goes to the end of the row.', PAL.cyan); }
+    else { lk.shut = true; clerkSay('shut'); toast('Unit ' + lk.num + ' stays shut today. The clerk puts the file away.', PAL.gray); }
   } else {
     const r = sellWithoutYou(lk);
     toast(r.passed ? 'Nobody bids on unit ' + lk.num + '. It stays on the row.'
@@ -4108,7 +4787,7 @@ function drawClerkWarn() {
     { t: '"Big Bart\'s been asking about your number. What you buy. What you pay."', c: PAL.yellow, s: 15 },
     { t: '"Bart doesn\'t ask about people. He asks about money he\'s short of."', c: PAL.yellow, s: 15 },
     { t: 'For a few days Bart will be at your doors, sizing you up.', c: PAL.gray, s: 12 },
-  ], clerkWarnSeen);
+  ], clerkWarnSeen, 'warn_bart');
 }
 // the clerk's other warning (2026-09-19): you have been running people up all week
 function drawPushWarn() {
@@ -4118,10 +4797,100 @@ function drawPushWarn() {
     { t: '"You\'ve run people up ' + n + ' times this week. They\'ve noticed. So have I."', c: PAL.yellow, s: 15 },
     { t: '"Folks stop coming to a yard where the price is a game. Do it again this week and it goes on your account."', c: PAL.yellow, s: 15 },
     { t: 'For a week, every push costs ' + fmt$(PUSH_FEE) + ' at the office, and the clerk thinks less of you for it.', c: PAL.gray, s: 12 },
-  ], pushWarnSeen);
+  ], pushWarnSeen, 'warn_push');
 }
-function drawClerkCard(atKey, lines, onDone) {
-  if (G.today[atKey] == null) G.today[atKey] = G.time;
+// ---- THE CLERK, OUT LOUD (user, 2026-09-20: "do the clerk voice") ----
+// He ran the office for the whole game as text. These are the moments he actually says something to you,
+// and every one of them recurs, which is what makes a take worth recording. Two rules hold the bank
+// together: **no line carries a number or a unit number** — the screen shows those, so one take fits every
+// time it happens, the same discipline the answering machine was written to — and he is `kind: 'line'`, so
+// he never fights the gavel. A slot with no file is silence; nothing waits on him.
+// every moment he speaks, in the order a career meets them. Declared as a list, like every other bank, so
+// the asset sheet, the dev room's VOICES page and the tests all read the same twelve names.
+const CLERK_VO = ['clerk_window', 'clerk_ask', 'clerk_whole', 'clerk_word', 'clerk_coffee', 'clerk_swap',
+  'clerk_minute', 'clerk_unit', 'clerk_paperwork', 'clerk_shut', 'clerk_warn_bart', 'clerk_warn_push'];
+function clerkSay(slot) {
+  if (typeof speak !== 'function') return;
+  speak(['clerk_' + slot], false, { kind: 'line', cooldown: 0 });
+}
+// ---- the raccoon, who talks (docs/RACCOON.md; user, 2026-09-21) ----
+// "I want the raccoon to have a voice, and I'm gonna make it sound really deep and smart or something...
+// he doesn't maybe have to speak right away. Maybe if a player clicks on him."
+//
+// He is already in the game four times over and has never made a sound: living in a unit (the rare
+// story, LEAVE IT is the only button), in your garage overnight taking one small thing and leaving a
+// tiny vest, on the office roof once the yard is yours, and in the ending with an offer in on the place.
+// So: he is silent until he is CLICKED, one line a visit, and nothing he says is ever a hint - if a line
+// ever tells you what is in the unit, it is wrong. One slot per line, the way the answering machine
+// does it, so the words on screen are the words in the file and a take can never land under the wrong
+// line. No line carries a number or a name, so one take fits every door, every town, every day.
+const RAC_LINES = {
+  // The first click of a career - he has been in four places and never made a sound
+  rac_first_01: "Ah. You can see me. That happens about once a season.",
+  rac_first_02: "Most people look straight past. You looked. I'll allow it.",
+  rac_first_03: "Yes. I live here. No, there is no paperwork.",
+  // In the unit, clicked
+  rac_unit_01: "You are not the first to open this door. You are the first to look up.",
+  rac_unit_02: "Everything in this room was once somebody's good idea.",
+  rac_unit_03: "Storage is the word people use when they mean 'later'.",
+  rac_unit_04: "A box is a promise to a future self. Most of them default.",
+  rac_unit_05: "You have bought a room full of postponements.",
+  rac_unit_06: "I don't own it. I live in it. Legally that is the weaker claim, and yet.",
+  rac_unit_07: "Nothing in here is lost. It is merely stored, which is worse.",
+  rac_unit_08: "You call it junk because it stopped being useful to you.",
+  rac_unit_09: "I have read every label in this unit. They are lies of scale.",
+  rac_unit_10: "People rent these to avoid a decision. You have just bought the decision.",
+  rac_unit_11: "That is not a stain. That is a summer.",
+  rac_unit_12: "Take whatever you like. Leave the insulation.",
+  rac_unit_13: "Your flashlight is unnecessary. I know what is in here by weight.",
+  rac_unit_14: "Do not move the couch. I have a system.",
+  rac_unit_15: "I was here before the padlock. I will be here after the sale.",
+  rac_unit_16: "I am not a pest. I am a tenant with an unconventional lease.",
+  // Clicked again, same visit
+  rac_again_01: "Yes. Still here.",
+  rac_again_02: "Clicking me will not lower the price.",
+  rac_again_03: "We are both waiting for you to decide.",
+  rac_again_04: "I have nothing further. That is rare, for me.",
+  rac_again_05: "You are enjoying this more than I am, and I am the one who lives here.",
+  // You leave the unit to him
+  rac_leave_01: "A sound decision. Possibly your first today.",
+  rac_leave_02: "The door comes down. The evening resumes.",
+  rac_leave_03: "I'll tell the others you were reasonable.",
+  rac_leave_04: "Go well. Do not think about this room at two in the morning.",
+  // The tiny vest, clicked - the morning after he has been in your garage
+  rac_stash_01: "You left it out. I assumed it was a gift.",
+  rac_stash_02: "The vest is a fair trade. It fits me and it did not fit you.",
+  rac_stash_03: "Your latch is an opinion, not a mechanism.",
+  rac_stash_04: "Consider it storage. I am holding it for you.",
+  // On the office roof, once the yard is yours
+  rac_roof_01: "Congratulations. You now own the building I sleep on.",
+  rac_roof_02: "A landlord at last. It suits you less than you hoped.",
+  rac_roof_03: "We are colleagues now. Do not make it strange.",
+  rac_roof_04: "I have watched four people buy this yard. You are the quiet one.",
+  // Rare, in place of an ordinary line in the unit
+  rac_rare_01: "I have seen inside the unit next to this one. You should bid on it.",
+  rac_rare_02: "One day you will store something here, and I will look after it.",
+  rac_rare_03: "There is a man who comes at night and takes nothing. I have not worked him out either.",
+};
+const RAC_VO = Object.keys(RAC_LINES);
+const RAC_RARE = 0.09;                 // now and then, in the unit, he says one of the three
+function racPick(bank) {
+  const keys = RAC_VO.filter((k) => k.indexOf(bank + '_') === 0);
+  return keys.length ? keys[(Math.random() * keys.length) | 0] : null;
+}
+// one line, said out loud if the take is recorded and always shown as he says it
+function racSay(bank) {
+  const w = G.world;
+  if (w && !w.racMet) { w.racMet = true; bank = 'rac_first'; }          // the first click of a career is the joke
+  else if (bank === 'rac_unit' && Math.random() < RAC_RARE) bank = 'rac_rare';
+  const key = racPick(bank);
+  if (!key) return null;
+  if (typeof speak === 'function') speak([key], false, { kind: 'line', cooldown: 0 });
+  toast(RAC_LINES[key], PAL.lblue, 4.6, 'raccoon');
+  return key;
+}
+function drawClerkCard(atKey, lines, onDone, voice) {
+  if (G.today[atKey] == null) { G.today[atKey] = G.time; if (voice) clerkSay(voice); }   // he starts talking as the card lands
   const t = G.time - G.today[atKey], ease = 1 - Math.pow(1 - Math.min(1, t / 0.35), 3);
   px(g, 0, 0, W, H, 'rgba(8,8,14,0.62)');
   hot(0, 0, W, H, () => {}, { label: 'the clerk', focusable: false });           // the yard waits while he talks
@@ -4532,17 +5301,20 @@ function sellWithoutYou(lk) {
   // Cody and Kaylee's week apart: with the other one in the room, each goes as far as their spite number
   const halves = duoHalvesIn(all);
   const reach = (a) => (halves && a.def.splitFrom) ? Math.max(a.cap, a.spiteCap || 0) : a.cap;
-  const room = all.filter((a) => a.active && !a.crowd && reach(a) >= lk.minBid).sort((a, b) => reach(b) - reach(a));
+  // the crowd is in this too now (user, 2026-09-20: "maybe even buy one once in a while"). It was filtered
+  // out, so a door no named face wanted simply passed - and the back row, which had been bidding all
+  // morning, was never allowed to take one home.
+  const room = all.filter((a) => a.active && reach(a) >= lk.minBid).sort((a, b) => reach(b) - reach(a));
   if (!room.length) { lk.passed = true; return { lk, passed: true }; }
   const top = room[0], second = room[1];
   const ceil = Math.max(lk.minBid, Math.floor(reach(top) / step) * step);
   const price = second ? Math.min(ceil, Math.max(lk.minBid, Math.ceil(reach(second) / step) * step + step)) : lk.minBid;
-  lk.sold = true; lk.soldTo = top.def.id; lk.soldFor = price;
+  lk.sold = true; lk.soldTo = top.crowd ? 'crowd' : top.def.id; lk.soldFor = price;
   const soldE = { unit: lk.num, rival: top.def.id, bid: price, value: lk.value };
   if (halves) soldE.halves = true;
   recordEvent('soldWithout', soldE);
-  noteLetGo(lk, top.def.id, price, 'walked');
-  return { lk, rival: top.def, price };
+  if (!top.crowd) noteLetGo(lk, top.def.id, price, 'walked');   // the crowd has no memory of you: nobody to owe
+  return { lk, rival: top.def, price, crowd: !!top.crowd };
 }
 function joinDoor(lk, posture) {
   if (!doorIsUp(lk)) {
@@ -4580,6 +5352,46 @@ function reportSales(sales) {
   }
 }
 // `sales`: the doors ahead that just sold without you (joinDoor), told first; `posture`: how you walked in
+// ---- who gets it going (docs/AUCTION_REDESIGN.md §4; the user, 2026-09-20) ----
+// "I noticed in some of the bidding you always have to start things off... Buzz will ask who's going to get us
+// going, and the NPCs can also start the bidding." Before this, one seeded roll at the top of the sale sometimes
+// had the room open for you and otherwise the first number was always yours. Now the sale opens on a BEAT: Buzz
+// asks, nothing happens for OPEN_WAIT, and a face who wants the door may take it (the room's own npcRound, so
+// they open at a number they would have paid anyway). Nobody after two goes and **Buzz drops the opening price
+// once** - which is worth knowing, because a door nobody will open at $150 is a door nobody wants at $150.
+// After that it is yours to start or leave. You can bid straight through any of it; the beat only holds the room.
+const OPEN_WAIT = 2.2, OPEN_TRIES = 3;
+const OPEN_CHANCE = [0.45, 0.6, 0.35];        // how likely the room is to speak first, try by try
+function openingBeatOn(a) { return !!(a && a.openBeat && !a.done && a.bid === 0 && !a.leader && !a.closing && !a.dutch && !a.sealed); }
+// Buzz takes a step off the opening price, once, when nobody will start it
+function lowerOpening(a) {
+  const step = a.step || 25, was = G.cur.minBid || step;
+  const now = Math.max(step, was - step * (was >= step * 4 ? 2 : 1));
+  if (now >= was) return false;
+  G.cur.minBid = now;
+  qLine('"Nobody at ' + fmt$(was) + '? All right - ' + fmt$(now) + ' to start. Give me ' + fmt$(now) + ' and we are away."', PAL.orange);
+  speakOneOf(['auc_open_lower'], false, { cooldown: 0 });
+  return true;
+}
+// the beat itself, from pumpQueue: true while the room is still deciding whether to open
+function openBeatTick(a, dt) {
+  if (!openingBeatOn(a)) return false;
+  const ob = a.openBeat;
+  ob.t = (ob.t || 0) + dt;
+  if (ob.t < OPEN_WAIT) return true;
+  ob.t = 0; ob.n = (ob.n || 0) + 1;
+  const R = RNG(strHash('openbeat' + G.worldSeed + '_' + G.day + '_' + G.cur.num + '_' + ob.n));
+  if (R.chance(OPEN_CHANCE[Math.min(ob.n, OPEN_CHANCE.length) - 1])) {
+    npcRound();                                    // somebody wants it enough to say a number first
+    if (a.bid > 0) { a.openBeat = null; return true; }
+  }
+  if (ob.n === 2 && !ob.dropped) { ob.dropped = true; if (!lowerOpening(a)) ob.n = OPEN_TRIES; }
+  if (ob.n >= OPEN_TRIES) {
+    a.openBeat = null;
+    qLine('"Somebody has to start it, folks. It might as well be somebody with a van."', PAL.orange);
+  }
+  return true;
+}
 function startAuction(sales, posture) {
   G.daylight -= 5;
   sunCheck();
@@ -4738,7 +5550,7 @@ function startAuction(sales, posture) {
   if (G.cur.format === 'dutch' && !G.auction.done) dutchArm(G.auction);   // the week's Dutch clock: Rapid Ray's rules
   if (G.cur.format === 'phone' && !G.auction.done) phoneArm(G.auction);   // or the week's absentee, already on the book
   if (G.cur.format === 'sealed' && !G.auction.done) sealedArm(G.auction);   // or the week's one-number round, everybody writing
-  if (!G.auction.done && !G.auction.dutch && dayR('npcopen', G.cur.num).chance(0.45)) resolveNpcs(1);
+  if (!G.auction.done && !G.auction.dutch && !G.auction.sealed) G.auction.openBeat = { t: 0, n: 0, dropped: false };   // Buzz asks; the room may answer
   G.auction.doorT = 1; G.auction.doorInit = false;   // the renderer throws it open on its first frame (aucDoorTick)
   G.mode = 'auction';
   callAuctionReminder();
@@ -4849,6 +5661,7 @@ function pumpQueue(dt) {
       if (!a.done && a.leader && a.leader !== 'you' && !a.closing && !(a.quietLeft > 0)) { a.turnT = a.auc.turnBeat || 0.8; a.pressT = 0; sayAsk(); }
     }
     if (a.turnT > 0) { a.turnT -= dt; return; }
+    if (openBeatTick(a, dt)) return;              // nobody has opened yet: the room gets its chance first
     // a run-up bids for you against one face (RUN THEM UP); the paddle answers while your hand is up
     quietReveal(a);                               // down to the last two: they turn round
     if (quietTick(a, dt)) return;
@@ -4867,6 +5680,7 @@ function pumpQueue(dt) {
         // of it — decided once per "once"/"twice" here, not re-rolled every frame
         a.closingCallDue = Math.random() < 0.4;
       }
+      if (a.lookHold > 0) { a.lookHold = Math.max(0, a.lookHold - dt); return; }   // LAST LOOK: the held breath
       a.closingT += dt;
       // wait exactly as long as the roll actually runs, not a fixed guess independent
       // of it — a recorded clip a second short (or long) of that guess used to leave
@@ -4886,6 +5700,7 @@ function pumpQueue(dt) {
         stopClosingRoll(a);
         const b0 = a.bid, hadYou = a.leader === 'you';
         if (a.closing === 1 && a.interrupt && !a.interrupt.fired && (a.interrupt.kind === 'late' || a.interrupt.kind === 'phone')) interruptArrive(a);   // "Going once" "WAIT."
+        const qWire = a.queue.length;
         npcRound();                              // somebody can always find their nerve at the last second
         if (a.bid > b0) {
           a.closing = 0; a.closingRollPlayed = false;
@@ -4895,7 +5710,16 @@ function pumpQueue(dt) {
           if (hadYou && a.leader && a.leader !== 'you') roomEvent('late', a.leader.def.name + ' came in at the wire.');
         }
         else if (a.closing === 1) { a.closing = 2; a.closingRollPlayed = false; a.heartT = 0.35; qLine('Going twice...', PAL.yellow, 'twice'); }
-        else { a.closing = 0; if (hadYou) soldToYou(a); else loseAuction(); }
+        else {
+          a.closing = 0;
+          // Whatever the room muttered while it was losing its nerve waits its turn: the hammer goes first.
+          // The SHRUGS do not come back at all - soldToYou says the whole room let it go in one line, and
+          // four separate "kicks a rock and folds" landing on top of your win is the pile-on the user was
+          // describing. Anything else they said (a dig, a story beat) still lands, after the sale.
+          const muttered = a.queue.splice(qWire).filter((l) => l.sfx !== 'fold');
+          if (hadYou) soldToYou(a); else loseAuction();
+          for (const l of muttered) a.queue.push(l);
+        }
       }
       return;
     }
@@ -4934,7 +5758,9 @@ function pumpQueue(dt) {
     if ((l.sfx === 'npc' || l.sfx === 'pbid') && a.interrupt && a.interrupt.kind === 'power' && !a.interrupt.fired && !a.done) { a.paddlesSeen = (a.paddlesSeen || 0) + 1; if (a.paddlesSeen >= 3) interruptPower(a); }
     if (l.sfx === 'fold' && l.npcId) a.shownFolded[l.npcId] = true;
     if (l.sfx === 'rejoin' && l.npcId) a.shownFolded[l.npcId] = false;
-    a.qt = (l.sfx === 'npc' || l.sfx === 'pbid' || l.sfx === 'edscrap' || l.sfx === 'gossip') ? a.auc.bidPace : a.auc.foldPace;   // bids get room to land
+    // bids get room to land, and a line may ask for more of it (`gap`): the hammer takes nearly a second of
+    // nothing before the room is allowed to react, so winning it is a moment and not a queue entry
+    a.qt = l.gap != null ? l.gap : ((l.sfx === 'npc' || l.sfx === 'pbid' || l.sfx === 'edscrap' || l.sfx === 'gossip') ? a.auc.bidPace : a.auc.foldPace);
     const voN0 = _voN;
     if (l.sfx === 'npc') {
       play('bid_rival');
@@ -5019,7 +5845,9 @@ function npcWants(a, target, leaderIsYou, R, auc, leader) {
   if (a.lateBid) { a.lateBid = false; if (target <= a.cap && target <= (a.budgetCap || Infinity)) return true; }   // through the gate late: one bid, if the number allows
   if (pushingYou(a) && leaderIsYou && target > a.cap) return target <= a.pushBack.to && target <= (a.budgetCap || Infinity) && R.chance(PUSHBACK_NERVE);   // not for the door: for you
   if (a.def.phone) return target <= a.cap && target <= (a.budgetCap || Infinity);   // a number on the book does not hesitate
-  if (target <= a.cap) return R.chance(0.95);
+  // A professional answers almost every time; the back row is slower to get a hand up, which is what keeps
+  // a crowd with a real number from filling the log with "a hand goes up in the back" (2026-09-20).
+  if (target <= a.cap) return R.chance(a.crowd ? 0.6 : 0.95);
   if (spiteBites(a, leader === undefined ? (leaderIsYou ? 'you' : null) : leader) && a.spiteCap && target <= a.spiteCap) return a.spiteWar ? true : R.chance(0.6);   // the first spite war: every paddle
   // pride: a reluctant raise past their own number — once or twice, never past the wallet
   if (a.pressLeft > 0 && target <= a.cap * 1.35 && target <= (a.budgetCap || Infinity)) {
@@ -5033,6 +5861,10 @@ function npcWants(a, target, leaderIsYou, R, auc, leader) {
 function npcRound() {
   const au = G.auction, R = au.R, auc = au.auc || AUCTIONEERS.default;
   let raisedAny = false;
+  pHeatTick(au);                                     // before they answer: who has noticed you, and who has stopped
+  // the whole room turned to look at the noise: this round does not happen. One round only, and the late
+  // chances during the count still fire, so it buys you the gavel's first "going once" and nothing more.
+  if (au.racSkip) { au.racSkip = null; return false; }
   for (const a of R.shuf(au.npcs)) {
     if (!a.active || au.leader === a) continue;
     if (a.folded) {
@@ -5126,7 +5958,7 @@ function tellKnown(id) {
   if (paid >= 3 && paid > lied * 2) return 'honest';
   return null;
 }
-const TELL_STRIP = { push: { t: 'pushing you', c: PAL.orange }, warm: { t: 'wants it', c: PAL.yellow }, sweat: { t: 'sweating', c: PAL.lblue }, pride: { t: 'past it', c: PAL.lred }, act: { t: 'acting', c: PAL.dgray } };
+const TELL_STRIP = { push: { t: 'pushing you', c: PAL.orange }, warm: { t: 'wants it', c: PAL.yellow }, sweat: { t: 'sweating', c: PAL.lblue }, pride: { t: 'past it', c: PAL.lred }, act: { t: 'acting', c: PAL.dgray }, mark: { t: 'watching you', c: PAL.orange } };
 // the written tell, once per state per sale, in the queue right behind the paddle it belongs to
 function tellAside(a, bid, spite) {
   const au = G.auction;
@@ -5235,12 +6067,23 @@ function callOut(a) {
 // they are past their own number (their pride shows — the room asks if you stop there) or
 // your number is reached (you let them have it). If they step back first, the door is yours
 // at your own bid: they called it. Anybody else taking the lead breaks the run and asks.
+// The number you had to pick first was the wrong question (user, 2026-09-20: "there shouldn't be a set amount
+// where you're going to try to run someone up, that doesn't make sense in my opinion"). You simply start pushing
+// now - their face and your money in front of you - and STOP PUSHING is on the bar the whole time. The wallet is
+// still the wall (bidCeiling), and every ask that used to stop the run still stops it.
 function openRunUp(a) {
   const au = G.auction;
   if (!au || au.done || au.runUp || au.leader === 'you') return;
-  if (!numberChips(Math.max(au.bid || 0, G.cur.minBid || 0)).length) { closeMoveMenu(); play('denied'); toast('Nothing to push with.', PAL.red); return; }
-  au.sel = a.def.id; au.selMode = 'runup';             // the chips come up inside the same card
-  au.roomHeld = true;
+  if (au.bid + (au.step || 25) > bidCeiling()) { closeMoveMenu(); play('denied'); toast('Nothing to push with.', PAL.red); return; }
+  closeMoveMenu();
+  startRunUp(a, bidCeiling());
+}
+function stopRunUp(quiet) {
+  const au = G.auction;
+  if (!au || !au.runUp) return;
+  const t = au.npcs.find((n) => n.def.id === au.runUp.id);
+  au.runUpEnded = au.runUp; au.runUp = null;
+  if (!quiet) qLine('You stop answering' + (t ? ' ' + shortRivalName(t.def) : '') + '. The number stands where it is.', PAL.cyan);
 }
 // ---- rivals push you back (the user's 2026-09-18 auction brief, built 2026-09-19) ----
 // You can run a face up; now a face can run YOU up. One face at a door, at most, bids against your paddle past
@@ -5300,6 +6143,7 @@ const PUSHBACK_TELLS = {
 function pushBackAside(a, bid) {
   const au = G.auction, pb = a.pushBack;
   pb.hit = Math.max(pb.hit || 0, bid);
+  if (a.def) bookWrite(a.def.splitFrom || a.def.id, 'counter', 'runs you up when you push him', false);
   if (pb.told || !pushReadable(a)) return;
   pb.told = true;
   if (!(careerBook().pushedBackSeen > 0)) bump('pushedBackSeen');
@@ -5544,23 +6388,99 @@ function slipBelieveChance(a) {
 const FACE_MAX = 1;
 const FACE_CERTAIN_CAP = 0.95, FACE_RATTLED_CAP = 1.08;
 function facesLeft(au) { au = au || G.auction; return au ? (au.faceLeft == null ? FACE_MAX : au.faceLeft) : 0; }
-const SAY_DECK = [
-  { id: 'mildew', kind: 'cool', label: 'IT SMELLS', say: ['"Smells like mildew from here, folks."', '"That\'s wet cardboard. You can smell it from here."'],
-    hint: 'box and condition people believe it. their numbers drop.', aud: ['bev', 'priscilla', 'dee', 'cobb', 'hattie', 'ferrell', 'duo', 'bart', 'charlie'], audMult: 1, others: 0.5, mult: 0.8 },
-  { id: 'marantz', kind: 'heat', label: 'THE GOOD STUFF', say: ['"That\'s a Marantz box in the back."', '"Somebody packed that like it mattered."'],
-    hint: 'maker, shine and feel people believe it. their numbers climb.', aud: ['vale', 'charlie', 'dex', 'wanda', 'vera', 'garrity'], audMult: 1, others: 0.4, mult: 1.25 },
-  { id: 'nextdoor', kind: 'cool', label: 'I HAD THE NEXT ONE', say: ['"I had the unit next to this one. Nothing."'],
-    hint: 'everybody, a little. win it and it is good: the paper prints it.', aud: null, audMult: 0.5, others: 0.5, mult: 0.9 },
-  { id: 'name', kind: 'cool', label: 'NAME ONE', hint: 'one face re-reads it low, in their own trade. costs a point with them.' },
-  { id: 'point', kind: 'point', label: 'POINT SAL', hint: "Sal's spite turns on somebody else. they will know you did it." },
-  { id: 'feud', kind: 'point', label: 'THOSE TWO', hint: 'remind two people who hate each other why. they both know who said it.' },
-  { id: 'certain', kind: 'face', label: 'LOOK CERTAIN', say: ['(you set your jaw, look at the door, and do not look at the price)'],
-    hint: 'let them think you will not stop. believed, they stop pushing. seen through, they push harder.' },
-  { id: 'rattled', kind: 'face', label: 'LOOK RATTLED', say: ['(you check your pocket, twice, and let the room see you do it)'],
-    hint: 'let them think you are nearly out. believed, they climb past their own number. seen through, they ease off.' },
-  { id: 'look', kind: 'look', label: 'SECOND LOOK', say: ['"Buzz, can we get a second look?"'], hint: 'the whole room looks again. their numbers move. 3 energy.', cost: 3 },
-  { id: 'quiet', kind: 'posture', label: 'SAY NOTHING', say: ['(nothing, loudly)'], hint: 'go QUIET: sit out the next raises while the room relaxes. 5 energy, your one change.' },
+// ---- ten things to say for each way in (docs/AUCTION_REDESIGN.md §3; the user, 2026-09-19) ----
+// "Each of these phases should have like ten things each that are related to their stage. The big thing about
+// these different stages is the things you get to say and try to manipulate other buyers - you could try to get
+// other rivals to run each other up."
+// So every row now says WHERE it can be said (`where`: the three ways in, by their door names - join / loud /
+// quiet), and there are three sets of about ten. What changes with where you stand is not only the wording:
+//   UP FRONT  you are seen and heard. The lines are public, direct and personal, and they cost standing.
+//   AT THE BACK  nobody knows who said it: the lines cost NO standing and are never written down against you
+//                (`anon`), but they are believed a little less, because a voice is not a face.
+//   IN THE CROWD  the old deck: a bit of both, and the two performances, which need to be seen.
+// The new rows all run through one handler (`sayMove`), so each is a short spec rather than its own code path:
+//   room  everybody's number moves by `mult`; `press` adds or clears a push; `fold` folds anybody already past it
+//   aim   one face (the leader, or whoever the door plays to) takes it
+//   lead  the one in front: dared, they spend their number NOW and have nothing left
+//   crowd the room bids it up one step without your paddle
+//   hurry the count starts, if the room lets it
+const SAY_MOVES = [
+  // ---------- UP FRONT: said to the whole yard, with your name on it ----------
+  { id: 'allday', kind: 'move', label: 'ALL DAY', where: ['loud'],
+    say: ['"I\'ll be here all day, folks."', '"I\'ve got nowhere to be."'],
+    hint: 'nervous paddles come down. the stubborn ones dig in.',
+    eff: { type: 'room', mult: 0.9, press: -1, sawPress: 1 } },
+  { id: 'mine', kind: 'move', label: "THAT ONE'S MINE", where: ['loud'],
+    say: ['"That one\'s mine, folks. Save yourselves the arm."'],
+    hint: 'anybody already at their number steps off. anybody who is not takes it personally.',
+    eff: { type: 'room', mult: 0.88, fold: true, sawSpite: 1.2, cost: 1 } },
+  { id: 'roll', kind: 'move', label: 'SHOW THE ROLL', where: ['loud'],
+    say: ['(you count it out where they can see it, slowly)'],
+    hint: 'they price you, not the door: their numbers drop. and every one of them remembers it.',
+    eff: { type: 'room', mult: 0.85, costAll: 1 } },
+  { id: 'best', kind: 'move', label: 'NAME YOUR BEST', where: ['loud'],
+    say: ['"Go on. Name your best number and we\'ll all go home."'],
+    hint: 'dare whoever leads: they spend their whole number now, and have nothing after it. or they sit on it and smile.',
+    eff: { type: 'lead', cost: 1 } },
+  { id: 'anyone', kind: 'move', label: 'ANYBODY ELSE?', where: ['loud'],
+    say: ['"Anybody else? No? Buzz, take it."'],
+    hint: 'hurry the hammer while they are thinking. one of them will not like being hurried.',
+    eff: { type: 'hurry', sawPress: 1 } },
+  // ---------- AT THE BACK: a voice, not a face. No standing, and never written down ----------
+  { id: 'rumour', kind: 'move', label: 'START SOMETHING', where: ['quiet'],
+    say: ['"...heard the office had it flagged."', '"...somebody said this one was already picked over."'],
+    hint: 'a rumour from nobody in particular. every number comes down a little, and nobody knows who said it.',
+    eff: { type: 'room', mult: 0.88, anon: true } },
+  { id: 'overheard', kind: 'move', label: 'LET THEM OVERHEAR', where: ['quiet'],
+    say: ['(you say it to the man beside you, at exactly the wrong volume)'],
+    hint: 'one face hears what you wanted them to hear. their number drops, and it cost you nothing.',
+    eff: { type: 'aim', mult: 0.78, anon: true } },
+  { id: 'whisper', kind: 'move', label: 'TALK IT UP TO ONE', where: ['quiet'],
+    say: ['(you tell the man beside you what you think it is worth, and let it travel)'],
+    hint: 'one face climbs. let them spend it on somebody else.',
+    eff: { type: 'aim', mult: 1.22, press: 1, anon: true } },
+  { id: 'nudge', kind: 'move', label: 'NUDGE THE FRONT ROW', where: ['quiet'],
+    say: ['(you lean forward and say two words to a man with a paddle)'],
+    hint: 'somebody else raises it for you. your paddle never moves, and their money is the one going.',
+    eff: { type: 'crowd', anon: true } },
+  { id: 'leaving', kind: 'move', label: 'MAKE FOR THE DOOR', where: ['quiet'],
+    say: ['(you pick up your coat and start for the gate)'],
+    hint: 'the room decides it is over. everybody relaxes, and nobody is watching the back.',
+    eff: { type: 'room', mult: 0.94, press: -1, anon: true } },
+  { id: 'grumble', kind: 'move', label: 'GRUMBLE', where: ['quiet'],
+    say: ['"...prices in here lately."', '"...paying yard rates for other people\'s rubbish."'],
+    hint: 'the whole room remembers what everything cost last week. a little comes off every number.',
+    eff: { type: 'room', mult: 0.95, anon: true } },
+  { id: 'cough', kind: 'move', label: 'COUGH', where: ['quiet'],
+    say: ['(you cough, once, at exactly the wrong moment)'],
+    hint: 'only while the hammer is coming down: Buzz loses his place and has to start the count again.',
+    eff: { type: 'stall', anon: true } },
+  // ---------- IN THE CROWD: the middle. One of the yard's own questions. ----------
+  { id: 'askbuzz', kind: 'move', label: 'ASK BUZZ', where: ['join'],
+    say: ['"Buzz — anything on the paperwork for this one?"'],
+    hint: 'a fair question, asked in front of everybody. Buzz answers, and the room hears it the way it wants to.',
+    eff: { type: 'room', mult: 0.93, buzz: true } },
 ];
+const SAY_DECK = [
+  { id: 'mildew', kind: 'cool', label: 'IT SMELLS', where: ['join', 'loud'], say: ['"Smells like mildew from here, folks."', '"That\'s wet cardboard. You can smell it from here."'],
+    hint: 'box and condition people believe it. their numbers drop.', aud: ['bev', 'priscilla', 'dee', 'cobb', 'hattie', 'ferrell', 'duo', 'bart', 'charlie'], audMult: 1, others: 0.5, mult: 0.8 },
+  { id: 'marantz', kind: 'heat', label: 'THE GOOD STUFF', where: ['join', 'loud'], say: ['"That\'s a Marantz box in the back."', '"Somebody packed that like it mattered."'],
+    hint: 'maker, shine and feel people believe it. their numbers climb.', aud: ['vale', 'charlie', 'dex', 'wanda', 'vera', 'garrity'], audMult: 1, others: 0.4, mult: 1.25 },
+  { id: 'nextdoor', kind: 'cool', label: 'I HAD THE NEXT ONE', where: ['join', 'loud'], say: ['"I had the unit next to this one. Nothing."'],
+    hint: 'everybody, a little. win it and it is good: the paper prints it.', aud: null, audMult: 0.5, others: 0.5, mult: 0.9 },
+  { id: 'name', kind: 'cool', label: 'NAME ONE', where: ['join', 'loud'], hint: 'one face re-reads it low, in their own trade. costs a point with them.' },
+  { id: 'point', kind: 'point', label: 'POINT SAL', where: ['join', 'loud', 'quiet'], hint: "Sal's spite turns on somebody else. they will know you did it - unless they cannot see you." },
+  { id: 'feud', kind: 'point', label: 'THOSE TWO', where: ['join', 'loud', 'quiet'], hint: 'remind two people who hate each other why. from the back, nobody knows who reminded them.' },
+  { id: 'certain', kind: 'face', label: 'LOOK CERTAIN', where: ['join', 'loud'], say: ['(you set your jaw, look at the door, and do not look at the price)'],
+    hint: 'let them think you will not stop. believed, they stop pushing. seen through, they push harder.' },
+  { id: 'rattled', kind: 'face', label: 'LOOK RATTLED', where: ['join', 'loud'], say: ['(you check your pocket, twice, and let the room see you do it)'],
+    hint: 'let them think you are nearly out. believed, they climb past their own number. seen through, they ease off.' },
+  { id: 'look', kind: 'look', label: 'SECOND LOOK', where: ['join', 'loud', 'quiet'], say: ['"Buzz, can we get a second look?"'], hint: 'the whole room looks again. their numbers move. 3 energy.', cost: 3 },
+  { id: 'quiet', kind: 'posture', label: 'SAY NOTHING', where: ['join', 'loud'], say: ['(nothing, loudly)'], hint: 'take the back row: a paddle and no face, and nothing you say after it is traced to you. 5 energy, your one change.' },
+].concat(SAY_MOVES);
+// where you are standing, in the deck's own words: the door calls them join / loud / quiet
+function sayWhere(au) { const p = (au && au.posture) || 'steady'; return p === 'steady' ? 'join' : p; }
+function sayRowHere(line, au) { return !line.where || line.where.includes(sayWhere(au)); }
 // NAME ONE, in their own trade
 const SAY_NAME_LINES = {
   pruitt: '"{name}, that is all cardboard. You can hear it."',
@@ -5612,9 +6532,18 @@ function pointLine(other) {
 function sayRows() {
   const au = G.auction;
   const said = (au && au.said) || [];
-  return SAY_DECK.map((line) => {
+  return SAY_DECK.filter((line) => sayRowHere(line, au)).map((line) => {
     const used = said.some((x) => x.id === line.id);
     let ok = !!au && !au.done && !used, text = line.say ? line.say[0] : '', target = null;
+    if (line.kind === 'move') {
+      const eff = line.eff || {};
+      if (eff.type === 'lead') { target = au && sayFace(au.leader) ? au.leader : null; ok = ok && !!target; if (!target) text = 'nobody is in front to dare.'; }
+      else if (eff.type === 'aim') { target = au ? nameTarget(au) : null; ok = ok && !!target; if (!target) text = 'nobody here to aim it at.'; }
+      else if (eff.type === 'crowd') { ok = ok && !!au && au.npcs.some((a) => sayFace(a) && a !== au.leader); if (!ok && !used) text = 'nobody beside you worth the words.'; }
+      else if (eff.type === 'hurry') ok = ok && !!au && !au.closing && !!au.leader;
+      else if (eff.type === 'stall') { ok = ok && !!au && !!au.closing; if (!ok && !used) text = 'nothing to interrupt yet.'; }
+      else ok = ok && !!au && au.npcs.some(sayFace);
+    }
     if (line.id === 'name') {
       target = au ? nameTarget(au) : null; ok = ok && !!target;
       text = target ? (SAY_NAME_LINES[target.def.id] || SAY_NAME_ANY).replace(/\{name\}/g, shortRivalName(target.def)) : 'nobody here to name.';
@@ -5740,6 +6669,115 @@ function reactLine(id, key, nm) {
 const COUNT_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'];
 // its own dice: flavor never moves a rival's decision
 function sayFlavorR(id) { const au = G.auction; return RNG(strHash('sayflavor' + G.worldSeed + '_' + G.day + '_' + (G.cur ? G.cur.num : 0) + '_' + id + '_' + ((au && au.said) ? au.said.length : 0))); }
+// ---- the new rows, run from one place (docs/AUCTION_REDESIGN.md §3) ----
+// Every one is a gamble on being believed, exactly as the old deck is: `slipBelieveChance` per face, halved
+// again for every line you have already said this sale. What a row does when it lands is its `eff`:
+//   mult      their number, multiplied (never past their wallet)
+//   press     a push added (1) or taken away (-1)
+//   fold      anybody already past their number steps off here
+//   sawPress  what it does to the ones who did NOT buy it (a bluff they see is an invitation)
+//   sawSpite  and what it does to their spite number
+//   cost      standing with the face it was aimed at; costAll, standing with everybody
+//   anon      said from the back: no standing, nothing written down, and believed a little less
+//   buzz      Buzz answers it out loud
+const SAY_ANON_BELIEF = 0.85;        // a voice is not a face: believed a little less from the back
+function sayAnon(au, eff) { return !!(eff && eff.anon) && quietHidden(au); }
+function sayMove(au, row, entry, fade) {
+  const R = au.R, eff = row.line.eff || {}, anon = sayAnon(au, eff);
+  const room = au.npcs.filter(sayFace);
+  const aside = (a, text, col, react) => au.queue.push({ text, col: col || PAL.gray, sfx: 'aside', npcId: a.def.id, react, showBid: au.bid, showLeader: leaderLabel() });
+  const move = (a, m) => {
+    a.cap = Math.min(a.budgetCap || Infinity, Math.max(G.cur.minBid || 0, Math.round(a.cap * m)));
+    if (a.spiteCap) a.spiteCap = Math.min(a.budgetCap || Infinity, Math.round(a.spiteCap * m));
+  };
+  const believes = (a) => R.chance(slipBelieveChance(a) * fade * (anon ? SAY_ANON_BELIEF : 1));
+  // said out loud, in the voice of where you are standing
+  qLine(anon ? 'From somewhere at the back: ' + R.pick(row.line.say) : 'You, loud enough: ' + R.pick(row.line.say), PAL.cyan);
+  if (eff.buzz) { qLine('"Nothing on the paperwork, folks. Same as every other door."', PAL.orange); speak(['auc_second_look']); }
+  if (!anon && eff.costAll) for (const a of room) standingBump(a.def.id, -eff.costAll);
+  // ---- one face: aimed, or whoever is in front ----
+  if (eff.type === 'aim' || eff.type === 'lead') {
+    const t = row.target;
+    if (!t) return;
+    if (!anon && eff.cost) standingBump(t.def.id, -eff.cost);
+    const nm = shortRivalName(t.def);
+    if (!believes(t)) {
+      aside(t, eff.type === 'lead' ? nm + ' smiles and does not move. The number stays where it is.' : nm + ' is not listening to that.', PAL.dgray, 'scoff');
+      if (eff.sawPress) t.pressLeft = (t.pressLeft || 0) + eff.sawPress;
+      return;
+    }
+    entry.believers.push(t.def.id);
+    if (eff.type === 'lead') {
+      // dared in front of everybody: they put their whole number up now, and have nothing behind it
+      const to = Math.min(t.budgetCap || Infinity, Math.max(au.bid + (au.step || 25), t.cap || 0));
+      if (to > au.bid) {
+        au.bid = to; au.leader = t; t.everLed = true; t.topRaise = Math.max(t.topRaise || 0, to);
+        au.queue.push({ text: '"Fine." ' + nm + ' names it: ' + fmt$(to) + '.', col: PAL.orange, sfx: 'npc', amt: to, npcId: t.def.id, react: 'bid', showBid: to, showLeader: leaderLabel() });
+      }
+      t.cap = au.bid; t.pressLeft = 0; t.spiteCap = 0;
+      aside(t, nm + ' has nothing behind that. One more from anybody and it is over.', PAL.cyan, 'sweat');
+      return;
+    }
+    if (eff.mult) move(t, eff.mult);
+    if (eff.press) t.pressLeft = Math.max(0, (t.pressLeft || 0) + eff.press);
+    aside(t, eff.mult && eff.mult < 1 ? nm + ' hears it, looks again, and thinks less of the door.'
+      : nm + ' hears it and looks at the door like it owes them money.', eff.mult && eff.mult < 1 ? PAL.cyan : PAL.orange, eff.mult && eff.mult < 1 ? 'believe' : 'warm');
+    return;
+  }
+  // ---- somebody else raises it for you ----
+  if (eff.type === 'crowd') {
+    const other = room.find((a) => a !== au.leader && a.cap > au.bid + (au.step || 25)) || room.find((a) => a !== au.leader);
+    if (!other || !believes(other)) { qLine('Nobody bites. The paddle beside you stays down.', PAL.dgray); return; }
+    const to = au.bid > 0 ? au.bid + (au.step || 25) : (G.cur.minBid || au.step || 25);
+    if (to > (other.budgetCap || Infinity)) { qLine('The man beside you looks at the number, and then at his shoes.', PAL.dgray); return; }
+    entry.believers.push(other.def.id);
+    au.bid = to; au.leader = other; other.everLed = true; other.topRaise = Math.max(other.topRaise || 0, to);
+    au.queue.push({ text: shortRivalName(other.def) + ' puts a hand up. ' + fmt$(to) + '. Not a penny of it yours.', col: PAL.white, sfx: 'npc', amt: to, npcId: other.def.id, react: 'bid', showBid: to, showLeader: leaderLabel() });
+    return;
+  }
+  // ---- the count, broken ----
+  if (eff.type === 'stall') {
+    au.closing = 0; au.closingT = 0; au.closingRollPlayed = false; stopClosingRoll(au);
+    qLine('Somebody coughs. Buzz loses his place, looks up, and starts the count again.', PAL.orange);
+    return;
+  }
+  // ---- the hammer, hurried ----
+  if (eff.type === 'hurry') {
+    const stubborn = room.find((a) => !believes(a));
+    if (stubborn) { aside(stubborn, shortRivalName(stubborn.def) + ' does not care to be hurried.', PAL.lred, 'glare'); stubborn.pressLeft = (stubborn.pressLeft || 0) + (eff.sawPress || 1); }
+    if (au.leader && au.leader !== 'you' && !au.closing) { qLine('Buzz takes you at your word. "Going once..."', PAL.orange); holdOff(); }
+    else qLine('Buzz looks at the room. The room looks back.', PAL.gray);
+    return;
+  }
+  // ---- everybody ----
+  const heard = [], saw = [];
+  for (const a of room) (believes(a) ? heard : saw).push(a);
+  for (const a of heard) {
+    entry.believers.push(a.def.id);
+    if (eff.mult) move(a, eff.mult);
+    if (eff.press) a.pressLeft = Math.max(0, (a.pressLeft || 0) + eff.press);
+    if (eff.fold && au.bid > 0 && a !== au.leader && a.cap <= au.bid && !a.folded) {
+      a.folded = true;
+      au.queue.push({ text: reactLine(a.def.id, 'fold', shortRivalName(a.def)), col: PAL.dgray, sfx: 'fold', npcId: a.def.id, showBid: au.bid, showLeader: leaderLabel() });
+    }
+  }
+  for (const a of saw) {
+    if (eff.sawPress) a.pressLeft = (a.pressLeft || 0) + eff.sawPress;
+    if (eff.sawSpite) a.spiteCap = Math.min(a.budgetCap || Infinity, Math.round(Math.max(a.spiteCap || 0, a.cap || 0) * eff.sawSpite));
+  }
+  if (heard.length) {
+    const one = heard[0];
+    aside(one, shortRivalName(one.def) + (eff.mult && eff.mult > 1 ? ' hears it and wants it more.' : ' hears it. The paddle hand slows down.'), eff.mult && eff.mult > 1 ? PAL.orange : PAL.cyan, eff.mult && eff.mult > 1 ? 'warm' : 'believe');
+    if (heard.length > 1) qLine(heard.length + ' of them take it in.', PAL.gray);
+  }
+  if (saw.length) {
+    const one = saw[0];
+    aside(one, shortRivalName(one.def) + ' does not buy a word of it.', PAL.dgray, 'scoff');
+    if (saw.length > 1) qLine(saw.length + ' of them are not buying it.', PAL.dgray);
+  }
+  // from the back, nobody knows whose voice that was: it is never written down against you
+  if (!anon && saw.length) { const mem = G.world.rivalMem = G.world.rivalMem || {}; mem.slipsCaught = (mem.slipsCaught || 0) + 1; }
+}
 function sayLine(id) {
   const au = G.auction;
   const row = au ? sayRows().find((r) => r.line.id === id) : null;
@@ -5764,6 +6802,7 @@ function sayLine(id) {
     if (a.spiteCap) a.spiteCap = Math.min(a.budgetCap || Infinity, Math.round(a.spiteCap * m));
   };
   const room = au.npcs.filter(sayFace);
+  if (line.kind === 'move') { sayMove(au, row, entry, fade); return; }
   if (id === 'look') {
     G.daylight -= line.cost; sunCheck();
     qLine('You: ' + line.say[0], PAL.cyan);
@@ -6177,14 +7216,29 @@ function resolveNpcs(rounds) {
   }
 }
 // the room stayed quiet through both counts: fold whoever is still standing and close it out
+// ---- THE HAMMER LANDS FIRST (user, 2026-09-20) ----
+// "when you are about to win the bid, you win it, but a rival might say something so it stops the heartbeat
+// and the winning feeling." It did: this queued a line for EVERY face still standing - "Bart shakes his
+// head." "Sal shakes his head." - and only then the sale. So the count ran out, the heartbeat stopped dead,
+// and you sat through three rivals giving up one at a time before anything told you that you had won.
+//
+// Now the order is the one the room actually has: SOLD, and then the room takes it in. And the room takes
+// it in ONCE, in a single line, however many of them were still holding a paddle - four separate shrugs was
+// the deflation, not the shrugging.
 function soldToYou(au) {
-  for (const a of au.npcs) {
-    if (a.active && !a.folded) {
-      a.folded = true;
-      au.queue.push({ text: a.crowd ? (a.def.lines.settle || 'The crowd settles down.') : a.def.name + ' shakes his head.', col: PAL.dgray, sfx: 'fold', npcId: a.def.id, showBid: au.bid, showLeader: leaderLabel() });
-    }
+  const standing = au.npcs.filter((a) => a.active && !a.folded);
+  for (const a of standing) a.folded = true;
+  au.queue.push({ text: 'SOLD to YOU for ' + fmt$(au.bid) + '!', col: PAL.green, sfx: 'sold', gap: (au.auc.foldPace || 0.5) + 0.9, showBid: au.bid, showLeader: 'you', then: () => winAuction() });
+  {
+    const named = standing.filter((a) => !a.crowd);
+    const names = named.map((a) => shortRivalName(a.def));
+    let text = null, who = null;
+    // Cody and Kaylee are two people under one name, the way the rest of the room's lines already treat them
+    if (names.length === 1) { text = names[0] + (named[0].def.id === 'duo' ? ' let it go.' : ' lets it go.'); who = named[0].def.id; }
+    else if (names.length > 1) text = names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] + ' let it go.';
+    else if (standing.length) { const c = standing[0]; text = (c.def.lines && c.def.lines.settle) || 'The crowd settles down.'; who = 'crowd'; }
+    if (text) au.queue.push({ text, col: PAL.dgray, sfx: 'fold', npcId: who, showBid: au.bid, showLeader: 'you' });
   }
-  au.queue.push({ text: 'SOLD to YOU for ' + fmt$(au.bid) + '!', col: PAL.green, sfx: 'sold', showBid: au.bid, showLeader: 'you', then: () => winAuction() });
   pushBackSettle(au, true);                             // somebody was running you up, and you paid it
   if (au.runUp) {
     // you were pushing somebody and they stepped back: the door is yours, and you did not want it
@@ -6200,6 +7254,7 @@ function soldToYou(au) {
     au.runUp = null;
   }
   cardsOnTable(au);
+  bookAfterSale(au);
   au.done = true;
 }
 function playerBid(inc) {
@@ -6211,8 +7266,18 @@ function playerBid(inc) {
   // a paddle at the back is easy to miss when the count is running
   if (quietHidden(au) && au.closing && au.R.chance(QUIET_MISS)) { play('denied'); toast('Buzz does not see the paddle at the back. Wave it again.', PAL.orange); return; }
   if (au.posture === 'loud' && au.bid > 0) inc = Math.max(inc, (au.step || 25) * 2);   // on your feet, nothing small
+  // what this raise says about you, to anybody in here who is reading (2026-09-22)
+  {
+    const p = au.posture || 'steady';
+    let heat = p === 'loud' ? PH.raise_loud : (p === 'quiet' ? (au.closing ? PH.raise_quiet_late : PH.raise_quiet_early) : PH.raise_steady);
+    if (inc > (au.step || 25)) heat += PH.jump;                       // a jump is a man in a hurry
+    if (!au.leader && !au.bid) heat += PH.first;                      // and opening it yourself is showing your hand
+    if (!(au.pbids > 0) && au.closing) heat += PH.raise_quiet_late;   // silent all sale, then in at the count
+    pHeatAdd(au, heat);
+  }
   const target = (au.bid === 0 ? G.cur.minBid : au.bid + inc);
   if (target > bidCeiling()) { play('denied'); return; }
+  racHelpRoll(au);                                   // square with the raccoon: he is somewhere in the dark
   const jump = au.bid > 0 ? Math.round(inc / (au.step || 25)) : 0;
   // opening the bidding yourself is showing your hand. Sal likes a shown hand.
   if (au.bid === 0 && au.leader === null) {
@@ -6287,6 +7352,7 @@ function numberChips(from) {
 // raises, you learned who is still interested. If nobody moves, the hammer
 // starts falling — and you can still jump back in until the last word.
 function holdOff() {
+  pHeatAdd(G.auction, PH.hold);                     // you look like a man who can take it or leave it
   const au = G.auction;
   if (!au.leader || au.leader === 'you' || au.done || au.closing) return;
   au.pressT = 0;
@@ -6349,6 +7415,7 @@ function loseAuction() {
     recordEvent('letHaveIt', { unit: G.cur.num, rival: w.def.id });
     au.queue.push({ text: shortRivalName(w.def) + ' looks over at you and nods. You let them have it. That is owed.', col: PAL.green, sfx: 'aside', npcId: w.def.id, react: 'win', showBid: au.bid, showLeader: leaderLabel() });
   }
+  bookAfterSale(au);
   au.done = true;
   bump('lost');
   if (!w.crowd) bumpIn('beatenBy', w.def.splitFrom || w.def.id);
@@ -6538,8 +7605,12 @@ function aucPriceStamp(au) {
   if (au.leader && au.leader.def) return { head: 'WENT TO ' + shortRivalName(au.leader.def).toUpperCase() + ' FOR ' + fmt$(au.bid), col: PAL.orange, lines: [yourTop ? 'you stopped at ' + fmt$(yourTop) : 'you never bid'] };
   return null;
 }
-function drawAucPaddle(x, by, up, grey, slam) {
-  const hy = by - (up ? 46 + (slam ? 5 : 0) : 26);
+// `t`: how long the paddle has been up, so it arrives with some weight in it - a hand throws a paddle up,
+// it overshoots, it settles (2026-09-21). Anything over a second is a paddle that is simply up.
+function drawAucPaddle(x, by, up, grey, slam, t) {
+  const spring = up && t != null && t < 1 ? Math.exp(-6 * t) * Math.sin(t * 17) * 7 : 0;
+  const hy = Math.round(by - (up ? 46 + (slam ? 5 : 0) + spring : 26));
+  if (up && !grey) { g.globalAlpha *= 0.35; px(g, x + 1, by - 3, 14, 3, '#05060a'); g.globalAlpha /= 0.35; }   // its shadow on the card
   const img = _uiImg.paddle && _uiImg.paddle[0];
   if (img) {
     g.globalAlpha *= grey ? 0.4 : (up ? 1 : 0.75);
@@ -6553,6 +7624,61 @@ function drawAucPaddle(x, by, up, grey, slam) {
   if (!grey) px(g, x + 4, hy + 5, 8, 3, up ? PAL.red : '#8a7d5c');
 }
 // ---- the rail: the door as a reminder, the row, your names, one slot for what matters now ----
+// ---- what the door LOOKS like it is worth (user's rework, 2026-09-20) ----
+// "replace the 1st 2nd door etc with a estimated locker value from view. It can show the player what its
+// estimated to be worth from the door and maybe a little extra for whats behind. And also on this screen it
+// can say how much you are potentially overpaying or saving. It will help with the suspense."
+//
+// The rule this has to live by is the one the whole game rests on: the door must not become a readout. So
+// the front row is counted honestly - you can SEE it - and widened by how little you did at the door; and
+// the back is a GUESS, made the way a person makes one, off how many shapes are in there and what the front
+// row averages, NEVER off what those things are actually worth. The number is wrong often, and it is meant
+// to be: it is the guess you are bidding against, not the answer.
+//
+// Seeded per door per day, so it does not wander while you are bidding, and rounded to $25 so it reads as a
+// guess rather than a figure somebody worked out.
+function doorEstimate(lk) {
+  if (!lk || !lk.items) return null;
+  const R = RNG(strHash('est_' + G.worldSeed + '_' + G.day + '_' + lk.num));
+  const it = lk.intel || {};
+  const r25 = (n) => Math.max(0, Math.round(n / 25) * 25);
+  // What you have actually SEEN. A long look is the whole point of the second row: it moves those things
+  // out of the guessing and into the counting, which is what makes six energy at the door worth spending.
+  const deep = !!(lk.longLook || it.deep);
+  const seenN = lk.items.filter((x) => x.layer === 2 || (deep && x.layer === 1));
+  const darkN = lk.items.filter((x) => !(x.layer === 2 || (deep && x.layer === 1)));
+  const seenVal = seenN.reduce((t, x) => t + (x.val || 0), 0);
+  // how sure you are of what you saw: a proper look tightens it, the loupe a shade more
+  let band = it.look ? 0.16 : 0.3;
+  if (deep) band -= 0.05;
+  if (lk.loupeUid) band -= 0.03;
+  if (lk.lookTight) band -= 0.05;                 // you went and looked at it yourself, from the front
+  const fLo = r25(seenVal * (1 - band)), fHi = r25(seenVal * (1 + band));
+  // and the dark: shapes, priced at what the things you CAN see average. Deliberately generous at the top
+  // end and thin at the bottom, because that is how a person guesses at a room they cannot see into - and
+  // because a guess that is only ever too low is a sum, not a guess.
+  const per = seenN.length ? seenVal / seenN.length : 30 * ((curTown() || {}).priceMult || 1);
+  // Tuned by measuring sixty real doors: the hunch is off by up to four tenths either way, and the band
+  // round it is 28%. That lands the true worth INSIDE the guess a little under half the time, and wrong in
+  // both directions the rest - twelve doors in sixty worth less than they looked, twenty worth more. A
+  // wider band was useless (it spanned three times the answer) and a narrower one made the guess a sum.
+  // A look from the front narrows the dark: you were close enough to see the shapes. A look that was WRONG
+  // narrows it just as confidently round a number that is not the one (2026-09-22) - the point of a source
+  // that can lie is that it never feels like one.
+  let mid = darkN.length * per * R.r(0.7, 1.4);
+  if (lk.lookTight === 1) mid = darkN.length * per * R.r(0.92, 1.12);
+  else if (lk.lookTight === -1) mid = darkN.length * per * R.pick([0.45, 1.75]);
+  const spread = deep ? 0.18 : (lk.lookTight ? 0.14 : 0.28);
+  const bLo = r25(mid * (1 - spread)), bHi = r25(mid * (1 + spread));
+  return { front: visibleValue(lk), seenVal, fLo, fHi, bLo, bHi, lo: fLo + bLo, hi: fHi + bHi, backN: darkN.length, deep };
+}
+// the live half: what the number on the block is against that guess
+function estVerdict(est, bid) {
+  if (!est) return null;
+  if (bid < est.lo) return { t: '~' + fmt$(est.lo - bid) + ' under the guess', c: PAL.green };
+  if (bid > est.hi) return { t: '~' + fmt$(bid - est.hi) + ' over the guess', c: PAL.red };
+  return { t: 'right about what it looks worth', c: PAL.yellow };
+}
 function drawAucRail(au, menu) {
   const x = 16, w = 180;
   panel(x, 44, w, 84, '#15171f', '#3a3f58');
@@ -6571,27 +7697,34 @@ function drawAucRail(au, menu) {
     T(x + w - 41, 111, 'LOOK AGAIN', hov ? PAL.ink : PAL.gray, 10, 'center', true);
     if (!menu) hot(x, 44, w, 84, () => { au.lookAgain = true; }, { label: 'LOOK AGAIN' });
   }
-  // the row, in the order it sells
-  panel(x, 136, w, 58, '#15171f', '#3a3f58');
-  const row = (G.today && G.today.lockers) || [];
+  // what it looks like it is worth, from the door. This is where the row of three used to be: which door of
+  // the day you are stood at is on the yard screen, and it never changed a bid (user, 2026-09-20).
+  panel(x, 136, w, 82, '#15171f', '#3a3f58');
+  const est = sawIt ? doorEstimate(G.cur) : null;
+  // your ticket for this door, where the row of stubs used to be: the art slot keeps its job, and the
+  // number on it is drawn in ink over the stub so the picture can never garble it
   const tk = _uiImg.ticket && _uiImg.ticket[0];
-  for (let i = 0; i < Math.min(3, row.length); i++) {
-    const d = row[i], ty = 139 + i * 18, here = d === G.cur;
-    if (here) px(g, x + 3, ty - 1, w - 6, 17, 'rgba(255,205,117,0.16)');
-    if (tk) {
-      // your ticket art: the row number printed on the stub in ink, so the art never garbles it
-      g.globalAlpha = here ? 1 : 0.6; g.drawImage(tk, x + 4, ty - 1, 40, 17); g.globalAlpha = 1;
-      T(x + 24, ty + 2, ['1ST', '2ND', '3RD'][i], PAL.ink, 11, 'center', true);
-    } else T(x + 8, ty + 1, ['1ST', '2ND', '3RD'][i], here ? PAL.yellow : PAL.dgray, 12, 'left', true);
-    let txt = 'later', col = PAL.dgray;
-    if (here) {
-      col = PAL.yellow;
-      txt = !au.done ? 'this door' : (G.cur.won ? 'yours ' + fmt$(au.bid) : (au.leader && au.leader !== 'you' && au.leader.def ? shortRivalName(au.leader.def) + ' ' + fmt$(au.bid) : (G.cur.pulled ? 'pulled' : 'no bid')));
-    } else if (d.won) { txt = 'you ' + fmt$(d.paid || 0); col = PAL.green; }
-    else if (d.sold) { const bd = d.soldTo ? rivalDef(d.soldTo) : null; txt = (bd ? shortRivalName(bd) : 'sold') + ' ' + fmt$(d.soldFor || 0); col = PAL.gray; }
-    else if (d.pulled) txt = 'pulled';
-    else if (d.passed) txt = 'no bid';
-    T(x + w - 8, ty + 1, txt, col, 12, 'right');
+  if (tk) {
+    g.drawImage(tk, x + 6, 138, 40, 17);
+    T(x + 26, 141, String(G.cur.num), PAL.ink, 11, 'center', true);
+    T(x + 50, 140, 'LOOKS WORTH', PAL.dgray, 10, 'left', true);
+  } else T(x + 8, 140, 'WHAT IT LOOKS WORTH', PAL.dgray, 10, 'left', true);
+  if (!est) {
+    T(x + 8, 158, 'you did not look', PAL.dgray, 12);
+    T(x + 8, 174, 'at this one.', PAL.dgray, 12);
+    T(x + 8, 194, 'everything from here', PAL.dgray, 11);
+    T(x + 8, 206, 'is the room talking.', PAL.dgray, 11);
+  } else {
+    T(x + 8, 156, est.deep ? 'what you saw' : 'front row', PAL.gray, 11);
+    T(x + w - 8, 155, fmt$(est.fLo) + '–' + fmt$(est.fHi), PAL.white, 12, 'right');
+    T(x + 8, 172, est.deep ? 'and the back wall' : 'and the dark', PAL.gray, 11);
+    T(x + w - 8, 171, est.bHi > 0 ? '+' + fmt$(est.bLo) + '–' + fmt$(est.bHi) : 'nothing much', est.deep ? PAL.lblue : PAL.dgray, 12, 'right');
+    px(g, x + 8, 190, w - 16, 1, '#2e3244');
+    T(x + 8, 197, 'A GUESS', PAL.dgray, 10, 'left', true);
+    T(x + w - 8, 194, fmt$(est.lo) + '–' + fmt$(est.hi), PAL.yellow, 14, 'right', true);
+    if (!menu && inRect(mouse.x, mouse.y, x, 136, w, 82)) {
+      _btnTip = { cx: x + w / 2, top: 136, text: 'What the front row is worth, near enough, plus what a room that shape might be hiding. The dark is a guess, and a guess is wrong often. That is the job.' };
+    }
   }
   // the yard's names for you
   const yname = yardName(), names = [];
@@ -6601,15 +7734,21 @@ function drawAucRail(au, menu) {
   for (const nm of names) {
     g.font = 'bold ' + textSize(11) + 'px ' + FONT;
     const cw = Math.ceil(g.measureText(nm).width) + 12;
-    px(g, cx, 202, cw, 18, '#3a2a18');
-    T(cx + 6, 205, nm, PAL.orange, 11, 'left', true);
+    px(g, cx, 226, cw, 18, '#3a2a18');
+    T(cx + 6, 229, nm, PAL.orange, 11, 'left', true);
     cx += cw + 4;
   }
   // one slot: the price stamp, your partner, the sit, or why this door matters
-  const sy = 228;
-  panel(x, sy, w, 168, '#15171f', '#3a3f58');
+  const sy = 250;
+  panel(x, sy, w, 146, '#15171f', '#3a3f58');
   const lines = [];
   const stamp = aucPriceStamp(au);
+  if (au.look) {                                   // what the look told you, for as long as the door is open
+    lines.push({ t: 'YOU LOOKED', c: PAL.lblue, s: 12, b: true });
+    const lw = wrapText(au.look.text, 26);
+    for (let i = 0; i < Math.min(3, lw.length); i++) lines.push({ t: i === 2 && lw.length > 3 ? lw[i].replace(/\s*\S*$/, '...') : lw[i], c: PAL.white, s: 12 });
+    lines.push({ t: '', c: PAL.gray, s: 4 });
+  }
   if (stamp) { lines.push({ t: stamp.head, c: stamp.col, s: 13, b: true }); for (const l of stamp.lines) lines.push({ t: l, c: PAL.gray, s: 12 }); }
   else if (au.partner) {
     const pd = rivalDef(au.partner.id), pn = pd ? shortRivalName(pd) : au.partner.name;
@@ -6624,7 +7763,7 @@ function drawAucRail(au, menu) {
     lines.push({ t: rw.tag, c: rw.col, s: 12, b: true }, { t: rw.sub, c: PAL.gray, s: 12 });
   }
   let ly = sy + 8;
-  for (const l of lines) for (const ln of wrapText(l.t, 24)) { if (ly > sy + 126) break; T(x + 8, ly, ln, l.c, l.s, 'left', !!l.b); ly += l.s + 4; }
+  for (const l of lines) for (const ln of wrapText(l.t, 24)) { if (ly > sy + 120) break; T(x + 8, ly, ln, l.c, l.s, 'left', !!l.b); ly += l.s + 4; }
   if (!stamp && !au.partner && !(au.quietLeft > 0 && !au.closing) && G.cur.reason && G.cur.reason.kind === 'tenant') {   // Merle, at the rope
     px(g, x + 8, sy + 76, 54, 54, PAL.ink);
     drawPortrait('tenant', x + 10, sy + 78, 50, 50);
@@ -6632,10 +7771,20 @@ function drawAucRail(au, menu) {
     T(x + 70, sy + 98, 'rented it', PAL.gray, 12);
     T(x + 70, sy + 112, 'heckling', PAL.lred, 12);
   }
-  const inN = au.npcs.filter((n) => n.active && !n.crowd && !au.shownFolded[n.def.id]).length;
-  const outN = au.npcs.filter((n) => n.active && !n.crowd && au.shownFolded[n.def.id]).length;
-  px(g, x + 6, sy + 140, w - 12, 1, '#2e3244');
-  T(x + 8, sy + 147, 'IN ' + inN + '    OUT ' + outN, PAL.gray, 13, 'left', true);
+  // where the IN / OUT tally used to be: what the number on the block is against that guess. Who is still
+  // in is on their own cards, dimmed the moment they fold, and a count of them never changed a bid; this
+  // does (user, 2026-09-20: "it can say how much you are potentially overpaying or saving").
+  px(g, x + 6, sy + 106, w - 12, 1, '#2e3244');
+  if (est) {
+    const bid = au.shownBid || au.bid || G.cur.minBid || 0;
+    const v = estVerdict(est, bid);
+    T(x + 8, sy + 113, 'AT ' + fmt$(bid), PAL.white, 13, 'left', true);
+    const vf = fitLines(v.t, w - 16, [12, 11], 2);
+    for (let i = 0; i < vf.lines.length; i++) T(x + 8, sy + 129 + i * 13, vf.lines[i], v.c, vf.fs);
+  } else {
+    T(x + 8, sy + 113, 'AT ' + fmt$(au.shownBid || au.bid || G.cur.minBid || 0), PAL.white, 13, 'left', true);
+    T(x + 8, sy + 129, 'and no idea if that is a lot', PAL.dgray, 11);
+  }
 }
 // ---- Buzz, the number, the chant, the crowd ----
 function drawAucStage(au, dt) {
@@ -6683,20 +7832,33 @@ function drawAucStage(au, dt) {
     const pips = quiet ? 0 : Math.round(au.heat * 5);
     for (let k = 0; k < 5; k++) px(g, 870 + k * 12, 60, 9, 9, k < pips ? (k >= 3 ? PAL.orange : PAL.yellow) : '#2e3244');
     T(821, 78, quiet ? 'quiet now' : (au.heat > 0.7 ? 'on its feet' : (au.heat > 0.35 ? 'leaning in' : 'watching')), PAL.gray, 11);
+    if (au.look && au.look.kind === 'field') T(821, 90, au.look.n > 0 ? au.look.n + ' of them mean it' : 'none of them mean it', PAL.lblue, 11);
   }
 }
 // ---- one face card ----
 function drawAucCard(au, a, r, menu) {
-  const { x, y, w, h } = r, id = a.def.id;
+  const { x, y: ry, w, h } = r, id = a.def.id;
   const leads = !au.done && !!au.shownLeader && au.shownLeader === a.def.name;
   const out = !a.active || !!au.shownFolded[id];
   const winner = au.done && au.leader === a;
   const base = menu && !au.ask ? 0.4 : 1;
   const ph = h - 40;                                    // the portrait takes everything between the name and the strip
+  // ---- the row breathes, the lit man stands up, the folded one lies down (2026-09-21) ----
+  // Three cards side by side went very still between bids, and a lead was announced by rings pulsing round
+  // the frame - a UI effect on a picture of a person. So: everybody sways a little, on their own phase; the
+  // one who leads lifts off the row and catches the light; the one who is out tips and settles like a card
+  // laid face-down on a table. Nothing here needs new art.
+  const ph2 = strHash(id) % 628 / 100;                  // his own phase, so the row is never in step
+  const bob = out || au.done ? 0 : Math.sin(G.time * 0.85 + ph2) * 0.9;
+  const lift = leads || winner ? 2 : 0;
+  const y = Math.round(ry + bob - lift + (out ? 3 : 0));
+  const tilt = out ? (strHash(id) % 2 ? 1 : -1) * 0.022 : 0;   // a degree and a quarter, either way
+  g.save();
+  if (tilt) { g.translate(x + w / 2, y + h / 2); g.rotate(tilt); g.translate(-(x + w / 2), -(y + h / 2)); }
   g.globalAlpha = base;
-  if (leads) {
-    const pulse = 0.6 + 0.4 * Math.sin(G.time * 3.2);
-    for (let ring = 2; ring >= 1; ring--) { g.globalAlpha = base * 0.2 * pulse / ring; const o = ring * 2; px(g, x - 2 - o, y - 2 - o, w + 4 + o * 2, h + 4 + o * 2, PAL.yellow); }
+  if (lift) {                                            // it is off the table now, so it throws a shadow
+    g.globalAlpha = base * 0.5; px(g, x + 1, y + h + 3, w - 2, 3, 'rgba(0,0,0,0.9)');
+    g.globalAlpha = base * 0.28; px(g, x + 4, y + h + 6, w - 8, 3, 'rgba(0,0,0,0.9)');
     g.globalAlpha = base;
   }
   const border = leads || winner ? 3 : 2;
@@ -6711,11 +7873,29 @@ function drawAucCard(au, a, r, menu) {
   g.save(); g.beginPath(); g.rect(x + 3, y + 18, w - 6, ph); g.clip();
   drawFace(a, x + 3 + jolt, y + 18 - Math.abs(jolt), w - 6, ph, { breakout: !out });   // a folded-out face stays in its box
   g.restore();
-  // where you are standing, marked on the card itself: a choice you cannot see is a choice you forget you made
-  if (au.beside === id && !out) { px(g, x + 3, y + 18, w - 6, 3, PAL.cyan); px(g, x + 3, y + 15 + ph, w - 6, 3, PAL.cyan); }
+  // the light in the room falls on whoever is leading it, and everybody else stands half a step back
+  if (leads || winner) {
+    const gr = g.createLinearGradient(0, y + 18, 0, y + 18 + ph);
+    gr.addColorStop(0, 'rgba(255,212,120,0.26)');
+    gr.addColorStop(0.55, 'rgba(255,196,96,0.10)');
+    gr.addColorStop(1, 'rgba(255,190,90,0)');
+    g.fillStyle = gr; g.fillRect(x + 3, y + 18, w - 6, ph);
+  } else if (!out && !au.done && au.shownLeader) px(g, x + 3, y + 18, w - 6, ph, 'rgba(6,7,14,0.22)');
+  if (out) {                                             // a folded corner, so a laid-down card reads at a glance
+    g.fillStyle = 'rgba(10,11,18,0.85)';
+    g.beginPath(); g.moveTo(x + w - 3, y + 18); g.lineTo(x + w - 3, y + 40); g.lineTo(x + w - 25, y + 18); g.closePath(); g.fill();
+    px(g, x + w - 20, y + 20, 15, 2, '#6b2f36');
+  }
+  // where you are standing: a tab clipped to the card's own edge, on the side you are on
+  if (au.beside === id && !out) {
+    px(g, x - 3, y + 18, 3, ph, PAL.cyan);
+    px(g, x - 3, y + 18, 30, 15, PAL.cyan);              // top corner: the paddle lives in the bottom one
+    T(x + 12, y + 20, 'YOU', PAL.ink, 10, 'center', true);
+  }
   const rr = au.react && au.react[id];
   const raised = !out && !au.done && (leads || (!!rr && rr.key === 'bid' && G.time - rr.at < 1.6));
-  drawAucPaddle(x + 7, y + 16 + ph, raised, out, raised && !!rr && rr.key === 'bid' && G.time - rr.at < 0.2);
+  drawAucPaddle(x + 7, y + 16 + ph, raised, out, raised && !!rr && rr.key === 'bid' && G.time - rr.at < 0.2,
+    raised && rr && rr.key === 'bid' ? G.time - rr.at : 9);
   // what they spent on the row, or that they need this one: a tag on the picture, not a row of its own
   const spent = a.crowd ? 0 : rivalSpentToday(id);
   const badge = a.needs ? 'NEEDS IT' : (spent > 0 ? 'SPENT ' + fmt$(spent) : '');
@@ -6735,9 +7915,21 @@ function drawAucCard(au, a, r, menu) {
   else if (!au.done && quietHidden(au)) { stT = "CAN'T SEE"; stC = PAL.dgray; }   // from the back you do not see their faces
   else if (!au.done) {
     let st = au.dutch ? dutchTell(a, au.dutch.price) : ((au.sealed && !au.sealed.read) ? 'cool' : tellState(a, au.shownBid || 0, leads));
-    if (st === 'sweat' && tellKnown(id) === 'act') st = 'act';
+    if (a.marked && !quietHidden(au) && st !== 'push') st = 'mark';   // they are reading you, and it shows
+    // a face you took your look at reads honest for the rest of the sale: the act shows as an act
+    if (st === 'sweat' && (tellKnown(id) === 'act' || (lookKnows(au, id) && a.tellMode !== 'honest'))) st = 'act';
     const strip = TELL_STRIP[st];
-    if (strip) { stT = strip.t.toUpperCase(); stC = strip.c; icon = st; } else stT = 'SILENT';   // no tell showing, whatever they were dealt
+    // No tell showing. The strip used to say SILENT under every quiet face, which is a word that never
+    // changed and told you nothing; where they stand with you does change, and is worth the row (2026-09-21).
+    if (strip) { stT = strip.t.toUpperCase(); stC = strip.c; icon = st; }
+    else if (!a.crowd) {
+      const sv = standingOf(id);
+      if (sv <= -2) { stT = 'SORE AT YOU'; stC = PAL.lred; }
+      else if (sv >= (typeof WARM_AT === 'number' ? WARM_AT : 2)) { stT = 'WARM TO YOU'; stC = PAL.green; }
+      else if (sv < 0) { stT = 'A LITTLE SORE'; stC = PAL.orange; }
+      else if (sv >= 1) { stT = 'NODS AT YOU'; stC = PAL.gray; }
+      else { stT = '—'; stC = PAL.dgray; }
+    } else stT = '—';
   }
   const sy = y + h - 21;
   px(g, x + 3, sy, w - 6, 18, 'rgba(20,18,32,0.9)');
@@ -6748,8 +7940,10 @@ function drawAucCard(au, a, r, menu) {
     T(icon ? x + 18 : x + w / 2, sy + 3, stT, stC, 11, icon ? 'left' : 'center', true);
   }
   g.globalAlpha = 1;
+  g.restore();                                           // the tilt, if this one is laid down
   if (au.pendingFloat && au.pendingFloat.npcId === id) { addFloat('+' + fmt$(au.pendingFloat.amt), PAL.yellow, x + w / 2 - 16, y + 60); au.pendingFloat = null; }
-  if (!menu) hot(x, y, w, h, () => faceClick(a), { label: (au.done || a.folded || !a.active ? 'about ' : 'work on ') + a.def.name });
+  // the hotspot stays where the card SITS, not where it sways: a button that moves is a button you miss
+  if (!menu) hot(x, ry, w, h, () => faceClick(a), { label: (au.done || a.folded || !a.active ? 'about ' : 'work on ') + a.def.name });
 }
 // ---- a face, grown in place: who they are to you, and what you can do to them ----
 function drawAucSelected(au, faces) {
@@ -6767,7 +7961,7 @@ function drawAucSelected(au, faces) {
   drawFace(a, x + 10, y + 26, 96, 96);
   const sv = standingOf(id);
   let st = tellState(a, au.shownBid || 0, au.shownLeader === a.def.name);
-  if (st === 'sweat' && tellKnown(id) === 'act') st = 'act';
+  if (st === 'sweat' && (tellKnown(id) === 'act' || (lookKnows(au, id) && a.tellMode !== 'honest'))) st = 'act';
   const strip = TELL_STRIP[st];
   const right = [quietHidden(au) ? { t: "CAN'T SEE FROM THE BACK", c: PAL.dgray, b: true } : { t: strip ? strip.t.toUpperCase() : 'SILENT', c: strip ? strip.c : PAL.dgray, b: true },
     { t: standingLabel(sv), c: sv <= -4 ? PAL.red : (sv < 0 ? PAL.orange : (sv > 0 ? PAL.green : PAL.gray)) }];
@@ -6776,21 +7970,15 @@ function drawAucSelected(au, faces) {
   if (spent > 0) right.push({ t: 'spent ' + fmt$(spent) + ' today', c: PAL.gray });
   let ty = y + 28;
   for (const it of right) for (const ln of wrapText(it.t, 18)) { if (ty > y + 110) break; T(x + 114, ty, ln, it.c, 12, 'left', !!it.b); ty += 15; }
-  // picking a number to push with: if the yard has seen you do it this week, that is what this space says
-  const seenN = au.selMode === 'runup' && !quietHidden(au) ? pushesSeen() : 0;
-  const warn = au.selMode === 'runup' && !quietHidden(au) && pushWarnedNow() ? 'The clerk warned you: this push costs ' + fmt$(PUSH_FEE) + ' at the office, and he will think less of you.'
+  // what the yard has seen you do lately, on the card of the face you are thinking of pushing
+  const seenN = !quietHidden(au) ? pushesSeen() : 0;
+  const warn = !quietHidden(au) && pushWarnedNow() ? 'The clerk warned you: a push costs ' + fmt$(PUSH_FEE) + ' at the office, and he will think less of you.'
     : seenN >= 1 ? 'The yard has seen you push ' + (seenN === 1 ? 'once' : seenN === 2 ? 'twice' : seenN + ' times') + ' this week.'
     + (seenN >= 2 ? ' They may just let you have it.' : ' Do it again and they start to notice.') : null;
   const way = warn ? wrapPx(warn, w - 20, 11) : wrapText(WAY_LINES[id] || (a.def.tag + '.'), 38);
   for (let k = 0; k < Math.min(3, way.length); k++) T(x + 10, y + 128 + k * 14, way[k], warn ? (seenN >= 2 || pushWarnedNow() ? PAL.orange : PAL.gray) : PAL.gray, 11);
   const by = y + 176;
-  if (au.selMode === 'runup') {
-    const chips = numberChips(Math.max(au.bid || 0, G.cur.minBid || 0));
-    T(x + 10, by - 6, 'push ' + nm + ' up to:', PAL.white, 12);
-    const cw = Math.floor((w - 20 - 6 * Math.max(0, chips.length - 1)) / Math.max(1, chips.length));
-    chips.forEach((c, k) => button(x + 10 + k * (cw + 6), by + 12, cw, 30, fmt$(c), () => startRunUp(a, c), { col: PAL.red, fs: 13 }));
-    button(x + 10, by + 50, w - 20, 24, 'BACK', () => { au.selMode = 'menu'; }, { col: PAL.slate, fs: 12 });
-  } else {
+  {
     const usedCall = !!au.calledOut, usedRun = !!au.runUp || !!au.runUpEnded || au.leader === 'you';
     button(x + 10, by, 112, 30, usedCall ? 'CALLED OUT' : 'CALL THEM OUT', () => callOut(a), { col: '#8a5a20', fs: 11, disabled: usedCall });
     button(x + 128, by, 112, 30, au.runUp ? 'RUNNING UP' : 'RUN THEM UP', () => openRunUp(a), { col: PAL.red, fs: 11, disabled: usedRun });
@@ -6822,7 +8010,7 @@ function drawSaySlip(au) {
   for (const r of rows) {
     const hov = r.ok && inRect(mouse.x, mouse.y, x + 6, ry, w - 12, rh - 2);
     px(g, x + 6, ry, w - 12, rh - 2, hov ? '#d6caa9' : (r.ok ? '#efe6cf' : '#ddd3bb'));
-    T(x + 14, ry + 4, r.line.label, r.ok ? '#7d2b3d' : '#a89c80', 12, 'left', true);
+    T(x + 14, ry + 4, fitLines(r.line.label, 150, [12, 11, 10], 1, true).lines[0], r.ok ? '#7d2b3d' : '#a89c80', 12, 'left', true);   // never into the line's own column
     T(x + 176, ry + 4, r.text, r.ok ? '#2a2417' : '#a89c80', 12);
     if (r.used) T(x + w - 14, ry + 4, 'said.', '#8a7d5c', 11, 'right');
     else if (r.line.cost) T(x + w - 14, ry + 4, r.line.cost + ' energy', '#8a7d5c', 11, 'right');
@@ -6873,8 +8061,18 @@ function drawAucLog(au, busy) {
   if (busy) hot(208, 334, 736, 66, hurryAuction, { label: 'hurry the auction', focusable: false });
 }
 // ---- the verb bar: five slots; the count, the paddle, the sit and a question each reshape it ----
+// It sat at 406 with the help line, the van and eighty empty pixels under it (user, 2026-09-20: "the buttons
+// need to align better with the bottom of the page - there's some gap there"). AUC_BAR_Y drops it, SAY
+// SOMETHING takes the whole height beside it (drawAucChips), and the help line and the van strip fill what is left.
+const AUC_BAR_Y = 410, AUC_BAR_H = 64;
+// what your paddle is actually doing, in the words of where you are standing (2026-09-20)
+function bidWord(au, amt) {
+  if (au.posture === 'loud') return 'SHOUT +' + fmt$(amt);
+  if (au.posture === 'quiet') return 'NOD +' + fmt$(amt);
+  return 'BID +' + fmt$(amt);
+}
 function drawAucBar(au, busy, menu) {
-  const Y = 406, HH = 58;
+  const Y = AUC_BAR_Y, HH = AUC_BAR_H;
   const slot = (i, span) => ({ x: 16 + i * 138, w: 130 * span + 8 * (span - 1) });
   if (au.ask) {
     const bs = au.ask.buttons, n = bs.length, bw = Math.floor((682 - 8 * (n - 1)) / n);
@@ -6929,6 +8127,16 @@ function drawAucBar(au, busy, menu) {
     return;
   }
   const dis = busy || menu;
+  if (au.runUp) {
+    // a push is running: the one button that matters is the one that ends it
+    const t = au.npcs.find((n) => n.def.id === au.runUp.id);
+    const s12 = slot(0, 3), s4r = slot(3, 1), s5r = slot(4, 1);
+    auctionButton(s12.x, Y, s12.w, HH, 'STOP PUSHING', () => stopRunUp(), { col: PAL.orange, fs: 20, shape: 'square', disabled: menu,
+      hint: 'stop answering them. Whatever the number is, it stands.' });
+    auctionButton(s4r.x, Y, s4r.w, HH, t ? 'PUSHING ' + shortRivalName(t.def).toUpperCase() : 'PUSHING', () => {}, { disabled: true, fs: 12, shape: 'round' });
+    auctionButton(s5r.x, Y, s5r.w, HH, 'LET IT GO', () => { stopRunUp(true); playerPass(); }, { disabled: menu, col: PAL.red, fs: 16, shape: 'pill' });
+    return;
+  }
   const openLbl = au.bid === 0;
   const st = (au.step || 25) * (au.posture === 'loud' ? 2 : 1);   // LOUD: the buttons say what your paddle actually does
   const sitting = au.quietLeft > 0 && !au.closing;
@@ -6953,7 +8161,7 @@ function drawAucBar(au, busy, menu) {
       auctionButton(s3.x, Y, s3.w, HH, 'JUMP +$' + st * 4, () => playerBid(st * 4), { disabled: dis || au.bid + st * 4 > ceil, col: '#8a5a20', fs: 15, shape: 'square' });
     } else {
       const s1 = slot(0, 1), s2 = slot(1, 1), s3 = slot(2, 1);
-      auctionButton(s1.x, Y, s1.w, HH, openLbl ? 'START ' + fmt$(G.cur.minBid) : 'BID +$' + st, () => playerBid(st), { disabled: dis || yours || (openLbl ? G.cur.minBid : au.bid + st) > ceil, col: PAL.dgreen, fs: 17, shape: 'square' });
+      auctionButton(s1.x, Y, s1.w, HH, openLbl ? 'START ' + fmt$(G.cur.minBid) : bidWord(au, st), () => playerBid(st), { disabled: dis || yours || (openLbl ? G.cur.minBid : au.bid + st) > ceil, col: PAL.dgreen, fs: 17, shape: 'square' });
       auctionButton(s2.x, Y, s2.w, HH, '+$' + st * 2, () => playerBid(st * 2), { disabled: dis || yours || openLbl || au.bid + st * 2 > ceil, col: PAL.dgreen, fs: 17, shape: 'square' });
       auctionButton(s3.x, Y, s3.w, HH, '+$' + st * 4, () => playerBid(st * 4), { disabled: dis || yours || openLbl || au.bid + st * 4 > ceil, col: PAL.dgreen, fs: 17, shape: 'square' });
     }
@@ -6966,21 +8174,52 @@ function drawAucBar(au, busy, menu) {
 // ---- the side chips: how you stand, and something to say ----
 function drawAucChips(au, menu) {
   if (au.done || au.dutch || au.sealed) return;             // on a clock, or writing a number, there is nothing to say and no way to stand but ready
+  // talking is meant to be half of this (user, 2026-09-20: "saying stuff in the bidding I think I want it to be
+  // sort of a big part of it, so that should be a little more prominent"), so it is as big as the bidding itself,
+  // and says how many things you have left to say. Where you stand and who you push are chips under it.
+  const n = (au.said || []).length, left = sayRows().filter((r) => r.ok).length;
+  auctionButton(712, AUC_BAR_Y, 232, AUC_BAR_H, 'SAY SOMETHING' + (n ? ' (' + n + ')' : ''), () => (au.slipOpen ? closeMoveMenu() : openSlipMenu()),
+    { col: left ? '#5a3a6e' : PAL.slate, fs: 17, shape: 'square', disabled: !left || (menu && !au.slipOpen),
+      hint: left ? 'one thing out loud. Whoever believes it bids like it.' : 'nothing left to say at this door' });
+  T(828, AUC_BAR_Y + AUC_BAR_H - 20, left ? left + (left === 1 ? ' thing left to say' : ' things left to say') : 'said your piece', PAL.dgray, 11, 'center');
   const P = POSTURES[au.posture || 'steady'];
-  auctionButton(712, 406, 232, 27, P.label + (au.postureSwitched ? '' : '  \u00b7  CHANGE'), () => (au.postureOpen ? closeMoveMenu() : openPostureMenu()),
-    { col: au.posture === 'loud' ? '#8a5a20' : (au.posture === 'quiet' ? PAL.navy : PAL.slate), fs: 12, shape: 'round', disabled: !!au.postureSwitched || (menu && !au.postureOpen) });
-  const n = (au.said || []).length;
-  auctionButton(712, 437, 232, 27, 'SAY SOMETHING' + (n ? ' (' + n + ')' : ''), () => (au.slipOpen ? closeMoveMenu() : openSlipMenu()),
-    { col: PAL.slate, fs: 12, shape: 'round', disabled: !sayRows().some((r) => r.ok) || (menu && !au.slipOpen) });
+  const pid = au.posture || 'steady';
+  const where = typeof stanceName === 'function' ? stanceName(pid === 'steady' ? 'join' : pid) : P.label;
+  auctionButton(712, 480, lookReady(au) ? 76 : 112, 24, where, () => (au.postureOpen ? closeMoveMenu() : openPostureMenu()),
+    { col: au.posture === 'loud' ? '#8a5a20' : (au.posture === 'quiet' ? PAL.navy : PAL.slate), fs: 11, shape: 'round', disabled: !!au.postureSwitched || (menu && !au.postureOpen),
+      hint: au.postureSwitched ? 'you have moved once already this sale' : 'where you are standing: ' + P.hint });
   // RUN THEM UP was only ever on a face's own card, and a player who wanted exactly this did not know it existed
   // (user, 2026-09-18: "lets give players the option to bid up rivals, with no intent to buy"). Here it is aimed
   // at whoever leads - the one you would push - and opens their card at the number chips.
   const lead = au.leader && au.leader !== 'you' && !au.leader.crowd ? au.leader : null;
+  // THE LOOK (2026-09-22): while it is still there the row carries three chips instead of two, because a
+  // look is the other half of where you are standing and belongs beside it, not buried in a menu.
+  const lookOn = lookReady(au);
+  const runX = lookOn ? 872 : 830, runW = lookOn ? 72 : 114;
+  if (lookOn) {
+    const lc = lookCost(au);
+    const kindWord = { unit: 'at the unit', face: 'at the faces', field: 'at the room' }[LOOK_KIND[au.posture || 'steady']];
+    auctionButton(792, 480, 76, 24, 'LOOK \u2013' + lc, () => takeLook(),
+      { col: PAL.navy, fs: 11, shape: 'round', disabled: G.daylight < lc || menu,
+        hint: 'one look at this door, ' + kindWord + ' - that is what standing ' + (au.posture === 'loud' ? 'at the front' : (au.posture === 'quiet' ? 'at the back' : 'in the room')) + ' shows you. ' + lc + ' energy, and only until you bid. It can be wrong.' });
+  }
+  // LAST LOOK lives where the run-up chip does, because the run-up is dead once the count starts: one look
+  // at the man who is leading, and a beat and a half to act on it (2026-09-22)
+  if (au.closing && !au.done) {
+    const can = lastLookReady(au);
+    auctionButton(runX, 480, runW, 24, au.lastLook ? 'LOOKED' : 'LAST LOOK \u2013' + LASTLOOK_COST, () => takeLastLook(),
+      { col: PAL.navy, fs: 11, shape: 'round', disabled: !can || G.daylight < LASTLOOK_COST || menu,
+        hint: au.lastLook ? 'you have had your look at this one'
+          : (quietHidden(au) ? 'from back here you cannot see his face - but you can see whether anybody else is going to answer. Holds the count a moment.'
+            : 'one look at the man leading it: how close the price is to the number he came in with. Holds the count a moment, then it goes on.') });
+    return;
+  }
   const usedRun = !!au.runUp || !!au.runUpEnded;
-  auctionButton(712, 468, 232, 27, au.runUp ? 'RUNNING THEM UP...' : (lead ? 'RUN ' + shortRivalName(lead.def).toUpperCase() + ' UP \u25B8' : 'RUN THEM UP \u25B8'),
+  auctionButton(runX, 480, runW, 24, au.runUp ? 'RUNNING UP...' : (lead && !lookOn ? 'RUN ' + shortRivalName(lead.def).toUpperCase() + ' UP \u25B8' : 'RUN UP \u25B8'),
     () => { if (lead) openRunUp(lead); },
-    { col: PAL.red, fs: 12, shape: 'round', disabled: !lead || usedRun || !!au.closing || au.quietLeft > 0 || (menu && au.selMode !== 'runup'),
-      hint: 'push whoever leads up to a number of yours. If they step back first, the door is yours.' });
+    { col: PAL.red, fs: 11, shape: 'round', disabled: !lead || usedRun || !!au.closing || au.quietLeft > 0 || (menu && au.selMode !== 'runup'),
+      hint: 'answer whoever leads, every time, until you press STOP. If they step back first, the door is yours - and you wanted it or you did not.'
+        + (pushWarnedNow() && !quietHidden(au) ? '  The clerk warned you: ' + fmt$(PUSH_FEE) + ' at the office.' : '') });
 }
 // ---- the cutout pop (IDEAS_TODO 2, built 2026-09-15, OFF since 2026-09-15) ----
 // The user turned it off: "it doesnt look good". `POPS_ON` is the whole switch — flip it to true and every trigger
@@ -7105,9 +8344,7 @@ function drawAuction(dt) {
   if (!drawBG()) px(g, 0, 0, W, H, '#14161f');
   drawTint();
   const au = G.auction;
-  const row = (G.today && G.today.lockers) || [];
-  const idx = row.indexOf(G.cur);
-  drawHeader((idx >= 0 ? 'DOOR ' + (idx + 1) + '/' + row.length + '  \u00b7  ' : '') + 'UNIT ' + G.cur.num);
+  drawHeader('UNIT ' + G.cur.num);
   // the room's heat, eased so the sound and the shake never jump with a single line
   const heatTarget = auctionHeat(au);
   au.heat = (au.heat || 0) + (heatTarget - (au.heat || 0)) * Math.min(1, (dt || 0) * 1.5);
@@ -7135,15 +8372,17 @@ function drawAuction(dt) {
   const sitting = au.quietLeft > 0 && !au.closing, yours = au.leader === 'you';
   let help = '';
   if (au.ask) help = 'the room is waiting on your answer.';
-  else if (au.sel) help = au.selMode === 'runup' ? 'pick how far you push. click the stage or press Escape to back out.' : 'the room holds while you size them up. click the stage or press Escape to put them back.';
+  else if (au.sel) help = 'the room holds while you size them up. click the stage or press Escape to put them back.';
+  else if (au.runUp) help = 'your paddle answers theirs, every time. STOP PUSHING when you have had enough - or when they have.';
   else if (au.slipOpen) help = 'say one thing out loud. whoever believes it bids like it.';
   else if (au.postureOpen) help = 'change how you stand, once this sale.';
+  else if (openingBeatOn(au)) help = 'nobody has opened yet. Somebody here might - or you can start it yourself.';
   else if (!au.done) help = sitting ? 'sitting quiet: the room thinks you are out. ' + au.quietLeft + ' more raise' + (au.quietLeft === 1 ? '' : 's') + ', or the count, and you can come back in.'
     : _paddle ? 'hold the paddle (or SPACE, or A) to stay in. let go and the count starts on them. click a face to work them.'
     : (yours ? 'the bid is yours. nobody bids against himself — the hammer does the rest.' : 'hold off to see who is still in. click a face to call them out or run them up.');
   if (busy && !menu && !au.done) help = (help ? help + '   ' : '') + '(click the log to hurry)';
-  if (help) T(16, 474, help, PAL.dgray, 12);
-  stripT(16, 498, vanStripText() + '   |   Energy: ' + Math.max(0, Math.round(G.daylight)), PAL.gray, 14);
+  if (help) { const hf = fitLines(help, 690, [12, 11], 2); for (let i = 0; i < hf.lines.length; i++) T(16, 481 + i * 14, hf.lines[i], PAL.dgray, hf.fs); }
+  stripT(16, 512, vanStripText() + '   |   Energy: ' + Math.max(0, Math.round(G.daylight)), PAL.gray, 14);
   if (au.sel) drawAucSelected(au, faces);
   else if (au.slipOpen) drawSaySlip(au);
   else if (au.postureOpen) drawPosturePanel(au);
@@ -7173,7 +8412,7 @@ function startDig() {
   // whose these were, said once, here, because this is the moment you are actually standing in it. Said
   // before the first-day line so that on the one morning both apply, the first-day line is what stays up.
   { const ten = tenantFor(G.cur); if (ten) toast(ten.line, PAL.gray, 5); }
-  if (bayOn() && !G.world.baySeen) { G.world.baySeen = true; toast('First day: your van has room for EVERYTHING. Pull whatever you like - it all goes home with you tonight. From tomorrow, the van has a limit.', PAL.cyan, 6); }
+  if (bayOn() && !G.world.baySeen) { G.world.baySeen = true; clerkPop('First day: your van has room for EVERYTHING. Pull whatever you like - it all goes home with you tonight. From tomorrow, the van has a limit.', PAL.cyan, 6); }
   for (const it of G.van) { it.loaded = true; it.carried = true; G.dig.pile.push(it); G.dig.loadedSize += it.size; }
   G.van = [];
   G.pileScroll = 0;
@@ -7378,7 +8617,7 @@ function decideInspect(load) {
     if (G.dig.loadedSize + it.size <= vanCapNow()) {
       it.loaded = true; G.dig.loadedSize += it.size;
       play('van_load');
-    } else { it.loaded = false; play('denied'); toast('Van is full — it stays on the ground', PAL.orange); }
+    } else { it.loaded = false; play('denied'); clerkPop('Van is full — it stays on the ground', PAL.orange); }
   } else {
     it.loaded = false;
     play('van_unload');
@@ -7559,7 +8798,7 @@ function drawLeaveCheck(m) {
         }
         else if (it.loaded) { it.loaded = false; G.dig.loadedSize -= it.size; play('van_unload'); }
         else if (G.dig.loadedSize + it.size <= vanCapNow()) { it.loaded = true; G.dig.loadedSize += it.size; play('van_load'); }
-        else { play('denied'); toast('No room — unload something first', PAL.red); }
+        else { play('denied'); clerkPop('No room — unload something first', PAL.red); }
       });
     }
     if (list.length > per) T(x0 + cols * cw - 4, gy + rows * (ch + 4) - 2, (start + per < list.length ? '+' + (list.length - start - per) + ' more  ·  ' : '') + 'wheel to scroll', PAL.dgray, 11, 'right');
@@ -7704,7 +8943,7 @@ function driveHome() {
   if (raccoonLeft) toast('There is a tiny vest on the passenger seat. You did not put it there.', PAL.cyan, 4);
   else if (crushed) toast('The van rode heavy. The ' + BASE_BY_ID[crushed.base].name.toLowerCase() + ' came home ' + crushed.cond + '.', PAL.orange, 3.6);
   else if (setLost > 0) toast('Matching wood left in the dark...', PAL.red, 3.2);
-  else if (wasFull) toast('The van is packed to the roof. Make room at the next door, or go home and unload.', PAL.orange, 3.6);
+  else if (wasFull) clerkPop('The van is packed to the roof. Make room at the next door, or go home and unload.', PAL.orange, 3.6);
   else if (lbCount > 0) {
     // honest either way, but not the same tone: leaving reachable stuff on
     // the table reads as a choice; running out of daylight was never one
@@ -7716,7 +8955,7 @@ function driveHome() {
   if (leftoversLine) toast(leftoversLine, PAL.green, 4);
   if (dumpBill > 0) {
     if (dumpWaived()) toast('Clearing what you left: ' + fmt$(dumpBill) + '. "First one\'s on the yard," says the clerk. "Enjoy it."', PAL.cyan, 4.5);
-    else if (dumpOwing > 0) toast('The haul-off is ' + fmt$(dumpBill) + ' and you had ' + (dumpBill === dumpOwing ? 'nothing' : fmt$(dumpBill - dumpOwing)) + '. The office put ' + fmt$(dumpOwing) + ' on your tab.', PAL.red, 5);
+    else if (dumpOwing > 0) clerkPop('The haul-off is ' + fmt$(dumpBill) + ' and you had ' + (dumpBill === dumpOwing ? 'nothing' : fmt$(dumpBill - dumpOwing)) + '. The office put ' + fmt$(dumpOwing) + ' on your tab.', PAL.red, 5);
     else toast('The yard clears what you left behind: −' + fmt$(dumpBill) + '.', PAL.orange, 4);
   }
 }
@@ -7775,6 +9014,7 @@ function drawInspectPanel() {
   if (it.cond === 'Mint' && townRule('crushRate') > 0 && !it.loot) extra.push({ t: 'mint rides badly in a packed van', c: PAL.orange, fs: 14 });
   const sense = sensoryLine(it);                   // what your hands notice that your eyes did not
   if (sense) extra.push({ t: sense, c: PAL.lblue, fs: 14 });
+  if (racWantsIt(it)) extra.push({ t: racWantLine(it), c: PAL.lblue, fs: 14 });   // the raccoon's whole intel, and it never says so
   if (it.keyId && it.locked) extra.push({ t: 'an odd lock. not a padlock.', c: PAL.gold, fs: 14 });
   const contentBottom = 36 + dh + 14 + nameLines.length * 22 + 24 + 20 + extra.length * 18;
   const h = Math.max(336, contentBottom + 66);     // 336 covers the ordinary case exactly as before
@@ -7785,12 +9025,25 @@ function drawInspectPanel() {
   if (x + w > W - 8) x = at.x - w - 18;
   x = clamp(Math.round(x), 8, W - w - 8);
   const y = clamp(Math.round(at.y - h / 2), 46, H - h - 8);
+  // Nothing behind the card takes a click. A modal clears the hotspots when it opens; this panel does not,
+  // so a miss on LOAD IT or LEAVE IT landed on the pile underneath and quietly loaded or unloaded something
+  // else (user, 2026-09-21: "if you miss the leave or load it button, you click under it and deselect stuff
+  // accidentally"). The decision stays until it is made.
+  hot(0, 0, W, H, () => {}, { focusable: false, label: 'the card is waiting' });
   px(g, x - 3, y - 3, w + 6, h + 6, PAL.yellow);
   panel(x, y, w, h, '#242737');
   T(x + w / 2, y + 8, 'YOU PULLED OUT:', PAL.gray, 15, 'center');
 
   px(g, x + (w - dw) / 2 - 6, y + 26, dw + 12, dh + 12, '#1a1c28');
   g.drawImage(spr, x + (w - dw) / 2, y + 32, dw, dh);
+  // the raccoon, and the vest he leaves behind him: click him and he says something (docs/RACCOON.md).
+  // Nothing tells you to. The cursor turning into a hand over a live animal is the whole invitation.
+  if (it.leaveOnly || it.base === 'tinyVest') {
+    hot(x + (w - dw) / 2 - 6, y + 26, dw + 12, dh + 12, () => {
+      racSay(it.base === 'tinyVest' ? 'rac_stash' : (it.racSaid ? 'rac_again' : 'rac_unit'));
+      it.racSaid = true;
+    }, { label: 'the raccoon', focusable: false });
+  }
 
   let yy = y + 36 + dh + 14;
   for (const line of nameLines) { T(x + w / 2, yy, line, PAL.white, nameFit.fs, 'center', true); yy += 22; }
@@ -7821,7 +9074,7 @@ function drawInspectPanel() {
   }
   if (it.leaveOnly) {                     // the raccoon. There is one button. He knows which.
     T(x + w / 2, y + h - 66, 'It is looking at you. It is not getting in the van.', PAL.cyan, 13, 'center');
-    button(x + w / 2 - 80, y + h - 52, 160, 40, 'LEAVE IT', () => decideInspect(false), { col: PAL.red, fs: 19 });
+    button(x + w / 2 - 80, y + h - 52, 160, 40, 'LEAVE IT', () => { racSay('rac_leave'); decideInspect(false); }, { col: PAL.red, fs: 19 });
     return;
   }
   const fits = G.dig.loadedSize + it.size <= vanCapNow();
@@ -7918,7 +9171,7 @@ function drawDig() {
     hot(cx, cy, cw - 4, ch, () => {
       if (it.loaded) { it.loaded = false; G.dig.loadedSize -= it.size; play('van_unload'); }
       else if (G.dig.loadedSize + it.size <= vanCapNow()) { it.loaded = true; G.dig.loadedSize += it.size; play('van_load'); }
-      else { play('denied'); toast('No room — unload something first', PAL.red); }
+      else { play('denied'); clerkPop('No room — unload something first', PAL.red); }
     });
   }
   if (G.dig.pile.length > perPage) stripT(936, 384, 'wheel: more items', PAL.gray, 15, 'right');
@@ -9091,6 +10344,28 @@ function drawSell() {
   }, { disabled: !junk.length, col: PAL.slate, fs: 13, hint: 'Pete takes every piece of junk you have been through. Keepers pulled out of a pile are not junk and stay.' });
   button(bx, 492, 336, 40, 'END DAY  (SLEEP)', () => endDay(), { col: PAL.purple, fs: 18 });
   button(24, 508, 140, 28, 'THE LEDGER', () => openCodex(), { col: PAL.slate, fs: 13 });
+  drawWallPhone(172, 508);
+}
+// ---- the phone on the garage wall (user, 2026-09-20: "we need a little spot for the phone... a little light
+// blinking so that we can check them when we want") ----
+// New messages still play themselves when you walk in; this is the rest of it: a light that says something is
+// waiting, and a handset you can pick up whenever you like to hear the last few again (vmSaved / vmOpen).
+function drawWallPhone(x, y) {
+  const waiting = (G.vmQueue || []).length, tape = typeof vmSaved === 'function' ? vmSaved().length : 0;
+  const on = waiting || tape;
+  const w = 150, h = 28;
+  const over = inRect(mouse.x, mouse.y, x, y, w, h);
+  px(g, x, y, w, h, PAL.ink);
+  px(g, x + 2, y + 2, w - 4, h - 4, on ? (over ? '#2f3a58' : '#242c44') : '#1c1e29');
+  // the handset, drawn small
+  px(g, x + 8, y + 9, 22, 6, on ? '#7c86b0' : '#3a3f58');
+  px(g, x + 6, y + 6, 7, 9, on ? '#7c86b0' : '#3a3f58'); px(g, x + 25, y + 6, 7, 9, on ? '#7c86b0' : '#3a3f58');
+  const blink = waiting && Math.floor(G.time * 2) % 2 === 0;
+  px(g, x + w - 14, y + 10, 8, 8, waiting ? (blink ? PAL.red : '#5a2020') : (tape ? PAL.dgreen : '#23262f'));
+  T(x + 38, y + 7, waiting ? waiting + ' NEW MESSAGE' + (waiting === 1 ? '' : 'S') : (tape ? 'MESSAGES' : 'NO MESSAGES'),
+    waiting ? PAL.white : (tape ? PAL.gray : PAL.dgray), 12, 'left', !!waiting);
+  buttonHot(x, y, w, h, waiting ? 'NEW MESSAGES' : 'MESSAGES', () => vmOpen(), { disabled: !on,
+    hint: waiting ? 'the machine has something new on it' : (tape ? 'the last few messages, again' : 'nothing on the machine') }, over);
 }
 
 // ============ THE MUSEUM ============
@@ -9392,11 +10667,67 @@ function drawModal() {
   } else if (m.paper) button(mx + mw / 2 - 110, my + mh - 46, 220, 34, m.ok || 'BACK TO THE PAPER', () => { G.modal = null; }, { col: PAL.dgreen, fs: 15 });
   else button(mx + mw / 2 - 70, my + mh - 46, 140, 34, m.ok || 'NICE', () => { G.modal = null; }, { col: PAL.blue, fs: 18 });
 }
+// ---- a message somebody says, instead of a banner nobody does ----
+// The van's rules arrived as a bar across the top of the screen in nobody's voice. The user, 2026-09-21:
+// "those pop up messages, about the van limit etc. Lets have those actually be a pop up clerk message. So
+// when they speak, have the pop up show right side, and the info in a speach bubble near them."
+// So a message can carry a speaker: the man himself slides in on the right, the words sit in a bubble
+// beside him with a tail pointing at him. Same timing, same one-at-a-time rule, same click to dismiss.
+const POP_SIZE = 148;
+const POP_NAMES = { clerk: 'THE CLERK', raccoon: 'THE RACCOON' };
+function popName(who) {
+  if (POP_NAMES[who]) return POP_NAMES[who];
+  const d = typeof rivalDef === 'function' ? rivalDef(who) : null;
+  return String((d && d.name) || who).toUpperCase();
+}
+// the office, saying it to your face: the van, the room in it, and what the yard charges to clear a door
+function clerkPop(text, col, ttl, slot) {
+  toast(text, col, ttl, 'clerk');
+  if (slot && typeof clerkSay === 'function') clerkSay(slot);
+}
+function drawSpeakerToast(t) {
+  const ease = 1 - Math.pow(1 - clamp(t.age / 0.24, 0, 1), 3);
+  // he comes in from the right, unless something is already open there (the pull card, which is where the
+  // raccoon is standing when he speaks, and where "no room" is answering from) - then he comes in the other
+  // side and the bubble turns round with him (2026-09-21)
+  const onLeft = !!(G.inspect || G.itemCard);
+  const slide = Math.round((1 - ease) * 70) * (onLeft ? -1 : 1);
+  const fx = (onLeft ? 14 : W - 14 - POP_SIZE) + slide, fy = Math.round((H - POP_SIZE) / 2) - 30;
+  // the words first, so the bubble is measured before anything is drawn
+  const fit = fitLines(t.text, 430, [18, 17, 16, 15], 5, true);
+  g.font = 'bold ' + textSize(fit.fs) + 'px ' + FONT;
+  let tw = 0;
+  for (const ln of fit.lines) tw = Math.max(tw, Math.ceil(g.measureText(ln).width));
+  const lh = textSize(fit.fs) + 5, bw = Math.min(444, tw + 30), bh = 16 + fit.lines.length * lh;
+  const bx = onLeft ? Math.min(W - 10 - bw, fx + POP_SIZE + 20) : Math.max(10, fx - 20 - bw), by = fy + 14;
+  px(g, bx + 4, by + 5, bw, bh, 'rgba(0,0,0,0.45)');
+  px(g, bx, by, bw, bh, '#e8dfc8');                       // the phone's paper colour: the game's voice-of-somebody
+  px(g, bx, by, bw, 3, t.col);                            // the message's own colour, along the top
+  g.fillStyle = '#e8dfc8';                                // the tail, pointing at him, whichever side he is on
+  const tx = onLeft ? bx : bx + bw, td = onLeft ? -14 : 14;
+  g.beginPath(); g.moveTo(tx, by + 24); g.lineTo(tx + td, by + 34); g.lineTo(tx, by + 44); g.closePath(); g.fill();
+  for (let i = 0; i < fit.lines.length; i++) T(bx + 15, by + 9 + i * lh, fit.lines[i], '#2a2320', fit.fs, 'left', true);
+  px(g, fx - 4, fy - 4, POP_SIZE + 8, POP_SIZE + 26, 'rgba(12,12,20,0.88)');
+  px(g, fx, fy, POP_SIZE, POP_SIZE, PAL.ink);
+  if (t.who === 'raccoon') {                              // he has no portrait and would not sit for one
+    const spr = getSprite('liveRaccoon', null, 'Clean', 3);
+    const sc = Math.floor(Math.min((POP_SIZE - 16) / spr.width, (POP_SIZE - 16) / spr.height));
+    g.imageSmoothingEnabled = false;
+    g.drawImage(spr, Math.round(fx + (POP_SIZE - spr.width * sc) / 2), Math.round(fy + (POP_SIZE - spr.height * sc) / 2),
+      spr.width * sc, spr.height * sc);
+  } else drawPortrait(t.who, fx + 2, fy + 2, POP_SIZE - 4, POP_SIZE - 4);
+  T(fx + POP_SIZE / 2, fy + POP_SIZE + 4, popName(t.who), PAL.white, 12, 'center', true);
+  const off = () => { if (G.toast) G.toast.ttl = Math.min(G.toast.ttl, 0.25); };
+  hot(bx, by, bw, bh, off, { focusable: false, label: 'dismiss' });
+  hot(fx, fy, POP_SIZE, POP_SIZE + 20, off, { focusable: false, label: 'dismiss' });
+}
 function drawToast(dt) {
   if (!G.toast) return;
   G.toast.ttl -= dt;
+  G.toast.age = (G.toast.age || 0) + dt;
   if (G.toast.ttl <= 0) { G.toast = G.toast.back || null; return; }   // the message it interrupted, if any, comes back
   g.globalAlpha = clamp(G.toast.ttl, 0, 1);
+  if (G.toast.who) { drawSpeakerToast(G.toast); g.globalAlpha = 1; return; }
   // Measured, not counted. The width was `text.length * 10` against a 19px PROPORTIONAL font on a 960 screen,
   // so anything past about ninety characters overflowed and was cut off at BOTH edges — the bay's
   // instructions on day one, the raccoon, and every tenant's story. It drops a size or takes a second line
@@ -9456,6 +10787,7 @@ function readStory(headline, text) {
   G.modal = { title: headline, lines: [{ text, col: '#2a2417' }], paper: true, ok: 'BACK TO THE PAPER' };   // the rest of the column, on the same newsprint
 }
 function drawPaper() {
+  bookReadPaper();                                  // what you read about them goes in the book, true or not
   px(g, 0, 0, W, H, '#0e0f16');
   const sx = 80, sy = 14, sw = 800, sh = 512;
   px(g, sx + 8, sy + 10, sw, sh, 'rgba(0,0,0,0.45)');

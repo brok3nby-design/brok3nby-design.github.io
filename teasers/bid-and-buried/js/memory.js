@@ -1638,6 +1638,35 @@ const FAVOUR_FROM = 3, FAVOUR_EVERY = 6, FAVOUR_CHANCE = 0.55, FAVOUR_DUE = 3;
 const FAVOUR_BULK = 12, FAVOUR_CASH = 120, FAVOUR_INTEREST = 60;
 const FAVOUR_THING_CHEAP = 0.35;                 // what "sell it to me cheap" actually means
 const FAVOUR_FACES = ['bart', 'dutch', 'bev', 'pruitt', 'vera', 'cobb', 'dee', 'charlie', 'tuck', 'hattie', 'dex', 'priscilla'];
+// A man with a wallet like Bart's does not ring you for a loan (user, 2026-09-20: "Bart called the next day
+// asking for money - isn't Bart like the richest guy almost in the game? Maybe Sal should be doing that").
+// So the money ask belongs to the ones who are short, by their own bidding wallet - unless the week has taken
+// it off them, which is exactly Bart's week with the truck in the shop.
+const FAVOUR_RICH = 3000;
+function favourCanAskCash(id, world, day) {
+  const def = (typeof rivalDef === 'function') ? rivalDef(id) : null;
+  const rich = def && (def.budget || 0) >= FAVOUR_RICH;
+  if (!rich) return true;
+  return id === 'bart' && typeof bartBrokeOn === 'function' && bartBrokeOn(world || G.world, day == null ? G.day : day);
+}
+// nobody rings you two days running, whatever they were going to say (2026-09-20)
+const CALLER_GAP = 3;
+function callerRecently(id, world, day) {
+  const w = world || G.world;
+  const seen = (w && w.arcs && w.arcs.callWho) || {};
+  const d = seen[id];
+  return d != null && (day == null ? G.day : day) - d < CALLER_GAP;
+}
+function noteCaller(id, world, day) {
+  const w = world || G.world;
+  if (!w || !id) return;
+  w.arcs = w.arcs || {};
+  const seen = w.arcs.callWho = w.arcs.callWho || {};
+  seen[id] = day == null ? G.day : day;
+  // never let it grow: the last dozen callers is all anybody needs to remember
+  const keys = Object.keys(seen);
+  if (keys.length > 12) { keys.sort((a, b) => seen[a] - seen[b]); for (const k of keys.slice(0, keys.length - 12)) delete seen[k]; }
+}
 const FAVOUR_KINDS = {
   space: {
     ask: 'Carry this home in your van and hold it till Thursday. I am full and the gate shuts at six.',
@@ -1685,6 +1714,7 @@ function favourAskerFor(world, day) {
   const roster = (typeof NPCS !== 'undefined' ? NPCS.map((n) => n.id) : []).concat(town.rivals || []);
   const pool = FAVOUR_FACES.filter((id) => roster.includes(id)
     && !(typeof awayOn === 'function' && awayOn(id, w, day))          // nobody asks a favour from out of town
+    && !callerRecently(id, w, day)                                    // and nobody rings you two days running
     && (typeof standingOf !== 'function' || standingOf(id) > -3));    // and somebody who has it in for you asks you nothing
   if (!pool.length) return null;
   return RNG(strHash('favour_' + (G && G.worldSeed) + '_' + day + '_' + w.town)).pick(pool);
@@ -1693,9 +1723,10 @@ function favourAskerFor(world, day) {
 // `phoneOnly`: the dealt opening keeps its yard to itself, so on those mornings only an ask that rings the phone
 function favourKindFor(world, day, who, phoneOnly) {
   const R = RNG(strHash('favourkind_' + (G && G.worldSeed) + '_' + day + '_' + who));
-  const kinds = phoneOnly ? ['cash'] : ['space', 'cash'];
+  const kinds = phoneOnly ? [] : ['space'];
+  if (favourCanAskCash(who, world, day)) kinds.push('cash');          // the rich do not ring you for a loan
   if (favourThingFor()) kinds.push('thing');
-  return R.pick(kinds);
+  return kinds.length ? R.pick(kinds) : null;
 }
 // a thing of yours they could plausibly want: appraised, vouched for, worth having
 function favourThingFor() {
@@ -1731,6 +1762,7 @@ function favourTick() {
   const who = favourAskerFor(w, G.day);
   if (!who) return;
   const kind = favourKindFor(w, G.day, who, inOpening);
+  if (!kind) return;                                                   // nothing this one would ring you about
   const thing = kind === 'thing' ? favourThingFor() : null;
   if (kind === 'thing' && !thing) return;
   const keep = { lastDay: f.lastDay, hedged: f.hedged };
@@ -1786,7 +1818,7 @@ function favourAnswer(answer, phone) {
   if (phone) { /* the call's own closing line says it */ }
   else if (answer === 'maybe') toast(who + ' looks at you a second longer than is comfortable, and walks off.', PAL.gray, 4);
   else if (answer === 'no') toast(who + ' nods once. "Fair enough." It is not fair enough.', PAL.gray, 4);
-  else if (answer === 'yes' && f.kind === 'space') toast('It is in the van. ' + FAVOUR_BULK + ' bulk, until Thursday.', PAL.cyan, 4);
+  else if (answer === 'yes' && f.kind === 'space') clerkPop('It is in the van. ' + FAVOUR_BULK + ' bulk, until Thursday.', PAL.cyan, 4);
   else if (answer === 'yes' && f.kind === 'cash') toast(fmt$(FAVOUR_CASH) + ' out of your pocket. Thursday.', PAL.cyan, 4);
   return true;
 }
@@ -2399,7 +2431,7 @@ function payNut() {
   G.vanCap += w.nut.lostRow || 0;
   w.nut = null;
   play('coin');
-  toast('Paid. The van is back, all of it. The clerk does not say "finally." He thinks it.', PAL.green, 3.4);
+  clerkPop('Paid. The van is back, all of it. The clerk does not say "finally." He thinks it.', PAL.green, 3.4);
   return true;
 }
 // the paper runs a notice the two mornings before the bill comes due

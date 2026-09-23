@@ -19,6 +19,39 @@ const DH_LINES = {
   yard: 'The lights are on because you pay for them now.',
 };
 
+// ---- he is about tonight (user, 2026-09-21) ----
+// "maybe the day before he's prowling around there's a cinematic and that kind of gives the player an idea
+// that the raccoon will be there at night... later on when he starts to figure out that these little
+// teasers are a pre-warning visit kind of thing."
+// Eyes at the verge in the headlights, for about a second, drawn - no clip to make. It is a TELL, not a
+// warning light: two nights in three when he is really coming, and one night in twelve when he is not, so
+// it is worth watching the road without ever being a readout. Seeded on the day, so it cannot be re-rolled.
+function racOnTheRoad() {
+  if (G.demo || !G.world) return false;
+  const coming = typeof racComingTonight === 'function' && racComingTonight();
+  return RNG(strHash('racsee' + G.worldSeed + '_' + G.day)).chance(coming ? 0.66 : 0.08);
+}
+function drawRacVerge(dh) {
+  if (!dh.rac) return;
+  const t = dh.t;
+  if (t < 0.45 || t > 1.9) return;
+  const a = t < 0.7 ? (t - 0.45) / 0.25 : (t > 1.6 ? (1.9 - t) / 0.3 : 1);
+  const S = 3, x = 184, y = H - 112;                     // at the verge, left of the drive
+  const spr = typeof getSprite === 'function' ? getSprite('liveRaccoon', null, 'Clean', 3) : null;
+  if (spr) {
+    g.save();
+    g.globalAlpha = clamp(a, 0, 1) * 0.5;               // a shape, not a portrait: he is not standing in the light
+    g.imageSmoothingEnabled = false;
+    g.drawImage(spr, x, y, spr.width * S, spr.height * S);
+    g.restore();
+  }
+  // the eyes, which is the bit anybody actually notices. The sprite has them at 26,7 and 31,7 of 36x24.
+  const eye = 0.55 + 0.45 * Math.sin(t * 9);
+  g.globalAlpha = clamp(a, 0, 1) * eye;
+  px(g, x + 26 * S, y + 7 * S, 2 * S, 1.5 * S, '#ffe9a8');
+  px(g, x + 31 * S, y + 7 * S, 2 * S, 1.5 * S, '#ffe9a8');
+  g.globalAlpha = 1;
+}
 function driveHomeBeat() {
   if (G.demo) return false;                 // a ?demo= state is a fixed picture, never a transition
   const first = !G.world.droveHome;
@@ -29,7 +62,7 @@ function driveHomeBeat() {
   const kind = first ? 'first' : (owned && !G.world.droveHomeOwned ? 'yard' : (diner ? 'diner' : null));
   if (kind === 'yard') G.world.droveHomeOwned = true;
   if (kind === 'diner') war.dinerSaid = true;
-  G.driveHome = { t: 0, kind, len: kind ? DH_HELD : DH_SECS, line: kind === 'diner' ? spiteWarDinerLine(war) : null };
+  G.driveHome = { t: 0, kind, len: kind ? DH_HELD : DH_SECS, line: kind === 'diner' ? spiteWarDinerLine(war) : null, rac: racOnTheRoad() };
   G.mode = 'drivehome';
   _musicPoll = 0;
   return true;
@@ -63,6 +96,7 @@ function drawDriveHome(dt) {
   g.fillStyle = grad;
   g.fillRect(0, 0, W, H);
 
+  drawRacVerge(dh);                          // and some nights there is something at the side of the road
   // the nights that have something to say
   if (dh.kind && dh.t > 0.9) {
     if (!dh.spoke) { dh.spoke = true; if (DH_LINES[dh.kind]) speak(['nar_home_' + dh.kind], true); }   // the narrator keeps to the two once-a-career nights

@@ -12,11 +12,20 @@
 // there is a sensible one.
 'use strict';
 
-const FM_SECS = 5.2;              // how long a beat holds on its own
+const FM_SECS = 5.2;              // the longest a beat holds waiting on nothing
 const FM_FADE = 0.7;              // the picture coming out of black
 const FM_TEXT = 1.1;              // the line arriving after it
 const FM_TAIL = 0.6;              // the beat holds until its voice is done, then this much longer
 const FM_HOLD_MAX = 45;           // and never longer than this, whatever is still talking
+// How long a beat holds at least. It used to be a flat FM_SECS, so "That's you." — two words and a take
+// under a second — sat on screen for five (user, 2026-09-20: "the thats you screen is too long"). A beat
+// now holds as long as its own words need, about three a second. But the FLOOR is not about the words: it
+// is a shot in a film, and the picture needs its moment whatever the line is. 2.6 read as a blink (same
+// day: "the Thats you opening is too short now, needs a few seconds longer the image"), so the floor is
+// 4.4 — under the flat five that was too long, and long enough to look at. A beat with its take recorded
+// still waits for the voice on top of this.
+const FM_READ_MIN = 4.4;
+function fmReadFor(b) { return Math.max(FM_READ_MIN, 1.4 + fmLine(b).split(/ +/).length / 3.2); }
 
 // Six beats: what this is, where it happens, that it is you, who else is there, WHY
 // anybody keeps at it, and what you have. Every one borrows a background you already own,
@@ -228,6 +237,6 @@ function drawFirstMorning(dt) {
   // second): the rivals line is thirty-odd words and FM_SECS alone gave it five seconds
   // (a beat with its take recorded follows the voice, as it always has)
   const recorded = typeof _snd !== 'undefined' && _snd[fmVoice(b)] && _snd[fmVoice(b)].length;
-  const readFor = recorded ? FM_SECS : Math.max(FM_SECS, 1.5 + fmLine(b).split(/ +/).length / 3);
+  const readFor = recorded ? Math.min(FM_SECS, fmReadFor(b)) : Math.max(FM_SECS, fmReadFor(b));
   if (fm.t > readFor && !G.demoFreeze && (voiceDone || fm.t > FM_HOLD_MAX)) firstMorningNext();
 }
