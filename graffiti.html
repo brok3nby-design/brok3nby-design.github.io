@@ -10,115 +10,119 @@
   <meta property="og:title" content="Graffiti | Brok3n by Design">
   <meta property="og:description" content="Draw something small. Sign it. Leave it on the wall.">
   <meta property="og:url" content="https://brok3nbydesign.com/graffiti.html">
-  <meta property="og:image" content="https://brok3nbydesign.com/images/teaser/graffiti_teaser.svg">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/graffiti/graffiti_logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=VT323&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0b0b0b; --panel:#141414; --text:#eee; --muted:#aaa; --accent:#ff5b38; --mint:#63e6be; --border:#352f2b; }
+    :root { --bg:#0b0b0b; --card:#151515; --text:#eee; --muted:#999; --accent:#00ff9f; --border:#2f2f2f; }
     * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
     body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.6; }
     a { color:inherit; }
-    a:focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
-    h1,h2,h3,.brand { font-family:'VT323',monospace; }
-    nav { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:16px 40px; border-bottom:1px solid #2f2f2f; background:#111; }
+    h1,h2 { font-family:'VT323',monospace; }
     nav a { text-decoration:none; }
-    .brand { color:#00ff9f; font-size:1.8rem; text-shadow:0 0 12px rgba(0,255,159,.65); }
-    .nav-links { display:flex; flex-wrap:wrap; gap:22px; color:#ddd; font-size:.94rem; }
-    .container { width:min(1120px,calc(100% - 40px)); margin:0 auto; }
-    .hero { display:grid; grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr); gap:48px; align-items:center; min-height:660px; padding:64px 0; }
-    .status { display:inline-flex; gap:8px; align-items:center; padding:7px 12px; border:1px solid #604035; border-radius:999px; color:#ffc0b0; background:rgba(255,91,56,.08); font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
-    .status::before { content:''; width:8px; height:8px; border-radius:50%; background:#ffd166; box-shadow:0 0 10px rgba(255,209,102,.7); }
-    h1 { margin:18px 0 0; color:var(--accent); font-size:clamp(5rem,12vw,8.5rem); line-height:.78; letter-spacing:-.02em; text-shadow:5px 5px 0 #41190f; }
-    .tagline { margin:28px 0 14px; color:#fff; font-family:'VT323',monospace; font-size:clamp(1.7rem,3vw,2.35rem); line-height:1.05; }
-    .intro { max-width:580px; color:#c6c6c6; font-size:1.08rem; }
-    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 20px; border:1px solid var(--accent); border-radius:7px; background:var(--accent); color:#180b08; font-weight:700; text-decoration:none; transition:transform .18s ease,box-shadow .18s ease; }
-    .btn:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(255,91,56,.18); }
-    .btn.secondary { border-color:#4a4a4a; background:transparent; color:#eee; }
-    .wall-art { position:relative; overflow:hidden; border:1px solid #443831; border-radius:18px; background:#120f0d; box-shadow:0 26px 70px rgba(0,0,0,.4); }
-    .wall-art img { display:block; width:100%; height:auto; }
-    .wall-art::after { content:''; position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 70px rgba(0,0,0,.5); }
-    .facts { display:grid; grid-template-columns:repeat(3,1fr); margin:0 0 90px; border:1px solid var(--border); border-radius:14px; background:#111; }
-    .fact { min-height:128px; padding:22px; border-right:1px solid var(--border); }
-    .fact:last-child { border-right:0; }
-    .fact strong { display:block; color:var(--accent); font-family:'VT323',monospace; font-size:2rem; font-weight:400; }
-    .fact span { color:var(--muted); font-size:.92rem; }
-    .section { margin-bottom:90px; }
-    .section-head { max-width:700px; margin-bottom:28px; }
-    .eyebrow { margin:0 0 7px; color:var(--accent); font-size:.75rem; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
-    h2 { margin:0; font-size:clamp(2.4rem,6vw,3.7rem); font-weight:400; line-height:1; }
-    .section-head p:last-child { color:#aaa; }
-    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .step { min-height:205px; padding:25px; border:1px solid var(--border); border-radius:12px; background:var(--panel); }
-    .step-number { color:var(--accent); font-family:'VT323',monospace; font-size:1.6rem; }
-    .step h3 { margin:24px 0 6px; color:#fff; font-size:1.8rem; font-weight:400; }
-    .step p { margin:0; color:#aaa; }
-    .server-card { display:grid; grid-template-columns:1fr auto; gap:30px; align-items:center; padding:34px; border:1px solid #604035; border-radius:14px; background:linear-gradient(120deg,rgba(255,91,56,.1),rgba(99,230,190,.04)); }
-    .server-card h2 { font-size:2.55rem; }
-    .server-card p { max-width:720px; margin:9px 0 0; color:#c7c7c7; }
-    .server-light { display:grid; place-items:center; width:76px; height:76px; border:1px solid #5e463b; border-radius:18px; background:#17110f; color:#ffd166; font-family:'VT323',monospace; font-size:1.1rem; text-align:center; line-height:.9; }
-    footer { padding:34px 20px; border-top:1px solid #252525; color:#777; text-align:center; font-size:.86rem; }
-    @media (max-width:820px) { nav { padding:14px 20px; } .hero { grid-template-columns:1fr; min-height:auto; gap:35px; } .hero-copy { padding-top:22px; } .facts,.steps { grid-template-columns:1fr; } .fact { border-right:0; border-bottom:1px solid var(--border); } .fact:last-child { border-bottom:0; } .server-card { grid-template-columns:1fr; } }
-    @media (max-width:520px) { .nav-links { gap:13px; font-size:.82rem; } h1 { font-size:5.4rem; } .container { width:min(100% - 26px,1120px); } }
+    .container { max-width:1100px; margin:0 auto; padding:0 20px; }
+    .hero { padding:60px 0 40px; text-align:center; }
+    .hero-logo-wrap { display:flex; align-items:center; justify-content:center; height:320px; margin-bottom:30px; }
+    .hero-logo { display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; }
+    .hero h1 { margin:0 0 8px; color:var(--accent); font-size:3.5rem; }
+    .status { display:block; width:fit-content; margin:0 auto 20px; padding:4px 16px; border-radius:20px; background:#3a7bd5; color:#fff; font-size:.88rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+    .hero p { max-width:680px; margin:0 auto 20px; color:#ccc; font-size:1.15rem; }
+    .hero .tagline { color:var(--text); }
+    .hero-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:28px; }
+    .btn { display:inline-flex; justify-content:center; align-items:center; min-height:48px; padding:14px 28px; border:2px solid transparent; border-radius:8px; font-weight:600; text-decoration:none; }
+    .btn-primary { background:var(--accent); color:#000; }
+    .btn-secondary { border-color:#444; color:var(--text); background:transparent; }
+    .btn:hover { filter:brightness(1.12); }
+    .section { margin-bottom:80px; }
+    .section h2 { margin:0 0 25px; padding-bottom:10px; border-bottom:1px solid var(--border); font-size:2rem; }
+    .features-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+    .feature-card,.changelog { padding:24px; border:1px solid var(--border); border-radius:10px; background:var(--card); }
+    .feature-card h3 { margin:0 0 12px; color:var(--accent); font-size:1.1rem; }
+    .feature-card p,.changelog p { margin:0; color:#bbb; }
+    .step-number { display:block; margin-bottom:12px; color:var(--accent); font-family:'VT323',monospace; font-size:1.6rem; }
+    .wall-preview { margin:28px 0 0; }
+    .wall-preview img { display:block; width:100%; height:auto; border:1px solid var(--border); border-radius:10px; }
+    .wall-preview figcaption { margin-top:10px; color:var(--muted); font-size:.9rem; }
+    footer { padding:50px 20px 30px; border-top:1px solid var(--border); background:#111; text-align:center; }
+    @media (max-width:700px) { .features-grid { grid-template-columns:1fr; } }
+    @media (max-width:600px) { .container { padding:0 16px; } .hero { padding-top:36px; } .hero-logo-wrap { height:auto; } .hero-logo { width:100%; } .hero h1 { font-size:2.6rem; } .btn { padding:12px 20px; } }
   </style>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/graffiti.html">
+<script src="progress-report.js" defer></script>
+<link rel="stylesheet" href="site-music.css">
+<script src="site-music.js" defer></script>
 </head>
 <body>
-  <nav aria-label="Main navigation">
-    <a class="brand" href="home.html">Brok3n by Design</a>
-    <div class="nav-links">
-      <a href="home.html">Home</a>
-      <a href="home.html#demos">Play</a>
-      <a href="home.html#current">Projects</a>
-      <a href="home.html#about">About</a>
-    </div>
-  </nav>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-copy">
-        <span class="status">Shared wall server setup next</span>
-        <h1>GRAFFITI</h1>
-        <p class="tagline">Draw something small. Sign it. Leave it behind.</p>
-        <p class="intro">A living pixel-art guestbook for Brok3n by Design. Every visitor gets one tiny canvas, a name, and a permanent place on the wall.</p>
-        <div class="actions">
-          <a class="btn" href="#how-it-works">See how it works ↓</a>
-          <a class="btn secondary" href="home.html#demos">Back to previews</a>
-        </div>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN<sup class="tm-mark" aria-label="trademark">™</sup></a><div class="studio-links"><a href="home.html#demos">Teasers</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a><a class="studio-x-cta" href="https://x.com/brok3nbydesign" target="_blank" rel="noopener"><img src="images/title/b3b_pp.png" alt="" width="32" height="32">Follow on X <span aria-hidden="true">↗</span></a></div></nav>
+<!-- STUDIO NAV END -->
+
+  <main class="container" id="main-content" tabindex="-1">
+    <section class="hero" aria-labelledby="graffiti-title">
+      <div class="hero-logo-wrap">
+        <img class="hero-logo" src="images/graffiti/graffiti_logo.png" alt="Graffiti logo on a wall of colourful pixel art" width="1672" height="941">
       </div>
-      <div class="wall-art">
-        <img src="images/teaser/graffiti_teaser.svg" alt="Preview of the Graffiti pixel wall and drawing studio" width="1200" height="630">
+      <h1 id="graffiti-title">Graffiti</h1>
+      <span class="status">In development · Coming soon</span>
+      <p class="tagline">Draw something small. Sign it. Leave it behind.</p>
+      <p>A living pixel-art guestbook for Brok3n by Design. Every visitor gets one tiny canvas, a name, and a permanent place on the wall.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="follow-development.html">Follow Development</a>
+        <a class="btn btn-secondary" href="home.html#demos">Back to Teasers</a>
       </div>
     </section>
 
-    <section class="facts" aria-label="Graffiti features">
-      <div class="fact"><strong>ONE SHARED WALL</strong><span>Every signature becomes part of the same public guestbook.</span></div>
-      <div class="fact"><strong>LIVE COUNT</strong><span>See how many people have signed before you.</span></div>
-      <div class="fact"><strong>GUIDED TOUR</strong><span>Visit every artist and message one at a time.</span></div>
+    <section class="section" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <p>Draw a tiny piece of pixel art, add your name and a message, and leave something behind for the next visitor. Graffiti brings every contribution together in one shared guestbook, with a guided tour through the people and pictures on the wall.</p>
+      <figure class="wall-preview">
+        <img src="images/teaser/graffiti_teaser.svg" alt="Preview of the Graffiti pixel wall and drawing studio" width="1200" height="630" loading="lazy">
+        <figcaption>Preview of the guestbook. The public wall is not open yet.</figcaption>
+      </figure>
     </section>
 
-    <section class="section" id="how-it-works">
-      <div class="section-head">
-        <p class="eyebrow">A guestbook you can draw in</p>
-        <h2>Make a mark in three steps.</h2>
-      </div>
-      <div class="steps">
-        <article class="step"><span class="step-number">01 / DRAW</span><h3>Build a tiny picture</h3><p>Use a simple pixel studio to paint an icon, a face, a creature, or whatever fits.</p></article>
-        <article class="step"><span class="step-number">02 / SIGN</span><h3>Add your name</h3><p>Leave a short signature and message beside your art, like a digital guestbook.</p></article>
-        <article class="step"><span class="step-number">03 / EXPLORE</span><h3>Tour the whole wall</h3><p>See the total signer count, then move through every contribution one by one.</p></article>
+    <section class="section" aria-labelledby="features-title">
+      <h2 id="features-title">Features</h2>
+      <div class="features-grid">
+        <article class="feature-card"><h3>One Shared Wall</h3><p>Every signature becomes part of the same public guestbook.</p></article>
+        <article class="feature-card"><h3>Live Count</h3><p>See how many people have signed before you.</p></article>
+        <article class="feature-card"><h3>Guided Tour</h3><p>Visit every artist and message one at a time.</p></article>
       </div>
     </section>
 
-    <section class="section server-card" aria-labelledby="server-title">
-      <div>
-        <p class="eyebrow">Opening soon</p>
-        <h2 id="server-title">The room is built. The wall needs its home.</h2>
-        <p>The drawing experience is ready. The next step is connecting the shared server so everyone sees the same wall and signatures remain safely stored.</p>
+    <section class="section" id="how-it-works" aria-labelledby="steps-title">
+      <h2 id="steps-title">How It Works</h2>
+      <div class="features-grid">
+        <article class="feature-card"><span class="step-number">01 / DRAW</span><h3>Build a Tiny Picture</h3><p>Use a simple pixel studio to paint an icon, a face, a creature, or whatever fits.</p></article>
+        <article class="feature-card"><span class="step-number">02 / SIGN</span><h3>Add Your Name</h3><p>Leave a short signature and message beside your art, like a digital guestbook.</p></article>
+        <article class="feature-card"><span class="step-number">03 / EXPLORE</span><h3>Tour the Whole Wall</h3><p>See the total signer count, then move through every contribution one by one.</p></article>
       </div>
-      <div class="server-light" aria-hidden="true">SERVER<br>SOON</div>
+    </section>
+
+    <section class="section" aria-labelledby="development-title">
+      <h2 id="development-title">Latest Development</h2>
+      <div class="changelog">
+        <p><strong>Coming soon.</strong> The drawing experience is built, but the public guestbook is not playable yet. Once the shared wall is ready, you will be able to draw, sign, and explore everyone’s contributions here.</p>
+      </div>
     </section>
   </main>
 
-  <footer>© 2026 Brok3n by Design · Draw small. Leave something behind.</footer>
+  <footer>
+    <p class="studio-credit">Independently created by Brok3n by Design.</p>
+    <p>Choose how to <a href="follow-development.html">follow development</a></p>
+    <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design™. All rights reserved.</p>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
+
+<div class="site-music" id="site-music-control" role="group" aria-label="Background music"><button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div>
 </body>
 </html>
