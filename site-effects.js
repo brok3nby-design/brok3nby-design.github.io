@@ -451,6 +451,7 @@
 
     let playtestLink = null;
     let guestbookLink = null;
+    let guestbookViewer = null;
     const isHomePage = document.querySelector('.hero-buttons') && document.querySelector('#released');
     if (isHomePage) {
       playtestLink = document.createElement('a');
@@ -459,11 +460,20 @@
       playtestLink.setAttribute('aria-label', 'Learn about upcoming Brok3n by Design playtests');
       playtestLink.innerHTML = '<span class="b3d-playtest-dot" aria-hidden="true"></span><span>PLAYTESTERS WANTED</span>';
 
-      guestbookLink = document.createElement('a');
+      guestbookLink = document.createElement('button');
+      guestbookLink.type = 'button';
       guestbookLink.className = 'b3d-guestbook-cta';
-      guestbookLink.href = 'graffiti/';
-      guestbookLink.setAttribute('aria-label', 'Open and sign the Graffiti guestbook');
-      guestbookLink.innerHTML = '<span aria-hidden="true">✦</span><span>SIGN THE GUESTBOOK</span>';
+      guestbookLink.setAttribute('aria-label', 'View the Graffiti guestbook');
+      guestbookLink.setAttribute('aria-haspopup', 'dialog');
+      guestbookLink.innerHTML = '<span aria-hidden="true">✦</span><span>VIEW GUESTBOOK</span>';
+
+      guestbookViewer = document.createElement('dialog');
+      guestbookViewer.className = 'b3d-guestbook-viewer';
+      guestbookViewer.setAttribute('aria-label', 'Graffiti guestbook viewer');
+      guestbookViewer.innerHTML = '<div class="b3d-guestbook-viewer-shell"><div class="b3d-guestbook-viewer-head"><strong>GRAFFITI GUESTBOOK</strong><button type="button" class="b3d-guestbook-viewer-close" aria-label="Close guestbook">×</button></div><iframe src="https://brok3n-graffiti.ragsdalejeremy818.workers.dev/directory.html" title="Graffiti guestbook signatures" loading="lazy"></iframe></div>';
+      guestbookLink.addEventListener('click', () => guestbookViewer.showModal());
+      guestbookViewer.querySelector('.b3d-guestbook-viewer-close').addEventListener('click', () => guestbookViewer.close());
+      guestbookViewer.addEventListener('click', event => { if (event.target === guestbookViewer) guestbookViewer.close(); });
     }
 
     const updateVisibility = () => {
@@ -487,6 +497,7 @@
       window.scrollTo({ top: 0, behavior: motionAllowed() ? 'smooth' : 'auto' });
     });
 
+    if (guestbookViewer) document.body.appendChild(guestbookViewer);
     if (guestbookLink) document.body.appendChild(guestbookLink);
     if (playtestLink) document.body.appendChild(playtestLink);
     document.body.appendChild(button);

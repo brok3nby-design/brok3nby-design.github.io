@@ -497,6 +497,7 @@ footer.b3d-ambient-footer {
   letter-spacing: .06em;
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
   opacity: 0;
   transform: translateY(12px);
   pointer-events: none;
@@ -519,6 +520,77 @@ footer.b3d-ambient-footer {
 .b3d-guestbook-cta:focus-visible {
   outline: 2px solid #ff5b38;
   outline-offset: 3px;
+}
+
+.b3d-guestbook-viewer {
+  width: min(410px, calc(100vw - 24px));
+  height: min(700px, calc(100dvh - 28px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 1px solid #536259;
+  border-radius: 16px;
+  background: #0b0d0c;
+  color: #eef4f0;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .78);
+  overflow: hidden;
+}
+
+.b3d-guestbook-viewer::backdrop {
+  background: rgba(2, 4, 3, .72);
+  backdrop-filter: blur(4px);
+}
+
+.b3d-guestbook-viewer-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.b3d-guestbook-viewer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 8px 10px 8px 16px;
+  border-bottom: 1px solid #354039;
+  background: #111713;
+}
+
+.b3d-guestbook-viewer-head strong {
+  color: #ff795c;
+  font: 700 .9rem/1 'VT323', monospace;
+  letter-spacing: .1em;
+}
+
+.b3d-guestbook-viewer-close {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #46544c;
+  border-radius: 50%;
+  background: #18201b;
+  color: #eef4f0;
+  font: 1.45rem/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.b3d-guestbook-viewer-close:hover,
+.b3d-guestbook-viewer-close:focus-visible {
+  border-color: #ff795c;
+  color: #ff795c;
+}
+
+.b3d-guestbook-viewer iframe {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #0b0d0c;
 }
 
 .b3d-tldr {
@@ -654,6 +726,12 @@ footer.b3d-ambient-footer {
     bottom: 106px;
     padding: 8px 11px;
     font-size: .9rem;
+  }
+
+  .b3d-guestbook-viewer {
+    width: calc(100vw - 16px);
+    height: calc(100dvh - 16px);
+    border-radius: 12px;
   }
 
   .b3d-tldr {
