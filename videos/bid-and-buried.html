@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bid &amp; Buried | Brok3n by Design</title>
+  <meta name="description" content="Bid &amp; Buried is a pixel-art storage-auction treasure hunt about reading lockers, outbidding rivals, digging for valuables, and building a resale empire.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bid &amp; Buried | Brok3n by Design">
+  <meta property="og:description" content="Buy blind. Dig deep. Get rich. A pixel-art storage-auction treasure hunt.">
+  <meta property="og:url" content="https://brok3nbydesign.com/bid-and-buried.html">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/bid-and-buried.jpg">
+  <meta property="og:image:alt" content="Bid &amp; Buried game logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@brok3nbydesign">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #00ff9f;
+      --border: #2f2f2f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    h1, h2 { font-family: 'VT323', monospace; }
+    nav {
+      background: #111;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    nav a { color: var(--text); text-decoration: none; }
+    nav .brand {
+      font-family: 'VT323', monospace;
+      font-size: 1.7rem;
+      color: var(--accent);
+      text-shadow: 0 0 12px var(--accent);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .hero { padding: 60px 0 40px; text-align: center; }
+    .hero-image {
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-image img {
+      display: block;
+      width: 100%;
+      max-width: 900px;
+      max-height: 470px;
+      object-fit: contain;
+    }
+    .hero h1 { font-size: 3.5rem; margin: 0 0 8px; color: var(--accent); }
+    .status {
+      display: block;
+      width: fit-content;
+      background: #9b59b6;
+      color: white;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 0 auto 20px;
+    }
+    .genre { color: var(--muted); }
+    .hero p { max-width: 680px; margin: 0 auto 30px; color: #ccc; font-size: 1.15rem; }
+    .btn {
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .3s ease;
+    }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #00cc7a; }
+    .btn-secondary { background: transparent; border: 2px solid #444; color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .trailer-frame {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #050505;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .35);
+    }
+    .trailer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .section { margin-bottom: 80px; }
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .feature-card h3 { color: var(--accent); margin: 0 0 12px; }
+    .feature-card p { margin: 0; color: #bbb; }
+    .game-loop {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .loop-step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .loop-step strong { display: block; color: var(--accent); margin-bottom: 6px; }
+    .loop-step p { margin: 0; color: #aaa; font-size: .95rem; }
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .screenshot {
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .2s ease, transform .2s ease;
+    }
+    .screenshot:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .screenshot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .changelog, .roadmap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 25px;
+    }
+    .roadmap div + div { margin-top: 8px; }
+    footer {
+      background: #111;
+      padding: 50px 20px 30px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); }
+    a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    @media (max-width: 600px) {
+      nav { padding: 14px 18px; }
+      .container { padding: 0 16px; }
+      .hero h1 { font-size: 2.6rem; }
+      .screenshots-grid { grid-template-columns: 1fr; gap: 14px; }
+    }
+  </style>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+<link rel="canonical" href="https://brok3nbydesign.com/bid-and-buried.html">
+<script src="progress-report.js" defer></script>
+<link rel="stylesheet" href="site-music.css">
+<script src="site-music.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html">BROK3N BY DESIGN<sup class="tm-mark" aria-label="trademark">™</sup></a><div class="studio-links"><a href="home.html#demos">Teasers</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a><a class="studio-x-cta" href="https://x.com/brok3nbydesign" target="_blank" rel="noopener"><img src="images/title/b3b_pp.png" alt="" width="32" height="32">Follow on X <span aria-hidden="true">↗</span></a></div></nav>
+<!-- STUDIO NAV END -->
+
+  <div class="container" id="main-content" tabindex="-1">
+    <div class="hero">
+      <div class="hero-image">
+        <img src="images/locker/buried-05.png" alt="Bid &amp; Buried game logo" width="1672" height="941">
+      </div>
+
+      <h1>Bid &amp; Buried<sup class="tm-mark" aria-label="trademark">™</sup></h1><!-- PROGRESS REPORT START --><div class="progress-report" style="--report-accent:#f4bc70"><button type="button" class="progress-trigger" aria-label="Open progress report for Bid &amp; Buried"><span class="progress-symbol" aria-hidden="true">◔</span> Progress</button><template><div class="progress-panel"><h3>Progress report</h3><p class="progress-status">In development · teaser live</p><div class="progress-number"><span>Content remaining</span><strong>50%</strong></div><meter min="0" max="100" value="50" aria-label="Content remaining: 50%">50%</meter><p class="progress-caption">Images, audio, music, voice, and other content.</p><dl><div><dt>Testing / demo ETA</dt><dd>Q1–Q2 2027</dd></div><div><dt>Full release ETA</dt><dd>Q4 2027</dd></div><div><dt>Time invested</dt><dd>Approx. 30–40 hours</dd></div></dl><p class="progress-caption">Includes Flow Programming, art and audio creation. Estimates may change; content remaining is not overall game completion.</p></div></template></div><!-- PROGRESS REPORT END -->
+      <div class="status">IN DEVELOPMENT</div>
+      <p class="genre">Pixel Art • Auction Strategy • Treasure Hunting</p>
+      <p>Buy blind. Dig deep. Get rich. Read the clues inside each locker, outbid your rivals, and turn a van full of questionable junk into a resale empire.</p>
+      <div class="hero-actions">
+        <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
+        <a href="#trailer" class="btn btn-secondary">Watch the Trailer ↓</a>
+        <a href="teasers/bid-and-buried/" target="_blank" rel="noopener" class="btn btn-secondary">Try the Locker Teaser ↗</a>
+      </div>
+    </div>
+
+    <section class="section" id="trailer" aria-labelledby="trailer-title">
+      <h2 id="trailer-title">Trailer</h2>
+      <div class="trailer-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/txFCiU7ykMw?rel=0" title="Bid &amp; Buried trailer" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>Three storage units go up for auction each day. You can peek from the doorway, but the best items are buried behind everything else. Visible objects hint at the locker's hidden archetype, rival behaviour leaks information, and every bid is a judgment call.</p>
+      <p>Once the unit is yours, excavation happens front-to-back. Containers may hide treasure, locked safes cost money to crack, and daylight keeps moving while your 40-capacity van fills up.</p>
+      <div class="b3d-tldr"><strong>TL;DR:</strong> A pixel-art storage-auction game built around partial information. Learn the tells, win the right lockers, dig through what you bought, and decide what deserves the last space in your van.</div>
+    </div>
+
+    <div class="section">
+      <h2>The Daily Loop</h2>
+      <div class="game-loop">
+        <div class="loop-step"><strong>1. Peek</strong><p>Inspect the visible pile and look for valuable tells.</p></div>
+        <div class="loop-step"><strong>2. Bid</strong><p>Read three rival bidders and know when to walk away.</p></div>
+        <div class="loop-step"><strong>3. Dig</strong><p>Excavate in order and discover what was buried.</p></div>
+        <div class="loop-step"><strong>4. Load</strong><p>Choose what earns a place in your limited van.</p></div>
+        <div class="loop-step"><strong>5. Sell</strong><p>Take quick cash or wait for the right specialist.</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card"><h3>Readable Lockers</h3><p>Each unit comes from a hidden archetype. What you can see provides clues about what may be buried deeper.</p></div>
+        <div class="feature-card"><h3>Rival Bidders</h3><p>Big Bart has deep pockets, Spite Sal pushes your price up, and Eagle Ed's sharp eye can reveal a promising unit.</p></div>
+        <div class="feature-card"><h3>Meaningful Excavation</h3><p>Items must be removed front-to-back. Containers can hide loot, and bulky finds force difficult decisions.</p></div>
+        <div class="feature-card"><h3>Limited Time &amp; Space</h3><p>Daylight runs out and the van only holds 40. Every item competes for the trip home.</p></div>
+        <div class="feature-card"><h3>Buyer Matching</h3><p>Pawn Pete buys anything cheaply. Rotating specialists pay much more for the categories they collect.</p></div>
+        <div class="feature-card"><h3>Legendary Finds</h3><p>Three unique legendary items exist in every world, waiting behind the right pile of forgotten junk.</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Screenshots</h2>
+      <div class="screenshots-grid" id="screenshots" aria-label="Bid &amp; Buried screenshots"></div>
+    </div>
+
+    <div class="section">
+      <h2>Latest Development</h2>
+      <div class="changelog"><strong>Prototype v0.1</strong> — One town and the complete day loop: yard, auction, excavation, van management, evening sales, rival AI, rotating buyers, and autosave.</div>
+    </div>
+
+    <div class="section">
+      <h2>Roadmap</h2>
+      <div class="roadmap">
+        <div>◐ Core Day Loop</div>
+        <div>○ More Towns, Buyers &amp; Locker Archetypes</div>
+        <div>○ Rumours &amp; Legendary Item Hunts</div>
+        <div>○ Tools, Van &amp; Shop Upgrades</div>
+        <div>○ Collections, Museum &amp; Story Lockers</div>
+        <div>○ Sound, Music, Gamepad &amp; Touch</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p class="studio-credit">Independently created by Brok3n by Design.</p>
+    <p>Choose how to <a href="follow-development.html">follow development</a></p>
+    <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design™. All rights reserved.</p>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+</footer>
+  <script>
+    // The logo occupies buried-05.png. Screenshot slots use 01–04 and 06–15.
+    // Missing future files stay hidden and appear automatically once added.
+    const screenshotNumbers = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const screenshotGallery = document.getElementById('screenshots');
+
+    screenshotNumbers.forEach((number) => {
+      const id = String(number).padStart(2, '0');
+      const link = document.createElement('a');
+      const image = document.createElement('img');
+      const jpgPath = `images/locker/buried-${id}.jpg`;
+
+      link.className = 'screenshot';
+      link.href = jpgPath;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.setAttribute('aria-label', `View Bid & Buried screenshot ${id}`);
+
+      image.src = jpgPath;
+      image.alt = `Bid & Buried gameplay screenshot ${id}`;
+      image.loading = number > 2 ? 'lazy' : 'eager';
+      image.decoding = 'async';
+
+      image.addEventListener('error', () => {
+        if (!image.dataset.triedPng) {
+          const pngPath = `images/locker/buried-${id}.png`;
+          image.dataset.triedPng = 'true';
+          image.src = pngPath;
+          link.href = pngPath;
+          return;
+        }
+        link.remove();
+      });
+
+      link.appendChild(image);
+      screenshotGallery.appendChild(link);
+    });
+  </script>
+<div class="site-music" id="site-music-control" role="group" aria-label="Background music"><button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div>
+</body>
+</html>
