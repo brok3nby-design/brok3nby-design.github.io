@@ -450,6 +450,7 @@
     button.innerHTML = '<span aria-hidden="true">&#8593;</span><span>TOP</span>';
 
     let playtestLink = null;
+    let guestbookLink = null;
     const isHomePage = document.querySelector('.hero-buttons') && document.querySelector('#released');
     if (isHomePage) {
       playtestLink = document.createElement('a');
@@ -457,6 +458,12 @@
       playtestLink.href = 'glass-and-fortune.html#playtest-heading';
       playtestLink.setAttribute('aria-label', 'Learn about upcoming Brok3n by Design playtests');
       playtestLink.innerHTML = '<span class="b3d-playtest-dot" aria-hidden="true"></span><span>PLAYTESTERS WANTED</span>';
+
+      guestbookLink = document.createElement('a');
+      guestbookLink.className = 'b3d-guestbook-cta';
+      guestbookLink.href = 'graffiti/';
+      guestbookLink.setAttribute('aria-label', 'Open and sign the Graffiti guestbook');
+      guestbookLink.innerHTML = '<span aria-hidden="true">✦</span><span>SIGN THE GUESTBOOK</span>';
     }
 
     const updateVisibility = () => {
@@ -469,12 +476,18 @@
         playtestLink.tabIndex = isVisible ? 0 : -1;
         playtestLink.setAttribute('aria-hidden', String(!isVisible));
       }
+      if (guestbookLink) {
+        guestbookLink.classList.toggle('is-visible', isVisible);
+        guestbookLink.tabIndex = isVisible ? 0 : -1;
+        guestbookLink.setAttribute('aria-hidden', String(!isVisible));
+      }
     };
 
     button.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: motionAllowed() ? 'smooth' : 'auto' });
     });
 
+    if (guestbookLink) document.body.appendChild(guestbookLink);
     if (playtestLink) document.body.appendChild(playtestLink);
     document.body.appendChild(button);
     updateVisibility();
