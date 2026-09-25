@@ -443,8 +443,9 @@
   function addBackToTop() {
     if (document.querySelector('.b3d-back-to-top')) return;
 
-    const floatingActions = document.createElement('nav');
+    const floatingActions = document.createElement('div');
     floatingActions.className = 'b3d-floating-actions';
+    floatingActions.setAttribute('role', 'navigation');
     floatingActions.setAttribute('aria-label', 'Page shortcuts');
 
     const button = document.createElement('button');
