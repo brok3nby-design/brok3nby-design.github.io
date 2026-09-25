@@ -443,6 +443,10 @@
   function addBackToTop() {
     if (document.querySelector('.b3d-back-to-top')) return;
 
+    const floatingActions = document.createElement('nav');
+    floatingActions.className = 'b3d-floating-actions';
+    floatingActions.setAttribute('aria-label', 'Page shortcuts');
+
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'b3d-back-to-top';
@@ -491,17 +495,13 @@
 
     const updateVisibility = () => {
       const isVisible = window.scrollY > 420;
-      button.classList.toggle('is-visible', isVisible);
+      floatingActions.classList.toggle('is-visible', isVisible);
+      floatingActions.setAttribute('aria-hidden', String(!isVisible));
       button.tabIndex = isVisible ? 0 : -1;
-      button.setAttribute('aria-hidden', String(!isVisible));
       if (playtestLink) {
-        playtestLink.classList.toggle('is-visible', isVisible);
         playtestLink.tabIndex = isVisible ? 0 : -1;
-        playtestLink.setAttribute('aria-hidden', String(!isVisible));
       }
       if (guestbookActions) {
-        guestbookActions.classList.toggle('is-visible', isVisible);
-        guestbookActions.setAttribute('aria-hidden', String(!isVisible));
         guestbookSignLink.tabIndex = isVisible ? 0 : -1;
         guestbookViewButton.tabIndex = isVisible ? 0 : -1;
       }
@@ -512,9 +512,10 @@
     });
 
     if (guestbookViewer) document.body.appendChild(guestbookViewer);
-    if (guestbookActions) document.body.appendChild(guestbookActions);
-    if (playtestLink) document.body.appendChild(playtestLink);
-    document.body.appendChild(button);
+    if (guestbookActions) floatingActions.appendChild(guestbookActions);
+    if (playtestLink) floatingActions.appendChild(playtestLink);
+    floatingActions.appendChild(button);
+    document.body.appendChild(floatingActions);
     updateVisibility();
     window.addEventListener('scroll', updateVisibility, { passive: true });
   }
