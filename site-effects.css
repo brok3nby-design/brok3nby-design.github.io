@@ -390,6 +390,12 @@ footer.b3d-ambient-footer {
   opacity: 0;
   transform: translateX(12px);
   pointer-events: none;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
   transition: opacity .2s ease, transform .2s ease;
 }
 
