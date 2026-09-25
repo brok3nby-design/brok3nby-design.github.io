@@ -450,7 +450,9 @@
     button.innerHTML = '<span aria-hidden="true">&#8593;</span><span>TOP</span>';
 
     let playtestLink = null;
-    let guestbookLink = null;
+    let guestbookActions = null;
+    let guestbookSignLink = null;
+    let guestbookViewButton = null;
     let guestbookViewer = null;
     const isHomePage = document.querySelector('.hero-buttons') && document.querySelector('#released');
     if (isHomePage) {
@@ -460,18 +462,29 @@
       playtestLink.setAttribute('aria-label', 'Learn about upcoming Brok3n by Design playtests');
       playtestLink.innerHTML = '<span class="b3d-playtest-dot" aria-hidden="true"></span><span>PLAYTESTERS WANTED</span>';
 
-      guestbookLink = document.createElement('button');
-      guestbookLink.type = 'button';
-      guestbookLink.className = 'b3d-guestbook-cta';
-      guestbookLink.setAttribute('aria-label', 'View the Graffiti guestbook');
-      guestbookLink.setAttribute('aria-haspopup', 'dialog');
-      guestbookLink.innerHTML = '<span aria-hidden="true">✦</span><span>VIEW GUESTBOOK</span>';
+      guestbookActions = document.createElement('div');
+      guestbookActions.className = 'b3d-guestbook-actions';
+      guestbookActions.setAttribute('aria-label', 'Graffiti guestbook actions');
+
+      guestbookSignLink = document.createElement('a');
+      guestbookSignLink.className = 'b3d-guestbook-cta b3d-guestbook-sign';
+      guestbookSignLink.href = 'graffiti/';
+      guestbookSignLink.setAttribute('aria-label', 'Sign the Graffiti guestbook');
+      guestbookSignLink.innerHTML = '<span aria-hidden="true">✎</span><span>SIGN</span>';
+
+      guestbookViewButton = document.createElement('button');
+      guestbookViewButton.type = 'button';
+      guestbookViewButton.className = 'b3d-guestbook-cta b3d-guestbook-view';
+      guestbookViewButton.setAttribute('aria-label', 'View the Graffiti guestbook');
+      guestbookViewButton.setAttribute('aria-haspopup', 'dialog');
+      guestbookViewButton.innerHTML = '<span aria-hidden="true">✦</span><span>VIEW</span>';
+      guestbookActions.append(guestbookSignLink, guestbookViewButton);
 
       guestbookViewer = document.createElement('dialog');
       guestbookViewer.className = 'b3d-guestbook-viewer';
       guestbookViewer.setAttribute('aria-label', 'Graffiti guestbook viewer');
       guestbookViewer.innerHTML = '<div class="b3d-guestbook-viewer-shell"><div class="b3d-guestbook-viewer-head"><strong>GRAFFITI GUESTBOOK</strong><button type="button" class="b3d-guestbook-viewer-close" aria-label="Close guestbook">×</button></div><iframe src="https://brok3n-graffiti.ragsdalejeremy818.workers.dev/directory.html" title="Graffiti guestbook signatures" loading="lazy"></iframe></div>';
-      guestbookLink.addEventListener('click', () => guestbookViewer.showModal());
+      guestbookViewButton.addEventListener('click', () => guestbookViewer.showModal());
       guestbookViewer.querySelector('.b3d-guestbook-viewer-close').addEventListener('click', () => guestbookViewer.close());
       guestbookViewer.addEventListener('click', event => { if (event.target === guestbookViewer) guestbookViewer.close(); });
     }
@@ -486,10 +499,11 @@
         playtestLink.tabIndex = isVisible ? 0 : -1;
         playtestLink.setAttribute('aria-hidden', String(!isVisible));
       }
-      if (guestbookLink) {
-        guestbookLink.classList.toggle('is-visible', isVisible);
-        guestbookLink.tabIndex = isVisible ? 0 : -1;
-        guestbookLink.setAttribute('aria-hidden', String(!isVisible));
+      if (guestbookActions) {
+        guestbookActions.classList.toggle('is-visible', isVisible);
+        guestbookActions.setAttribute('aria-hidden', String(!isVisible));
+        guestbookSignLink.tabIndex = isVisible ? 0 : -1;
+        guestbookViewButton.tabIndex = isVisible ? 0 : -1;
       }
     };
 
@@ -498,7 +512,7 @@
     });
 
     if (guestbookViewer) document.body.appendChild(guestbookViewer);
-    if (guestbookLink) document.body.appendChild(guestbookLink);
+    if (guestbookActions) document.body.appendChild(guestbookActions);
     if (playtestLink) document.body.appendChild(playtestLink);
     document.body.appendChild(button);
     updateVisibility();
