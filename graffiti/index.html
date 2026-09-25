@@ -1,13 +1,72 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Graffiti · Brok3n by Design</title>
-  <meta name="description" content="Leave your mark on the Brok3n by Design pixel guestbook.">
-  <style>html,body{margin:0;height:100%;background:#131716;color:#edf0e7;font-family:Arial,sans-serif}nav{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:13px}a{color:#c1f888}iframe{display:block;width:100%;height:calc(100dvh - 44px);border:0}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#131716">
+  <meta name="description" content="A shared pixel guestbook. Draw a little something, sign your name, and leave your mark.">
+  <title>Graffiti — leave a little mark.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23131716'/%3E%3Cpath d='M8 8h16v5H13v6h6v-3h5v8H8z' fill='%23c1f888'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/specks.js" defer></script><script src="/props.js" defer></script><script src="/studio.js" defer></script><script src="/studio-file.js" defer></script><script src="/tour.js" defer></script><script src="/studio-tools.js" defer></script><script src="/app.js" defer></script>
 </head>
 <body>
-  <nav><a href="https://brok3nbydesign.com/">← Brok3n by Design</a><a href="https://brok3n-graffiti.ragsdalejeremy818.workers.dev/?draw=1" target="_blank" rel="noopener">Sign the wall ↗</a></nav>
-  <iframe src="https://brok3n-graffiti.ragsdalejeremy818.workers.dev/?embed=1" title="Graffiti pixel guestbook" allow="clipboard-write https://brok3n-graffiti.ragsdalejeremy818.workers.dev"></iframe>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Graffiti home"><span class="brand-icon" aria-hidden="true">▟</span><span id="brand-name">graffiti</span><span class="brand-period">.</span></a>
+    <span class="byline">A LITTLE CORNER OF THE INTERNET</span>
+    <a id="open-full-wall" class="primary" href="/?draw=1" target="_blank" rel="noopener" hidden>Sign the wall ↗</a><button id="sign-wall" class="primary">Sign the wall ↗</button><button class="quiet about-trigger">How it works <span aria-hidden="true">↗</span></button>
+  </header>
+  <nav class="mobile-tabs" aria-label="Workspace"><button id="wall-tab" class="active">The wall</button><button id="studio-tab">Your studio</button></nav>
+  <main class="workspace">
+    <section class="wall-area" aria-label="Shared graffiti wall">
+      <div class="wall-intro"><span class="eyebrow"><i class="live-dot"></i> THE OPEN WALL</span><h1>A pixel each. A wall together.</h1><p>Every coloured square is someone’s signature. Tap to look closer.</p><div class="wall-stats"><span id="mark-count">Connecting…</span><span class="stat-divider">/</span><span>one shared canvas</span></div></div>
+      <div id="viewport" tabindex="0" aria-label="Wall. Drag to explore, use zoom buttons, or tab to a tile."><div id="wall"></div></div>
+      <div class="wall-topright"><span id="connection"><i class="live-dot"></i> Connecting</span><button id="tour-start" class="tour-start">▷ Take the signature tour</button><button id="random" class="quiet">↗ Explore a mark</button></div>
+      <div id="placement" hidden><span>Pick an empty tile for your mark.</span><button id="nearest">Find me a spot</button><button id="cancel-place" aria-label="Cancel placement">✕</button></div>
+      <div class="wall-bottom"><span class="wall-hint">✥ <span>Drag to wander · scroll to zoom</span></span><div class="zoom-controls"><button id="zoom-out" aria-label="Zoom out">−</button><output id="zoom-label">100%</output><button id="zoom-in" aria-label="Zoom in">+</button><span></span><button id="fit-wall" aria-label="Fit the whole wall" title="See the whole wall">⊞</button><button id="home" aria-label="Return to the large wall view" title="Large wall view">⌖</button></div></div>
+      <span class="sample-note">Visitor signatures only. There’s room for yours.</span>
+    </section>
+  </main>
+  <dialog id="editor" aria-label="Draw and sign the wall"><button class="close" aria-label="Back to the wall">×</button>
+    <aside class="studio" aria-label="Your drawing studio">
+      <div class="studio-heading"><div><span class="eyebrow">MAKE YOUR MARK</span><h2>Draw. Sign. Leave it here.<span>✳</span></h2></div><button id="replay-drawing-tour" class="quiet guide-link">Take the drawing tour ↗</button></div>
+      <div class="studio-layout"><div class="paint-panel">
+      <div class="canvas-meta"><label for="size">CANVAS <select id="size"><option value="16">16 × 16</option><option value="32">32 × 32</option></select></label><button id="grid" class="text-button" aria-pressed="true">Grid on</button></div>
+      <div class="drawing-wrap"><canvas id="drawing" width="512" height="512" tabindex="0" aria-label="Pixel drawing canvas. Arrow keys move, space paints. Pencil P, eraser E, fill F, eyedropper I."></canvas></div>
+      <div class="tools" id="tools" role="group" aria-label="Drawing tools">
+        <button data-tool="pencil" class="selected" title="Draw pixels (P)" aria-pressed="true"><span class="tool-icon" aria-hidden="true">✎</span><span class="tool-name">Pencil</span></button>
+        <button data-tool="eraser" title="Erase pixels (E)" aria-pressed="false"><span class="tool-icon" aria-hidden="true">▱</span><span class="tool-name">Eraser</span></button>
+        <button data-tool="fill" title="Fill a connected area (F)" aria-pressed="false"><span class="tool-icon" aria-hidden="true">◩</span><span class="tool-name">Fill</span></button>
+        <button data-tool="pick" title="Pick a colour from your drawing (I)" aria-pressed="false"><span class="tool-icon" aria-hidden="true">⌾</span><span class="tool-name">Pick colour</span></button>
+        <button id="mirror" aria-label="Mirror drawing" title="Draw on both sides of the canvas" aria-pressed="false"><span class="tool-icon" aria-hidden="true">◧</span><span class="tool-name">Mirror</span></button>
+        <button id="undo" title="Undo your last change (Ctrl+Z)" aria-label="Undo"><span class="tool-icon" aria-hidden="true">↶</span><span class="tool-name">Undo</span></button>
+        <button id="redo" title="Restore the last undone change (Ctrl+Shift+Z)" aria-label="Redo"><span class="tool-icon" aria-hidden="true">↷</span><span class="tool-name">Redo</span></button>
+        <button id="clear" title="Clear the whole canvas" aria-label="Clear canvas"><span class="tool-icon" aria-hidden="true">×</span><span class="tool-name">Clear</span></button>
+      </div><p class="tool-tip" id="tool-tip" role="status">Pencil: paint individual pixels in your chosen colour.</p>
+      <div class="palette-heading" id="palette-heading"><span class="eyebrow">CHOOSE A COLOUR</span><label class="custom-color"><span class="custom-caption">Custom colour</span><input id="color" type="color" value="#c1f888" aria-label="Choose a custom colour"><span id="color-value">#C1F888</span></label></div><div id="palette" role="group" aria-label="Colour palette"></div>
+      <p class="tool-note">Your draft is kept while you explore the wall.</p></div><div class="settings-panel">
+      <div class="starter-row"><span>Need a starting point?</span><button id="browse-starters">Browse <span id="starter-count">the collection</span> ↗</button></div>
+      <details class="creative-tools" id="creative-tools" open><summary>Letters, numbers &amp; symbols</summary><label for="stamp-text">Type pixel text <span>A–Z · uppercase</span></label><div class="stamp-input"><input id="stamp-text" maxlength="20" placeholder="HI ♥" autocomplete="off"><button id="stamp-use">Place text</button></div><label for="stamp-scale">Letter &amp; symbol size <output id="stamp-scale-value">1×</output></label><input id="stamp-scale" type="range" min="1" max="4" step="1" value="1"><div id="symbols" role="group" aria-label="Pixel symbols to stamp"></div><p id="stamp-note" role="status">Choose a size, then Place text and tap the canvas. Every pixel stays editable.</p></details>
+      <details class="creative-tools" id="resize-tools"><summary>Resize the whole drawing</summary><label for="art-scale">Drawing size <output id="art-scale-value">100%</output></label><input id="art-scale" type="range" min="25" max="200" step="25" value="100"><button id="resize-art" class="text-button">Apply size</button><p class="tool-note">Resizes all painted pixels together and centres them. Undo restores the original.</p></details>
+      <div class="tilt-tools"><div><label for="tilt">Give it a tilt <output id="tilt-value">0°</output></label><input id="tilt" type="range" min="-45" max="45" step="1" value="0"><button id="tilt-reset" class="text-button">Straighten</button><p class="tool-note">Tilts the finished art. Keep drawing on the flat grid.</p></div><canvas id="tilt-preview" width="160" height="160" aria-label="Finished signature preview with tilt"></canvas></div>
+      <div class="signature"><span class="step-tag">02 — SIGN</span><label for="nickname">Your name <span>optional</span></label><input id="nickname" maxlength="24" placeholder="A passing speck" autocomplete="nickname"><label for="message">A little something to say <span>optional</span></label><input id="message" maxlength="140" placeholder="Hello from my corner of the world."></div>
+      <button id="publish" class="primary">Leave it on the wall <span>↗</span></button><p class="post-note" id="post-note">No account. Just you and a few pixels.</p>
+      <div class="file-actions" id="file-actions"><button id="import" class="text-button"><span aria-hidden="true">↥</span><span>Open a Speck file</span></button><button id="download" class="text-button"><span aria-hidden="true">↓</span><span>Save drawing as PNG</span></button><input type="file" id="file" accept=".json,.speck.json" hidden></div>
+      <footer class="studio-footer"><span>MADE WITH <b>SPECK STUDIO</b></span><button id="moderate" class="text-button" aria-label="Wall owner moderation">⚑</button></footer>
+      </div></div>
+    </aside>
+    <div id="drawing-tour" hidden aria-live="polite">
+      <div id="tour-shade" aria-hidden="true"></div><div id="tour-spot" aria-hidden="true"></div>
+      <section class="tour-card" aria-label="Drawing board tour"><div class="tour-card-top"><span class="eyebrow">YOUR FIRST MARK</span><span id="drawing-tour-count">1 of 9</span></div>
+        <h2 id="drawing-tour-title">Start with the canvas</h2><p id="drawing-tour-copy"></p>
+        <div class="tour-card-actions"><button id="drawing-tour-skip" class="text-button">Skip tour</button><span class="tour-step-actions"><button id="drawing-tour-back" class="quiet">← Back</button><button id="drawing-tour-next" class="primary">Next →</button></span></div>
+      </section>
+    </div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="detail"><button class="close" aria-label="Close">×</button><span class="eyebrow" id="detail-label">A MARK ON THE WALL</span><section id="view-warning" hidden><span class="warning-pixels" aria-hidden="true">▪ ▪ ▪</span><h2>The internet drew these.</h2><p>Visitor-made pixels ahead. You might find tiny masterpieces… or the occasional digital wiener.</p><p>Art, names and messages aren’t screened. Want a closer look?</p><button id="reveal" class="primary">Show me the signatures ↗</button><button id="stay-dots" class="quiet">I’m happy with the pixels</button><p class="detail-meta">We’ll only ask once this visit.</p></section><section id="signature-content" hidden><canvas id="detail-art" width="256" height="256"></canvas><h2 id="detail-name"></h2><p id="detail-message"></p><p class="detail-meta" id="detail-date"></p></section><section id="tour-controls" aria-label="Signature tour" hidden><p id="tour-progress" role="status" aria-live="polite"></p><div class="tour-buttons"><button id="tour-previous" aria-label="Previous signature">← Previous</button><button id="tour-play" aria-label="Play signature tour">▷ Play</button><button id="tour-next" aria-label="Next signature">Next →</button></div><p id="tour-note">Oldest to newest · every signature has a stop.</p></section><div class="dialog-actions"><button id="share" class="primary">Copy link ↗</button><button id="report" class="quiet">Report</button><button id="hide-mark" class="quiet">Hide for me</button><button id="remove" class="danger" hidden>Remove my mark</button></div><p id="report-status" class="post-note"></p></dialog>
+  <dialog id="starters"><button class="close" aria-label="Close">×</button><span class="eyebrow">BORROW A LITTLE INSPIRATION</span><h2>Make one of these your own.</h2><p>Load a starter, recolour it, change any pixel. Undo brings back your previous drawing.</p><div class="library-filters"><label>Search<input id="starter-search" type="search" placeholder="Cat, chair, star…"></label><label>Collection<select id="starter-category"><option value="">All collections</option></select></label></div><p id="library-count" role="status"></p><div id="starter-gallery"></div><div class="library-pages"><button id="library-prev">← Previous</button><span id="library-page"></span><button id="library-next">Next →</button></div></dialog>
+  <dialog id="about"><button class="close" aria-label="Close">×</button><span class="eyebrow">WELCOME TO GRAFFITI</span><h2>A guestbook.<br>With a little more colour.</h2><p>Draw something small, sign it if you like, and pick an empty spot. Your mark becomes a pixel on the same canvas everyone else sees.</p><ol><li><b>Make it yours.</b> Start from scratch or alter a premade.</li><li><b>Find your spot.</b> Every drawing has its own protected place.</li><li><b>Stay a little.</b> Tap a square to meet the person behind it.</li></ol><p>Keep it kind. No hate, personal information, or explicit imagery. Report a mark if it doesn’t belong here. Reporting sends it to the wall owner; hiding only changes what you see.</p><p class="detail-meta">Your draft stays on this device. Posted art is public and is not automatically screened. Keep this browser’s cookies to remove your own marks later. Viewing consent lasts for this tab’s session; hidden pixels are remembered on this device when storage is available.</p><div class="preference-actions"><button id="reset-viewing">Ask before artwork again</button><button id="reset-hidden">Restore hidden pixels</button></div><button class="primary close-about">Got it. Let’s draw ↗</button></dialog>
+  <dialog id="admin"><button class="close" aria-label="Close">×</button><span class="eyebrow">WALL OWNER</span><h2>Keep the wall kind.</h2><form id="admin-form"><label for="admin-key">Owner key</label><input id="admin-key" type="password" autocomplete="off" required><button class="primary">Review reports</button></form><p id="admin-status" role="status"></p><div id="reports"></div><details class="embed-help"><summary>Add this guestbook to a website</summary><p>Copy this widget into your page. Visitors see the pixel wall here and open the full studio to sign.</p><label for="embed-code">Embed HTML</label><textarea id="embed-code" rows="5" readonly></textarea><button id="copy-embed">Copy embed code</button><p id="embed-sites"></p></details></dialog>
 </body>
 </html>
