@@ -473,7 +473,7 @@
 
       guestbookSignLink = document.createElement('a');
       guestbookSignLink.className = 'b3d-guestbook-cta b3d-guestbook-sign';
-      guestbookSignLink.href = 'graffiti/';
+      guestbookSignLink.href = 'graffiti/?draw=1';
       guestbookSignLink.setAttribute('aria-label', 'Sign the Graffiti guestbook');
       guestbookSignLink.innerHTML = '<span aria-hidden="true">✎</span><span>SIGN</span>';
 
