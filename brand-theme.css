@@ -6,17 +6,17 @@ html body.studio-home, html body.studio-page {
 }
 body .studio-nav { background:#030303; border-bottom:1px solid #353538; padding-top:8px; padding-bottom:8px; gap:12px 24px; }
 body .studio-nav .brand { display:flex; align-items:center; flex-shrink:0; line-height:1; }
-.studio-nav .brand img { display:block; width:280px; height:64px; object-fit:cover; }
+.studio-nav .brand img { display:block; width:230px; height:52px; object-fit:cover; }
 body .studio-nav .brand .tm-mark { color:#b2b2b8; font-size:10px; margin-left:-12px; }
 body .studio-links a { font:500 13px/1.4 Inter,Arial,sans-serif; }
 body .studio-links a:hover, body .studio-links a[aria-current='page'] { color:var(--studio-link); }
 body .studio-links .studio-x-cta { background:#18181a; border-color:#444448; border-radius:4px; }
 body .studio-links .studio-x-cta:hover { background:#252527; border-color:var(--studio-red); color:#fff; }
-body.studio-home .hero { max-width:none; padding:0 20px 44px; background:#000; margin:0; }
-.studio-home .hero h1 { margin:0 auto; max-width:900px; line-height:0; }
+body.studio-home .hero { max-width:none; padding:20px 20px 32px; background:#000; margin:0; }
+.studio-home .hero h1 { margin:0 auto; max-width:520px; line-height:0; }
 .studio-home .studio-hero-logo { display:block; width:100%; height:auto; }
 .studio-home .hero .eyebrow { margin:-10px 0 16px; color:var(--studio-link); font:600 12px/1.5 Inter,Arial,sans-serif; }
-.studio-home .hero .studio-intro { font-size:17px; line-height:1.7; color:#c4c4c9; margin-bottom:26px; }
+.studio-home .hero .studio-intro { font-size:16px; line-height:1.6; color:#c4c4c9; margin-bottom:20px; }
 .studio-home .hero-divider { width:100%; background:#353538; margin-bottom:44px; }
 body.studio-home h2, body.studio-home h3, body.studio-page h1, body.studio-page h2, body.studio-page h3 {
   font-family:Impact,'Arial Narrow',Arial,sans-serif; font-weight:400; letter-spacing:0;
@@ -60,10 +60,11 @@ body .site-music button:hover { border-color:var(--studio-link); }
 body .site-music input { accent-color:var(--studio-red); }
 @media(max-width:700px) {
   body .studio-nav { gap:0; padding:4px 16px 12px; }
-  .studio-nav .brand img { width:250px; height:58px; }
+  .studio-nav .brand img { width:210px; height:48px; }
   body .studio-links { gap:0 14px; }
   body .studio-links a { min-height:40px; font-size:12px; }
-  body.studio-home .hero { padding:12px 16px 32px; }
+  body.studio-home .hero { padding:12px 16px 24px; }
+  .studio-home .hero h1 { max-width:320px; }
   .studio-home .hero .eyebrow { margin:2px 0 14px; font-size:11px; }
   .studio-home .hero .studio-intro { font-size:15px; }
   .studio-home .hero-buttons { gap:10px; }
