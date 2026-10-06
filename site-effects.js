@@ -30,7 +30,7 @@
     let lastX = 0;
     let lastY = 0;
     let lastSpawn = 0;
-    let accent = '#00ff9f';
+    let accent = '#ff686e';
 
     function resize() {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -41,7 +41,7 @@
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      accent = getComputedStyle(root).getPropertyValue('--accent').trim() || '#00ff9f';
+      accent = getComputedStyle(root).getPropertyValue('--accent').trim() || '#ff686e';
     }
 
     function tick() {
@@ -95,7 +95,7 @@
           vy: Math.sin(angle) * speed,
           size: Math.random() > .72 ? 3 : 2,
           life: .72 + Math.random() * .28,
-          color: Math.random() > .28 ? accent : '#ffd166'
+          color: Math.random() > .28 ? accent : '#d7d7dc'
         });
       }
       if (!frame) frame = requestAnimationFrame(tick);

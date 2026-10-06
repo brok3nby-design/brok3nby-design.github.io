@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brok3n by Design — Independent Game Studio</title>
   <meta name="description" content="Brok3n by Design is an independent game studio where each project is designed, directed, and built by a single creator using modern creative tools.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230b0b0b'/><text x='50' y='70' font-size='56' font-family='monospace' fill='%2300ff9f' text-anchor='middle'>B3</text></svg>">
+  <link rel="icon" href="images/studio/studio-mark.svg">
   <style>
 body { margin:0; background:#000; color:#eee; font-family:monospace; }
 .video-container { min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:20px; box-sizing:border-box; }
 video { display:block; width:min(100%,850px); max-height:58svh; object-fit:contain; }
 .intro-actions { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
-.enter-btn { display:inline-block; padding:16px 54px; font-size:1.4rem; border:2px solid #00ff9f; color:#00ff9f; text-decoration:none; }
-.enter-btn:hover { background:#00ff9f; color:#00150c; }
+.enter-btn { display:inline-block; padding:16px 54px; font-size:1.4rem; border:2px solid #ff686e; color:#ff686e; text-decoration:none; }
+.enter-btn:hover { background:#ff686e; color:#00150c; }
 .intro-credit { margin:0; font-size:.85rem; line-height:1.5; color:#bbb; }
 .intro-actions label { display:flex; gap:10px; align-items:center; min-height:44px; font-size:.9rem; }
-.intro-actions input { width:20px; height:20px; accent-color:#00ff9f; }
+.intro-actions input { width:20px; height:20px; accent-color:#ff686e; }
 #intro-note { min-height:1em; margin:0; font-size:.8rem; color:#9cbaa7; }
 @media(max-height:500px) and (min-width:700px){.video-container{flex-direction:row;} video{width:55%;max-height:85svh;}.intro-actions{max-width:40%;}}
 </style>
@@ -25,7 +25,7 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
   <script src="studio-core.js" defer></script>
   <script src="site-effects.js?v=20260912-titles" defer></script>
   <script src="intro.js" defer></script>
-<meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/studio.jpg">
+<meta property="og:image" content="https://brok3nbydesign.com/images/studio/b3d.png">
 <link rel="canonical" href="https://brok3nbydesign.com/">
 <link rel="stylesheet" href="site-music.css">
 <script src="site-music.js" defer></script>
@@ -34,7 +34,7 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
 
   <main class="video-container">
   <h1 class="sr-only">Brok3n by Design — Independent Game Studio</h1>
-  <video id="splashVideo" muted loop playsinline preload="none" poster="images/studio/share/studio.jpg" aria-label="Brok3n by Design studio intro"><source src="videos/BrokenIntro.mp4" type="video/mp4"></video>
+  <video id="splashVideo" muted loop playsinline preload="none" poster="images/studio/b3d.png" aria-label="Brok3n by Design studio intro"><source src="videos/BrokenIntro.mp4" type="video/mp4"></video>
   <div class="intro-actions">
     <a class="enter-btn" href="home.html">ENTER THE STUDIO</a>
     <button type="button" id="intro-pause" class="studio-button" aria-pressed="false" hidden>Play intro</button>
