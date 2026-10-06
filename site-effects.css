@@ -1,5 +1,5 @@
 :root {
-  --b3d-fx-accent: var(--accent, #00ff9f);
+  --b3d-fx-accent: var(--accent, #ff686e);
   --b3d-fx-bg: var(--bg, #0b0b0b);
 }
 
@@ -313,8 +313,8 @@ footer.b3d-ambient-footer {
 .b3d-secret-door:focus-visible,
 .b3d-secret-door.is-open {
   border-color: var(--b3d-fx-accent);
-  background: rgba(0, 255, 159, .1);
-  box-shadow: 0 0 16px rgba(0, 255, 159, .3), inset 6px 0 8px rgba(0, 255, 159, .1);
+  background: rgba(215, 25, 32, .1);
+  box-shadow: 0 0 16px rgba(215, 25, 32, .3), inset 6px 0 8px rgba(215, 25, 32, .1);
   opacity: 1;
   outline: none;
 }
@@ -363,7 +363,7 @@ footer.b3d-ambient-footer {
 .project-card.b3d-cartridge:hover {
   border-color: var(--b3d-fx-accent);
   transform: perspective(850px) rotateX(var(--b3d-tilt-x, 0deg)) rotateY(var(--b3d-tilt-y, 0deg)) translateY(-5px);
-  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, .17), 0 16px 34px rgba(0, 255, 159, .12);
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, .17), 0 16px 34px rgba(215, 25, 32, .12);
 }
 
 .project-card.b3d-cartridge.is-inserting {
@@ -410,7 +410,7 @@ footer.b3d-ambient-footer {
   align-items: center;
   gap: 7px;
   padding: 9px 13px;
-  border: 1px solid var(--b3d-fx-accent, #00ff9f);
+  border: 1px solid var(--b3d-fx-accent, #ff686e);
   border-radius: 999px;
   background: rgba(10, 10, 12, .9);
   color: var(--b3d-fx-text, #eee);
@@ -428,8 +428,8 @@ footer.b3d-ambient-footer {
 
 .b3d-back-to-top:hover,
 .b3d-back-to-top:focus-visible {
-  color: var(--b3d-fx-accent, #00ff9f);
-  box-shadow: 0 0 15px color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 35%, transparent);
+  color: var(--b3d-fx-accent, #ff686e);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--b3d-fx-accent, #ff686e) 35%, transparent);
 }
 
 .b3d-back-to-top:focus-visible {
@@ -442,9 +442,9 @@ footer.b3d-ambient-footer {
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  border: 1px solid var(--b3d-fx-accent, #00ff9f);
+  border: 1px solid var(--b3d-fx-accent, #ff686e);
   border-radius: 999px;
-  background: var(--b3d-fx-accent, #00ff9f);
+  background: var(--b3d-fx-accent, #ff686e);
   color: #07110d;
   font: .82rem/1 'VT323', monospace;
   font-weight: 700;
@@ -472,11 +472,11 @@ footer.b3d-ambient-footer {
 .b3d-playtest-cta:hover,
 .b3d-playtest-cta:focus-visible {
   background: #fff;
-  box-shadow: 0 0 18px color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 45%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--b3d-fx-accent, #ff686e) 45%, transparent);
 }
 
 .b3d-playtest-cta:focus-visible {
-  outline: 2px solid var(--b3d-fx-accent, #00ff9f);
+  outline: 2px solid var(--b3d-fx-accent, #ff686e);
   outline-offset: 3px;
 }
 
@@ -598,16 +598,16 @@ footer.b3d-ambient-footer {
   max-width: 900px;
   margin: 0 auto 36px;
   padding: 18px 22px;
-  border: 1px solid color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--b3d-fx-accent, #ff686e) 55%, transparent);
   border-left-width: 4px;
   border-radius: 8px;
-  background: color-mix(in srgb, var(--b3d-fx-accent, #00ff9f) 7%, rgba(12, 12, 15, .92));
+  background: color-mix(in srgb, var(--b3d-fx-accent, #ff686e) 7%, rgba(12, 12, 15, .92));
   color: var(--b3d-fx-text, #ddd);
   line-height: 1.6;
 }
 
 .b3d-tldr strong:first-child {
-  color: var(--b3d-fx-accent, #00ff9f);
+  color: var(--b3d-fx-accent, #ff686e);
   font-family: 'VT323', monospace;
   font-size: 1.2em;
   letter-spacing: .06em;
