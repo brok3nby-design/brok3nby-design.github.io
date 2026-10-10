@@ -177,3 +177,20 @@
   .passport-banner .passport-mark { display:none; }
   .studio-disclosure { padding:14px; }
 }
+
+/* Released studio films and the press thumbnail. */
+.brand-film-card { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:28px; align-items:center; padding:24px; border:1px solid #353538; border-radius:12px; background:#141416; }
+.brand-film-player { aspect-ratio:16/9; min-width:0; background:#080808; border:1px solid #353538; border-radius:6px; overflow:hidden; }
+.brand-film-player iframe { display:block; width:100%; height:100%; border:0; }
+.brand-film-copy { min-width:0; }
+.brand-film-copy .brand-film-mark { display:block; width:76px; height:auto; margin-bottom:16px; }
+.brand-film-copy h3 { font-size:2rem; margin:8px 0 12px; }
+.brand-film-copy p { color:#c4c4c9; }
+.brand-film-copy .eyebrow { color:var(--accent,#ff686e); }
+.brand-film-copy .studio-actions { margin:20px 0 0; }
+.brand-film-copy .studio-button { text-align:center; }
+.brand-channel-note { margin-top:24px; }
+.studio-grid .press-brand-thumbnail { display:block; width:220px; max-width:100%; height:auto; margin:0 auto 20px; border-radius:0; }
+#launched, #brand-film { scroll-margin-top:24px; }
+@media (max-width:820px) { .brand-film-card { grid-template-columns:1fr; gap:20px; padding:20px; } }
+@media (max-width:400px) { .brand-film-card { padding:14px; } }
