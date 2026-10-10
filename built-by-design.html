@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Built by Design, Not by Budget — Brok3n by Design</title>
+  <meta name="description" content="Why one person uses AI-assisted tools to make content-rich games, and why that should not be controversial. A note from the creator of Brok3n by Design.">
+  <link rel="icon" href="images/studio/studio-mark.svg">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Built by Design, Not by Budget — Brok3n by Design">
+  <meta property="og:description" content="Why one person uses AI-assisted tools to make content-rich games, and why that should not be controversial.">
+  <meta property="og:url" content="https://brok3nbydesign.com/built-by-design.html">
+  <meta property="og:image" content="https://brok3nbydesign.com/images/studio/b3d.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@brok3nbydesign">
+  <link rel="canonical" href="https://brok3nbydesign.com/built-by-design.html">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #151515;
+      --text: #eeeeee;
+      --muted: #999999;
+      --accent: #ff686e;
+      --border: #2f2f2f;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    h1, h2, h3, .logo {
+      font-family: 'VT323', monospace;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 50px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero .eyebrow {
+      margin: 0 0 14px;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      line-height: 1;
+      margin: 0 0 16px 0;
+      color: var(--accent);
+    }
+    .hero .tagline {
+      font-size: 1.4rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .hero .byline {
+      color: #777;
+      font-size: 0.95rem;
+      margin: 18px 0 0;
+    }
+    .hero .byline a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .hero .byline a:hover {
+      text-decoration: underline;
+    }
+    /* Article */
+    .article {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .section {
+      margin-bottom: 72px;
+    }
+    .section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 24px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .section p {
+      color: #ccc;
+      font-size: 1.1rem;
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+    .section .lede {
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+    .section .closer {
+      color: #aaa;
+    }
+    .pull-quote {
+      border-left: 3px solid var(--accent);
+      background: var(--card);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 26px;
+      margin: 30px 0 34px;
+      font-family: 'VT323', monospace;
+      font-size: 1.7rem;
+      line-height: 1.25;
+      color: var(--text);
+    }
+    .pull-quote.flow {
+      border-left-color: #00e5ff;
+      color: #00e5ff;
+      letter-spacing: 0.02em;
+    }
+    /* Cards: what the tools do and don't do */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 28px 0 10px;
+    }
+    .info-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 255, 159, 0.08);
+    }
+    .info-card .eyebrow {
+      margin: 0 0 8px;
+    }
+    .info-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+    .info-card p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+    /* Status pill (matches About) */
+    .status-badge {
+      display: inline-block;
+      width: fit-content;
+      max-width: 100%;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: normal;
+      vertical-align: middle;
+    }
+    .status-flow {
+      background: #00e5ff;
+      color: #000;
+    }
+    /* Closing block */
+    .next-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .next-block p {
+      margin: 0;
+      max-width: 460px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #b61118;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid #444;
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    /* Footer */
+    footer {
+      background: #111;
+      padding: 60px 20px 40px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+    .social-links a {
+      color: var(--text);
+      margin: 0 15px;
+      text-decoration: none;
+    }
+    .social-links a:hover {
+      color: var(--accent);
+    }
+    /* Responsive */
+    @media (max-width: 680px) {
+      .hero {
+        padding: 50px 16px 40px;
+      }
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      .hero .tagline {
+        font-size: 1.15rem;
+      }
+      .section h2 {
+        font-size: 1.9rem;
+      }
+      .pull-quote {
+        font-size: 1.45rem;
+        padding: 16px 20px;
+      }
+      .next-block {
+        flex-direction: column;
+        text-align: center;
+        padding: 28px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
+  <link rel="stylesheet" href="studio.css">
+  <script src="studio-data.js" defer></script>
+  <script src="studio-core.js" defer></script>
+  <script src="site-effects.js?v=20260912-titles" defer></script>
+  <link rel="stylesheet" href="site-music.css">
+  <script src="site-music.js" defer></script>
+</head>
+<body class="studio-page">
+<a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- STUDIO NAV START -->
+<nav class="studio-nav" aria-label="Main navigation"><a class="brand" href="home.html"><img src="images/studio/b3d-header.webp" alt="Brok3n by Design" width="230" height="52"><sup class="tm-mark" aria-label="trademark">™</sup></a><div class="studio-links"><a href="home.html#demos">Teasers</a><a href="home.html#current">Shelf</a><a href="about.html">About</a><a href="follow-development.html">Follow</a><a href="passport.html">Passport</a><a class="studio-x-cta" href="https://x.com/brok3nbydesign" target="_blank" rel="noopener"><img src="images/studio/studio-mark.svg" alt="" width="32" height="32">Follow on X <span aria-hidden="true">↗</span></a></div></nav>
+<!-- STUDIO NAV END -->
+
+  <!-- Hero -->
+  <div class="hero" id="main-content" tabindex="-1">
+    <p class="eyebrow">FROM THE STUDIO</p>
+    <h1>BUILT BY DESIGN,<br>NOT BY BUDGET</h1>
+    <p class="tagline">Why one person uses AI to make games, and why that should not be controversial.</p>
+    <p class="byline">A note from the creator of <a href="about.html">Brok3n by Design</a></p>
+  </div>
+
+  <div class="container">
+    <article class="article">
+
+      <!-- The gate -->
+      <section class="section">
+        <h2>The quiet gate</h2>
+        <p class="lede">
+          Here is something the industry does not like to say out loud: for most of its history, making a content-rich game has been a question of money.
+        </p>
+        <p>
+          Think about what a finished game actually holds. Thousands of voice lines. Hundreds of unique images. Systems, menus, music, and the small details that make a world feel alive instead of empty. Producing that much has always taken capital. A publisher. A funded team. Or the ability to work for years without a real paycheck.
+        </p>
+        <p>
+          Talent mattered. Vision mattered. They were rarely enough on their own. The real filter was who could afford to keep going.
+        </p>
+        <p>
+          That filter decides which games get finished. Nobody designed it, but it works like a gate. Plenty of good ideas never reach players because the person behind them ran out of money before they ran out of ideas.
+        </p>
+      </section>
+
+      <!-- What changed -->
+      <section class="section">
+        <h2>What changed</h2>
+        <p>
+          I'm one person. I design, direct, and build every Brok3n by Design project myself, between a full-time tech job and being a dad. There is no art department down the hall. There is no voice booth, no QA team, no publisher writing checks.
+        </p>
+        <p>
+          A few years ago that would have meant one of two things: make something small, or make something that never gets done.
+        </p>
+        <p>
+          AI-assisted tools changed that math. Voice generation, image tools, and code assistance let me produce and iterate on the volume of content a real game needs, without a six-figure budget or a decade of nights and weekends. The gap between a clear idea and a finished, content-dense game is narrower than it has ever been.
+        </p>
+        <blockquote class="pull-quote">
+          That is not hype. It is the only reason some of these projects exist at all.
+        </blockquote>
+      </section>
+
+      <!-- What did not change -->
+      <section class="section">
+        <h2>What did not change</h2>
+        <p>
+          The tools do not have taste. They do not know what belongs in a world and what does not. They will happily generate a thousand things, and nine hundred of them will be wrong.
+        </p>
+        <p>
+          So the job is the same job it always was. I decide what each game is, how it plays, and what belongs in it.
+        </p>
+        <div class="info-grid">
+          <div class="info-card">
+            <p class="eyebrow">WRITING &amp; VOICE</p>
+            <h3>I write the lines</h3>
+            <p>Every line is mine. AI performs it. I direct the read and throw out the takes that miss.</p>
+          </div>
+          <div class="info-card">
+            <p class="eyebrow">ART</p>
+            <h3>I set the look</h3>
+            <p>Every image starts from my concept and direction. I redraw, edit, or cut whatever does not fit the world.</p>
+          </div>
+          <div class="info-card">
+            <p class="eyebrow">CODE</p>
+            <h3>I design the systems</h3>
+            <p>AI helps me write and debug faster. It does not decide what the game is.</p>
+          </div>
+        </div>
+        <p style="margin-top:28px;">
+          It is the same loop I call <span class="status-badge status-flow">Flow Programming</span> on the <a href="about.html" style="color:var(--accent);">About page</a>. I just get through it more times.
+        </p>
+        <blockquote class="pull-quote flow">
+          Design. Build. Play. Refine. Same loop. More passes.
+        </blockquote>
+      </section>
+
+      <!-- Why I'm saying this -->
+      <section class="section">
+        <h2>Why I'm saying this</h2>
+        <p>
+          People argue about AI in games, and some of the criticism is fair. Low-effort work exists. It always has, with every new tool.
+        </p>
+        <p>
+          But a lot of the argument quietly assumes the old way was fine. It was not. "Only people with deep pockets can make big games" was never a healthy rule, and I am not going to defend it out of nostalgia.
+        </p>
+        <p>
+          The means of making things should not be reserved for people who already have money. A better creative landscape is one where more people with skill and drive actually get to finish what they started. These tools make that possible for me. I am not embarrassed by that. I am proud of what one person can build now.
+        </p>
+        <p class="closer">
+          One creative vision, carried through every iteration. The tools changed. The vision did not.
+        </p>
+        <p class="closer" style="font-style:italic; color:#888;">
+          Independently created by Brok3n by Design.
+        </p>
+      </section>
+
+      <!-- Where to next -->
+      <section class="section">
+        <div class="next-block">
+          <div>
+            <p style="font-size:1.15rem; color:#ccc;">
+              Want to see what one person can actually build? The games are on the shelf. Some of them you can play right now.
+            </p>
+            <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;">
+              Questions about the process? Email is open.
+            </p>
+          </div>
+          <div style="display:flex; gap:14px; flex-wrap:wrap;">
+            <a href="home.html#current" class="btn btn-primary">See the Games</a>
+            <a href="about.html" class="btn btn-secondary">About the Studio</a>
+            <a href="mailto:brok3nbydesign@pm.me" class="btn btn-secondary">Email the Studio</a>
+          </div>
+        </div>
+      </section>
+
+    </article>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="footer-kicker">INDEPENDENT GAME STUDIO</p>
+      <p class="studio-credit">Independently created by Brok3n by Design.</p>
+      <div class="social-links">
+        <a href="https://x.com/brok3nbydesign" target="_blank" rel="noopener">@brok3nbydesign on X</a>
+      </div>
+      <p style="margin-top: 40px; font-size: 0.9rem; color: #666;">
+        © 2026 Brok3n by Design™. All rights reserved.
+      </p>
+    </div>
+  <!-- STUDIO LINKS START -->
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<!-- STUDIO LINKS END -->
+  </footer>
+<div class="site-music" id="site-music-control" role="group" aria-label="Background music"><button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div>
+</body>
+</html>
