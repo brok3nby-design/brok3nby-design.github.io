@@ -440,6 +440,51 @@
     });
   }
 
+  function addGuestbookInvite(signLink) {
+    const key = 'b3d-guestbook-invited';
+    const wasShown = () => { try { return sessionStorage.getItem(key) === '1'; } catch (_) { return false; } };
+    if (wasShown()) return;
+    let finished = false;
+    let timer;
+    let invite;
+    const dismiss = () => {
+      finished = true;
+      clearTimeout(timer);
+      try { sessionStorage.setItem(key, '1'); } catch (_) {}
+      if (invite) {
+        // Keep keyboard focus usable if the visitor dismisses from inside the card.
+        if (invite.contains(document.activeElement)) {
+          const fallback = document.querySelector('.hero-buttons a');
+          fallback?.focus({ preventScroll: true });
+        }
+        invite.remove();
+      }
+      document.removeEventListener('keydown', onEscape);
+    };
+    const onEscape = event => {
+      if (event.key === 'Escape' && !document.querySelector('dialog[open]')) dismiss();
+    };
+    signLink.addEventListener('click', dismiss);
+    const show = () => {
+      if (finished || wasShown()) return;
+      // Wait until the page is visible and no other dialog or full-screen player is open.
+      if (document.hidden || document.querySelector('dialog[open], .trailer-modal.open') || document.fullscreenElement) {
+        timer = setTimeout(show, 5000);
+        return;
+      }
+      try { sessionStorage.setItem(key, '1'); } catch (_) {}
+      invite = document.createElement('aside');
+      invite.className = 'b3d-guestbook-invite';
+      invite.setAttribute('aria-labelledby', 'guestbook-invite-heading');
+      invite.innerHTML = '<button type="button" class="b3d-guestbook-invite-close" aria-label="Dismiss guestbook invitation">×</button><div role="status"><h2 id="guestbook-invite-heading">Leave your mark.</h2><p>Enjoying the studio? Draw something small, add your name, and sign the Graffiti guestbook.</p></div><a href="graffiti/?draw=1">Sign the guestbook →</a>';
+      invite.querySelector('button').addEventListener('click', dismiss);
+      invite.querySelector('a').addEventListener('click', dismiss);
+      document.body.appendChild(invite);
+      document.addEventListener('keydown', onEscape);
+    };
+    timer = setTimeout(show, 60000);
+  }
+
   function addBackToTop() {
     if (document.querySelector('.b3d-back-to-top')) return;
 
@@ -484,6 +529,7 @@
       guestbookViewButton.setAttribute('aria-haspopup', 'dialog');
       guestbookViewButton.innerHTML = '<span aria-hidden="true">✦</span><span>VIEW</span>';
       guestbookActions.append(guestbookSignLink, guestbookViewButton);
+      addGuestbookInvite(guestbookSignLink);
 
       guestbookViewer = document.createElement('dialog');
       guestbookViewer.className = 'b3d-guestbook-viewer';
