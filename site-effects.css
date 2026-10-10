@@ -491,13 +491,14 @@ footer.b3d-ambient-footer {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 38px;
-  padding: 8px 12px;
+  box-sizing: border-box;
+  min-height: 32px;
+  padding: 6px 10px;
   border: 1px solid #ff795c;
   border-radius: 999px;
   background: #ff5b38;
   color: #190906;
-  font: 1rem/1 'VT323', monospace;
+  font: .85rem/1 'VT323', monospace;
   font-weight: 700;
   letter-spacing: .06em;
   text-decoration: none;
@@ -729,9 +730,9 @@ footer.b3d-ambient-footer {
   }
 
   .b3d-guestbook-cta {
-    min-height: 35px;
-    padding: 7px 9px;
-    font-size: .9rem;
+    min-height: 32px;
+    padding: 6px 9px;
+    font-size: .85rem;
   }
 
   .b3d-guestbook-viewer {
@@ -767,3 +768,14 @@ footer.b3d-ambient-footer {
     transform: none;
   }
 }
+
+/* A quiet, dismissible invitation; it never takes keyboard focus. */
+.b3d-guestbook-invite { position:fixed; left:20px; bottom:24px; z-index:1500; box-sizing:border-box; width:min(350px,calc(100vw - 40px)); padding:22px; border:1px solid #ff795c; border-radius:12px; background:#151112; color:#f5eded; box-shadow:0 12px 40px #0009; font:14px/1.6 Inter,Arial,sans-serif; }
+.b3d-guestbook-invite[hidden] { display:none; }
+.b3d-guestbook-invite h2 { margin:0 30px 8px 0; font:700 21px/1.25 Inter,Arial,sans-serif; color:#fff; }
+.b3d-guestbook-invite p { margin:0 0 16px; color:#d4c5c5; }
+.b3d-guestbook-invite-close { position:absolute; top:8px; right:8px; width:36px; height:36px; padding:0; border:0; background:transparent; color:#eee; font:24px/1 Arial,sans-serif; cursor:pointer; }
+.b3d-guestbook-invite a { display:inline-flex; align-items:center; min-height:40px; padding:0 14px; border-radius:6px; background:#ff5b38; color:#190906; font-weight:700; text-decoration:none; }
+.b3d-guestbook-invite a:hover { background:#fff; }
+.b3d-guestbook-invite :is(a,button):focus-visible { outline:2px solid #fff; outline-offset:3px; }
+@media (max-width:680px) { .b3d-guestbook-invite { left:12px; bottom:76px; width:calc(100vw - 24px); padding:18px; } }
