@@ -1,5 +1,6 @@
 /* Shared project catalogue. Keep public availability separate from production methods. */
 globalThis.B3DProjects = [
+  {id:'under-the-radar',title:'Under the Radar',category:'development',status:'In development',hook:'Your next favourite is one you’ve never heard of.',description:'Follow your curiosity into a world of quiet surprises and unexpected connections. Some things are worth a closer look.',image:'images/radar/Under_Radar_logo.png',shelfImage:'images/radar/Under_Radar_logo.png',secret:true,accent:'#e9bd79'},
   {id:'glass-and-fortune',title:'Glass & Fortune',category:'development',status:'Private alpha',hook:'Bend the roll. Cheat fate.',description:'A tactile roguelike built around five glass dice, risky combinations, and a masked fortune-teller who never gives you the whole truth.',image:'images/dice/glass-01.png',accent:'#c1a5ff'},
   {id:'bid-and-buried',trailer:'bid-and-buried.html#trailer',title:'Bid & Buried',category:'development',status:'In development',hook:'Buy blind. Dig deep. Get rich.',description:'Peek inside a locker, buy it, dig front to back, and choose what earns space in your van.',image:'images/locker/buried-05.png',accent:'#f4bc70'},
   {id:'speck',trailer:'speck.html#trailer',title:'Speck',category:'development',status:'Private development',hook:'Start small. Leave something behind.',description:'A shared survival sandbox about beginning as almost nothing, shaping the objects around you, and turning an empty patch of world into home.',image:'images/speck/speck_01.png',accent:'#a6e8ae'},
@@ -22,6 +23,6 @@ const progressReports = {
   'macabre-dolls': {remaining:25, testing:'No ETA', release:'No ETA', hours:'Approx. 40 hours'},
   'graffiti': {remaining:null, testing:'Live now', release:'Live now', hours:'Not yet reported'}
 };
-const projectOrder = ['glass-and-fortune','bid-and-buried','speck','wrfm','pocket-wilds','doqi','macabre-dolls','labyrinth-fate','juicebox','graffiti'];
+const projectOrder = ['glass-and-fortune','bid-and-buried','speck','under-the-radar','wrfm','pocket-wilds','doqi','macabre-dolls','labyrinth-fate','juicebox','graffiti'];
 globalThis.B3DProjects.sort((a,b)=>projectOrder.indexOf(a.id)-projectOrder.indexOf(b.id));
 for (const project of globalThis.B3DProjects) project.progress = progressReports[project.id] || {remaining:null, testing:'No ETA', release:'No ETA', hours:'Not yet reported'};
