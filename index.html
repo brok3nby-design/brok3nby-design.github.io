@@ -9,7 +9,7 @@
   <style>
 body { margin:0; background:#000; color:#eee; font-family:monospace; }
 .video-container { min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:20px; box-sizing:border-box; }
-video { display:block; width:min(100%,850px); max-height:58svh; object-fit:contain; }
+.entrance-logo { display:block; width:min(100%,850px); height:auto; max-height:58svh; object-fit:contain; }
 .intro-actions { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
 .enter-btn { display:inline-block; padding:16px 54px; font-size:1.4rem; border:2px solid #ff686e; color:#ff686e; text-decoration:none; }
 .enter-btn:hover { background:#ff686e; color:#00150c; }
@@ -17,7 +17,7 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
 .intro-actions label { display:flex; gap:10px; align-items:center; min-height:44px; font-size:.9rem; }
 .intro-actions input { width:20px; height:20px; accent-color:#ff686e; }
 #intro-note { min-height:1em; margin:0; font-size:.8rem; color:#9cbaa7; }
-@media(max-height:500px) and (min-width:700px){.video-container{flex-direction:row;} video{width:55%;max-height:85svh;}.intro-actions{max-width:40%;}}
+@media(max-height:500px) and (min-width:700px){.video-container{flex-direction:row;} .entrance-logo{width:55%;max-height:85svh;}.intro-actions{max-width:40%;}}
 </style>
   <link rel="stylesheet" href="site-effects.css?v=20260912-titles">
   <link rel="stylesheet" href="studio.css">
@@ -34,10 +34,9 @@ video { display:block; width:min(100%,850px); max-height:58svh; object-fit:conta
 
   <main class="video-container">
   <h1 class="sr-only">Brok3n by Design — Independent Game Studio</h1>
-  <video id="splashVideo" muted loop playsinline preload="none" poster="images/studio/b3d-web.webp" aria-label="Brok3n by Design studio intro"><source src="videos/BrokenIntro.mp4" type="video/mp4"></video>
+  <img class="entrance-logo" src="images/studio/b3d-web.webp" alt="Brok3n by Design" width="1040" height="416">
   <div class="intro-actions">
     <a class="enter-btn" href="home.html">ENTER THE STUDIO</a>
-    <button type="button" id="intro-pause" class="studio-button" aria-pressed="false" hidden>Play intro</button>
     <label hidden><input type="checkbox" id="remember-intro">Go straight to the games next time</label>
     <p class="intro-credit">Independently created by Brok3n by Design.</p>
     <p id="intro-note" role="status"></p>
