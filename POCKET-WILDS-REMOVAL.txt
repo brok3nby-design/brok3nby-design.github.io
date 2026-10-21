@@ -1,0 +1,10 @@
+Pocket Wilds removal — 21 October 2026
+
+The website files remove all Pocket Wilds play links and mark the project as private development.
+
+A full local backup is stored OUTSIDE the website at:
+C:\Users\dev29\Documents\Brok3n by Design Private\Pocket Wilds-20261021-website-removal
+
+When deploying a full directory copy, remove the previous Game/ directory and teasers/pocket-wilds/ directory from the destination first, then upload the non-playable entry pages included here. Copying new files alone will not delete old game source.
+
+The separately hosted full game is in brok3nby-design/pocket-wilds. This ZIP does not disable that separate GitHub Pages site. Unpublish it under Settings > Pages and make that repository private to restrict access to its source and history.
