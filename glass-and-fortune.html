@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glass &amp; Fortune | Brok3n by Design</title>
-  <meta name="description" content="Glass &amp; Fortune — a roguelike game of loaded fate. Five glass dice, 24 named hands, twelve Readings, and a masked cat who narrates every cast. Bend the roll, build the hand, and cheat fate.">
+  <meta name="description" content="Glass &amp; Fortune is a dark tabletop roguelike about glass dice, tempting risks, and a masked fortune-teller. Bend the roll. Cheat fate.">
   <link rel="icon" href="images/studio/studio-mark.svg">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Glass &amp; Fortune | Brok3n by Design">
-  <meta property="og:description" content="Five glass dice, 24 named hands, twelve Readings, and a masked cat keeping the table. Bend the roll, build the hand, and cheat fate.">
+  <meta property="og:description" content="Glass &amp; Fortune is a dark tabletop roguelike about glass dice, tempting risks, and a masked fortune-teller. Bend the roll. Cheat fate.">
   <meta property="og:url" content="https://brok3nbydesign.com/glass-and-fortune.html">
   <meta property="og:image" content="https://brok3nbydesign.com/images/studio/share/glass-and-fortune.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -268,52 +268,6 @@
     .roadmap div:last-child {
       margin-bottom: 0;
     }
-    .playtest-callout {
-      position: relative;
-      overflow: hidden;
-      padding: 30px;
-      border: 1px solid rgba(0, 255, 159, .4);
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(0, 255, 159, .09), rgba(21, 21, 21, .96) 60%);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, .22);
-    }
-    .playtest-callout::after {
-      content: '?';
-      position: absolute;
-      right: 22px;
-      top: 50%;
-      color: rgba(0, 255, 159, .07);
-      font-family: 'VT323', monospace;
-      font-size: 9rem;
-      line-height: 1;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-    .playtest-timing {
-      position: relative;
-      z-index: 1;
-      display: inline-block;
-      margin-bottom: 12px;
-      padding: 4px 12px;
-      border: 1px solid rgba(0, 255, 159, .38);
-      border-radius: 999px;
-      color: var(--accent);
-      font-family: 'VT323', monospace;
-      font-size: 1.05rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .playtest-callout p {
-      position: relative;
-      z-index: 1;
-      max-width: 740px;
-      margin: 0 0 22px;
-      color: #ccc;
-    }
-    .playtest-callout .btn {
-      position: relative;
-      z-index: 1;
-    }
     .status-alpha {
       background: #b07cc6;
       color: #100810;
@@ -567,73 +521,12 @@
       <p>A roguelike game of loaded fate. Bend the roll. Build the hand. Cheat fate.</p>
       <div class="hero-actions">
         <a href="follow-development.html" class="btn btn-primary">Follow Development</a>
-        
-        <a href="#build-status" class="btn btn-ghost">What&rsquo;s Built &amp; What&rsquo;s Left</a>
       </div>
     </div>
 
-    <div class="section">
-      <h2>Overview</h2>
-      <p>
-        Glass &amp; Fortune is a dark tabletop roguelike built around five mutable glass dice.
-        Every die carries a number <em>and</em> a colour, and both of them score. Build a hand across
-        twelve Readings, bend the roll with limited actions before you commit it, and cast when the
-        odds feel right &mdash; or one cast too late.
-      </p>
-      <p style="margin-top: 18px;">
-        You are not rolling and hoping. <strong>TURN</strong> raises a number, <strong>TINT</strong>
-        changes a colour, <strong>RECAST</strong> rerolls both, and each one spends Favour on a single
-        die you choose. The question a fortune keeps asking is not what you rolled. It is how much
-        you are willing to spend arguing with it.
-      </p>
-      <p style="margin-top: 18px;">
-        Keeping the table is <strong>Morrow</strong>, a masked black cat who narrates every cast and
-        has opinions about most of them. Doing the arithmetic out loud is <strong>Tally</strong>, a
-        clockwork mouse who reads your figures back to you in one of four voices.
-      </p>
-      <p style="margin-top: 18px; color: #aaa;">
-        Bend the roll. Build the hand. Cheat fate.
-      </p>
-      <div class="b3d-tldr"><strong>TL;DR:</strong> A dark tabletop roguelike where five glass dice score by number and colour. Bend individual dice, build powerful hands, and survive twelve increasingly strange Readings.</div>
-    </div>
+    <section class="section project-summary"><h2>About the game</h2><p>A dark tabletop roguelike about glass dice, tempting risks, and a masked fortune-teller with opinions. Bend the roll. Cheat fate.</p></section>
 
-    <div class="section">
-      <h2>Features</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>Five Glass Dice</h3>
-          <p>Six colours &mdash; Garnet, Cobalt, Jade, Amber, Violet and Sea Glass &mdash; each with its own value and its own symbol, so colour is never the only thing telling you what you are holding.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Bend the Roll</h3>
-          <p>TURN raises a number. TINT changes a colour. RECAST rerolls both. Each spends Favour, and each acts on one die you pick &mdash; so every bend is a small argument with fate that you have to pay for.</p>
-        </div>
-        <div class="feature-card">
-          <h3>24 Named Hands</h3>
-          <p>From Poor Omen to Perfect Fortune. Numbers score and colours score, and combined hands mean gaining a colour pattern never wipes out the number pattern underneath it.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Twelve Readings</h3>
-          <p>Targets climbing from 80 to 8,200, and a different table rule at every one &mdash; The Crossroads, The Mirror Market, The Midnight Bell, Broken Constellation, The Last Light.</p>
-        </div>
-        <div class="feature-card">
-          <h3>18 Charms, 9 Curios</h3>
-          <p>Every one with its own artwork, effect and stack limit. Cards glow when they affect the hand in front of you and show you the exact live bonus, then pulse when it commits.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Keepers of the Table</h3>
-          <p>Morrow, a masked black cat, narrates your fortunes and reacts to the hands you cast. Tally, his clockwork mouse, keeps track of the figures while you decide how far to push your luck.</p>
-        </div>
-        <div class="feature-card">
-          <h3>The Hall of Fortunes</h3>
-          <p>A worldwide top-100 board, live now. Ties break by who got there first, and the whole game plays in full without ever submitting a thing.</p>
-        </div>
-        <div class="feature-card">
-          <h3>43 Achievements, 10 Secrets</h3>
-          <p>Five categories, from Common to Legendary. Every Easter egg has its own Morrow recording and a cryptic hint in the ledger, and 24 stats track quietly in the background with no account needed.</p>
-        </div>
-      </div>
-    </div>
+    <section class="section project-summary"><h2>How it plays</h2><p>Roll the dice, weigh your options, and decide when to push your luck. Each run invites you back to the table for one more chance.</p></section>
 
     <div class="section">
       <h2>Gallery</h2>
@@ -641,7 +534,7 @@
         <div class="gallery-item"><img src="images/dice/glass-01.png" alt="Glass &amp; Fortune title screen" loading="lazy"></div>
         <div class="gallery-item"><img src="images/dice/glass-02.png" alt="Morrow, a plague-doctor cat character from Glass &amp; Fortune" loading="lazy"></div>
         <div class="gallery-item"><img src="images/dice/glass-03.png" alt="Morrow and Talley seated at the Glass &amp; Fortune table" loading="lazy"></div>
-        <div class="gallery-item"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay showing a Twin Pair hand" loading="lazy"></div>
+        <div class="gallery-item"><img src="images/dice/glass-04.png" alt="Glass &amp; Fortune gameplay screenshot" loading="lazy"></div>
         <div class="gallery-item"><img src="images/dice/glass-06.png" alt="Glass &amp; Fortune gameplay with Morrow at the table" loading="lazy"></div>
         <div class="gallery-item"><img src="images/dice/glass-07.png" alt="Talley, the mechanical mouse character from Glass &amp; Fortune" loading="lazy"></div>
       </div>
@@ -654,168 +547,6 @@
       <span class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next screenshot">&#10095;</span>
     </div>
 
-    <div class="section">
-      <h2>Latest Development</h2>
-      <div class="changelog">
-        <div class="changelog-item">
-          <p style="margin:0 0 12px;"><strong>Alpha 0.11.0 &mdash; &ldquo;The Glass Runs On&rdquo;, 23 August 2026.</strong> Glass &amp; Fortune is a content-complete alpha. It plays end to end with no console errors, and the worldwide Hall of Fortunes is live in production.</p>
-          <p style="margin:0 0 12px;">This build shipped <strong>Share Fortune</strong> on the victory and game-over screens, and the leaderboard came out of testing and onto real infrastructure &mdash; signed submissions, replay protection, hashed addresses and a 123-test suite covering signing, ranking, renaming, erasure and the audit trail. All 123 pass.</p>
-          <p style="margin:0;">Earlier in the year the project was called Lumina Dice. It now has a new name, a new world, a full cast, twelve Readings instead of five, and 162 recorded voice lines.</p>
-        </div>
-      </div>
-    </div>
-
-    <section class="section" aria-labelledby="playtest-heading">
-      <h2 id="playtest-heading">Playtesters Wanted Soon</h2>
-      <div class="playtest-callout">
-        <span class="playtest-timing">Expected in 1&ndash;2 months</span>
-        <p><strong>Glass &amp; Fortune will need real hands at the table.</strong> I&rsquo;m not looking for playtesters quite yet, but I expect to open the doors in the next month or two. If you&rsquo;d like to help test the balance, pacing, clarity, and strange edge cases, follow development and I&rsquo;ll announce when playtesting begins.</p>
-        <a href="follow-development.html" class="btn btn-primary">Get the Playtest Announcement</a>
-      </div>
-    </section>
-
-    <details class="studio-disclosure"><summary>Development details & complete feature inventory</summary>
-<div class="section statusboard" id="build-status">
-      <h2>What&rsquo;s Built &amp; What&rsquo;s Left</h2>
-
-      <div class="statusboard-head">
-        <span class="statusboard-stamp">STATUS &middot; 23 AUG 2026</span>
-        <p class="statusboard-note">A content-complete alpha. What is left is almost entirely <em>shipping</em> work &mdash; getting it hosted, and getting it light enough to load &mdash; rather than gameplay.</p>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat"><b>24</b><span>Named hands</span></div>
-        <div class="stat"><b>12</b><span>Readings</span></div>
-        <div class="stat"><b>27</b><span>Charms &amp; curios</span></div>
-        <div class="stat"><b>43</b><span>Achievements</span></div>
-        <div class="stat"><b>162</b><span>Voice lines</span></div>
-        <div class="stat"><b>20</b><span>Music tracks</span></div>
-      </div>
-
-      <div class="status-cols">
-        <div class="status-col built">
-          <h3>Built and playable</h3>
-          <p class="col-note">The game runs start to finish, with no missing assets and no console errors.</p>
-
-          <h4>The table</h4>
-          <ul class="status-list">
-            <li>Five-die glass engine across six colours, each with its own value and colourblind-readable symbol</li>
-            <li>24 named hands, fully scored, ranked and narrated &mdash; number hands, colour hands, combined and apex</li>
-            <li>The bending system: TURN, TINT and RECAST, each spending Favour on one chosen die</li>
-            <li>Twelve Readings with targets from 80 to 8,200, and a unique table rule at every one</li>
-            <li>Chips &times; multiplier scoring with live hand preview, the exact formula shown, and a full 24-hand rank ledger</li>
-            <li>Final-cast safety &mdash; persistent warning, highlighted counter, distinct button state and a second confirmation</li>
-            <li>One-click dice sorting by number or Tint order, with selection preserved and no effect on the hand</li>
-            <li>Save and resume, with a spoken welcome-back line when you return</li>
-          </ul>
-
-          <h4>Progression</h4>
-          <ul class="status-list">
-            <li>18 Charms, each with unique artwork, effect text and a stack limit</li>
-            <li>9 Curios, all with working mechanics</li>
-            <li>A Shard economy earned per Reading and spent in the Curio Cabinet</li>
-            <li>A living card shelf &mdash; duplicates stacked with a count, cards glowing and showing their live bonus when they apply</li>
-            <li>Full-size card viewer for everything you have collected</li>
-            <li>Charm reward screens offering three choices, four with the Spyglass, prioritising Charms you have not seen</li>
-          </ul>
-
-          <h4>Characters and narration</h4>
-          <ul class="status-list">
-            <li>Morrow in four poses, with recorded narration, captions and an optional-commentary setting</li>
-            <li>Tally reading live figures through system speech, in four voices at an adjustable pace</li>
-            <li>162 recorded voice lines &mdash; hand announcements, cast reactions, idle remarks, menu greetings, achievement reactions, secret reveals and leaderboard opinions</li>
-            <li>Playback restraint logic, so character lines never crowd important narration</li>
-          </ul>
-
-          <h4>Achievements and secrets</h4>
-          <ul class="status-list">
-            <li>43 permanent achievements across five categories, from Common to Legendary</li>
-            <li>A horizontal achievement ledger with filters, progress bars and unlock dates</li>
-            <li>10 hidden Easter eggs, each with its own Morrow recording and cryptic hint &mdash; all ten verified wired to working triggers</li>
-            <li>24 tracked stats, stored locally, designed to survive balance changes &mdash; no account required</li>
-          </ul>
-
-          <h4>The Hall of Fortunes</h4>
-          <ul class="status-list">
-            <li>A worldwide top-100 board, live in production and verified healthy</li>
-            <li>Sequential ranking, ties broken by earliest submission, country display</li>
-            <li>Anti-cheat: signed submission tokens, client-signed payloads, nonce replay protection and rate limiting</li>
-            <li>Addresses hashed with a server-side salt, never stored raw, with a full audit trail</li>
-            <li>Rename your entry, or erase it entirely &mdash; and the game plays in full without ever submitting</li>
-            <li>Offline resilience &mdash; a fortune that cannot reach the Hall is queued and sent when the connection returns</li>
-            <li>A 123-test suite covering signing, ranking, renaming, erasure, rate limiting and the audit trail. All passing.</li>
-          </ul>
-
-          <h4>Tutorial</h4>
-          <ul class="status-list">
-            <li>A five-panel illustrated lesson with narration and animated example hands</li>
-            <li>A guided interactive hand covering selection, TURN, TINT and casting, with correction nudges</li>
-            <li>Downloadable illustrated guides &mdash; all 24 hands with exact ranks, a how-to-play sheet and an achievement poster</li>
-          </ul>
-
-          <h4>Audio and presentation</h4>
-          <ul class="status-list">
-            <li>20 music tracks across seven scenes, rotating between fortunes but staying put when a saved one resumes</li>
-            <li>38 sound effects in five families, each with a procedural synthesis fallback if the file fails to load</li>
-            <li>Table room-tone ambience on its own channel, and five independent volume controls</li>
-            <li>An animated parlour menu with an illustrated reduced-motion fallback</li>
-            <li>27 handmade parlour props in random rotation across the table and menu</li>
-            <li>The Glass Tally &mdash; etched counters travelling into the Reading meter, an engraved multiplier seal, a &ldquo;Reading Fulfilled&rdquo; stamp</li>
-            <li>Reduced motion honoured by dice, particles, menu, video and score tally</li>
-            <li>Responsive across eight breakpoints, from a 470px phone to desktop</li>
-          </ul>
-
-          <h4>Shell</h4>
-          <ul class="status-list">
-            <li>A full in-game Updates screen with the version history from Alpha 0.8.0 onward</li>
-            <li>Handbook covering rules, hands and terminology</li>
-            <li>Legal &amp; Privacy screen covering saved data, leaderboard transmission, hashing and erasure rights</li>
-            <li>Share Fortune on the victory and game-over screens, using the native share sheet with a clipboard fallback</li>
-            <li>A settings screen with five volume sliders, four Tally voices, speaking pace and reduced motion</li>
-            <li>The whole game in one HTML file &mdash; no build step, no bundler, no runtime dependencies</li>
-          </ul>
-        </div>
-
-        <div class="status-col left">
-          <h3>Still to come</h3>
-          <p class="col-note">Almost none of this is gameplay. It is the work between a finished alpha and something you can click a link and play.</p>
-
-          <h4>Before anyone can play it</h4>
-          <ul class="status-list">
-            <li class="wip"><strong>The background video has to come down.</strong> The play-table loop is far too heavy to serve over a normal connection, and re-encoding it for the web is the single thing standing between this game and being hostable.</li>
-            <li><strong>Pick a host and put it up.</strong> There is no public build yet &mdash; which also means Share Fortune has no real link to share.</li>
-            <li><strong>Social metadata</strong> &mdash; description, Open Graph and card tags, theme colour and touch icon, so a shared fortune renders a preview instead of a bare URL. The poster art is already drawn.</li>
-          </ul>
-
-          <h4>Polish</h4>
-          <ul class="status-list">
-            <li>Tally&rsquo;s speaking animation is a single-frame swap. The two-frame counting motion is specified and the second frame is already drawn &mdash; it just is not being played.</li>
-            <li>The trailer and five shorts are written and fully shot-listed, down to timings. Nothing has been filmed.</li>
-          </ul>
-
-          <h4>Accessibility worth a pass</h4>
-          <ul class="status-list">
-            <li>Pinch-zoom is currently blocked by the viewport setting</li>
-            <li>No in-game &ldquo;erase everything&rdquo; control &mdash; achievements, stats and preferences can only be cleared through site data, which is unkind</li>
-            <li>Captions are always on. That is the right default, but it should still be a choice.</li>
-          </ul>
-
-          <h4>Before a storefront</h4>
-          <ul class="status-list">
-            <li>A proper legal review of the privacy notice against whatever storefront it lands on. The text is thorough, but nobody qualified has read it.</li>
-            <li>Balance validation against real play data. The twelve-Reading curve, Shard economy and Curio pricing were tuned by hand and have never met a crowd &mdash; and with no entries on the board yet, there is nothing to tune against.</li>
-          </ul>
-
-          <h4>Deliberate, for now</h4>
-          <ul class="status-list">
-            <li><strong>One language.</strong> The voice structure anticipates more, but there is no selector and no string table yet. A structural decision to revisit, not a defect.</li>
-            <li><strong>Readings V&ndash;XII have no recorded introduction.</strong> They use Tally&rsquo;s live voice instead, by design &mdash; the deeper you go, the more the table stops announcing itself.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-</details>
-
   </div>
 
   <footer>
@@ -823,13 +554,11 @@
     <p>Choose how to <a href="follow-development.html">follow development</a></p>
     <p style="margin-top:30px; color:#666;">© 2026 Brok3n by Design™. All rights reserved.</p>
   <!-- STUDIO LINKS START -->
-<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Watch intro</a></div>
+<div class="studio-utility"><a href="passport.html">Studio Passport <span data-passport-count></span></a><a href="settings.html">Effects &amp; sound</a><a href="press-kit.html">Press kit</a><a href="index.html?intro=1">Studio entrance</a></div>
 <!-- STUDIO LINKS END -->
 </footer>
 
   <!-- Site-wide background music (continues across pages) -->
-  
-  
 
 <div class="site-music" id="site-music-control" role="group" aria-label="Background music"><button type="button" aria-pressed="false">♫ Play music</button><label><span class="sr-only">Music volume</span><input type="range" min="0" max="100" step="1" aria-label="Music volume"></label></div>
 </body>
