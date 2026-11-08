@@ -168,11 +168,11 @@
   "mug": {
    "scope": "home",
    "object": "PROP_Mug",
-   "action": "easter-egg",
-   "idea": "steam wisp spells something dry; or the mug quietly refills",
+   "action": "sting",
    "panel": {
-    "title": "Coffee break",
-    "text": "Still warm. Somebody is coming right back."
+    "eyebrow": "SATURDAY, 7:00 A.M.",
+    "title": "The detention mug",
+    "text": "“We're all pretty bizarre. Some of us are just better at hiding it, that's all.” — The Breakfast Club (1985). Still warm. Somebody is coming right back."
    },
    "stamp": "coffee"
   },
@@ -377,6 +377,28 @@
     "text": "Most people never turn the desk around. Behind every finished thing there's tape, a map and a poster for a film that only exists here."
    },
    "stamp": "backstage"
+  },
+  "sunglasses": {
+   "scope": "home",
+   "object": "PROP_Sunglasses (top shelf)",
+   "action": "sting",
+   "panel": {
+    "eyebrow": "DAY OFF",
+    "title": "Sunglasses",
+    "text": "“Life moves pretty fast. If you don't stop and look around once in a while, you could miss it.” — Ferris Bueller's Day Off (1986)."
+   },
+   "stamp": "day-off"
+  },
+  "flag_canada": {
+   "scope": "home",
+   "object": "MON_R_FlagSticker (back of the right monitor)",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "TRUE NORTH",
+    "title": "Made in Canada",
+    "text": "A little flag on the back of the monitor, where only the curious look. Brok3n by Design is made in Canada."
+   },
+   "stamp": "true-north"
   }
  },
  "hiding_places": "EGG_* markers (egg_id extras) - see diorama/EASTER_EGGS.md"
