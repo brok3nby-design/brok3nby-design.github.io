@@ -1160,6 +1160,36 @@
      }
     ]
    }
+  },
+  {
+   "id": "the-relative",
+   "title": "The Relative",
+   "category": "games",
+   "status": "Concept · early development",
+   "hook": "An ordinary week that refuses to stay ordinary.",
+   "description": "A point-and-click adventure about an ordinary week that refuses to stay ordinary.",
+   "accent": "#d4a24c",
+   "secret": false,
+   "completed": false,
+   "progress": {
+    "remaining": null,
+    "testing": "No ETA",
+    "release": "No ETA",
+    "hours": "Not yet reported"
+   },
+   "cover": "media/projects/the-relative/the-relative.webp",
+   "logo": null,
+   "gallery": [],
+   "trailer": null,
+   "live_url": null,
+   "old_url": null,
+   "page": {
+    "source": null,
+    "kicker": "R&D FILES",
+    "genres": "Point-and-click mystery • Concept",
+    "lead": "A point-and-click adventure about an ordinary week that refuses to stay ordinary.",
+    "sections": []
+   }
   }
  ]
 }
