@@ -399,6 +399,17 @@
     "text": "A little flag on the back of the monitor, where only the curious look. Brok3n by Design is made in Canada."
    },
    "stamp": "true-north"
+  },
+  "neon_sign": {
+   "scope": "home",
+   "object": "NEON_Sign (on the invisible side wall, left of the desk)",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "OPEN LATE",
+    "title": "Brok3n by Design",
+    "text": "The studio's name in bent glass and humming gas, on the wall beside the desk. The 3 burns red: the crack is part of the design. It's an old sign, so it stutters a little when you poke it."
+   },
+   "stamp": "open-late"
   }
  },
  "hiding_places": "EGG_* markers (egg_id extras) - see diorama/EASTER_EGGS.md"
