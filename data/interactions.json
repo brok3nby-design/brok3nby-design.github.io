@@ -1,0 +1,383 @@
+{
+ "_note": "Maps interactive_id tags (Blender custom properties -> glTF node extras -> three.js object.userData) to website behaviour. Kept separate from model generation. kind: navigation = leads to a site section (always ALSO reachable through normal HTML links); discovery = optional reward, never needed to navigate. scope = which exhibit listens (home = desk homepage, games = Games page, about = About page). A click on any child mesh resolves to the nearest ancestor with an interactive_id. Routes are internal paths; external links (href) are only ones the existing site already uses (see AUDIT.md). Panel copy is taken from the existing site ('source').",
+ "navigation": {
+  "games_crate": {
+   "scope": "home",
+   "object": "NAV_GamesCrate",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Choose your next world.",
+    "text": "Start here: choose a cartridge, hear it click into place, and see where the project stands. Explore the project pages for development updates and a closer look at each world.",
+    "source": "home.html"
+   },
+   "button": {
+    "label": "EXPLORE GAMES",
+    "route": "/games"
+   }
+  },
+  "notebook": {
+   "scope": "home",
+   "object": "NAV_Notebook",
+   "action": "focus+panel",
+   "panel": {
+    "title": "About the Studio",
+    "text": "Brok3n by Design is an independent game studio where each project is designed, directed, and built by a single creator using modern creative tools. The studio brings together strange ideas, dark humor, nostalgia, and experimental mechanics. Every project explores something a little different — from retro RPGs and satirical personality tests to haunted card games and fictional radio stations.",
+    "source": "home.html"
+   },
+   "button": {
+    "label": "ABOUT THE STUDIO",
+    "route": "/about"
+   }
+  },
+  "monitor_left": {
+   "scope": "home",
+   "object": "MON_L_Screen",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Brok3n by Design — brand film",
+    "eyebrow": "BRAND FILM · OUT NOW",
+    "text": "A film from the studio behind the games. Watch the new Brok3n by Design brand trailer.",
+    "source": "home.html"
+   },
+   "button": {
+    "label": "WATCH ON YOUTUBE ↗",
+    "href": "https://youtu.be/zhIMgJ5sl7Q"
+   },
+   "links": [
+    {
+     "label": "View on X ↗",
+     "href": "https://x.com/brok3nbydesign/status/2108530273004421284"
+    }
+   ]
+  },
+  "monitor_right": {
+   "scope": "home",
+   "object": "MON_R_Screen",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Brok3n by Design — brand film",
+    "eyebrow": "BRAND FILM · OUT NOW",
+    "text": "A film from the studio behind the games. Watch the new Brok3n by Design brand trailer.",
+    "source": "home.html"
+   },
+   "button": {
+    "label": "WATCH ON YOUTUBE ↗",
+    "href": "https://youtu.be/zhIMgJ5sl7Q"
+   },
+   "links": [
+    {
+     "label": "View on X ↗",
+     "href": "https://x.com/brok3nbydesign/status/2108530273004421284"
+    }
+   ]
+  },
+  "headphones": {
+   "scope": "home",
+   "object": "PROP_Headphones_Stand",
+   "action": "focus+panel",
+   "idea": "put the headphones on: the studio soundtrack, a playlist that follows the mood of the page; play / pause / next, volume",
+   "panel": {
+    "title": "Studio soundtrack",
+    "eyebrow": "ON THE HEADPHONES",
+    "text": "Put the headphones on: the studio's own soundtrack. It follows the mood of the page you're on (chill on the desk, chiptune in the Games crate, something creepier with the dolls) and keeps playing as you look around."
+   }
+  },
+  "contact_card": {
+   "scope": "home",
+   "object": "NAV_ContactCards",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Get in touch",
+    "text": "Explore the games, follow what's taking shape, or drop a line about games, feedback, or a collaboration.",
+    "source": "about.html"
+   },
+   "button": {
+    "label": "GET IN TOUCH",
+    "route": "/contact"
+   },
+   "links": [
+    {
+     "label": "Email the Studio",
+     "href": "mailto:brok3nbydesign@pm.me"
+    }
+   ]
+  },
+  "game_slot_XX": {
+   "scope": "games",
+   "object": "GAME_Case_XX",
+   "action": "lift+turn+panel",
+   "data": "games.json (slot -> project) + projects.json (copy)",
+   "button": {
+    "label": "VIEW GAME",
+    "route": "from games.json"
+   },
+   "close": "return case to its original transform"
+  },
+  "graffiti": {
+   "scope": "home",
+   "object": "NAV_Guestbook",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Graffiti",
+    "eyebrow": "LIVE GUESTBOOK",
+    "text": "A shared pixel-art guestbook where every visitor can draw, sign, and leave a permanent mark on the wall.",
+    "source": "studio-data.js"
+   },
+   "button": {
+    "label": "SIGN THE GUESTBOOK ↗",
+    "href": "https://brok3n-graffiti.ragsdalejeremy818.workers.dev/?draw=1"
+   },
+   "links": [
+    {
+     "label": "About Graffiti",
+     "route": "/graffiti"
+    }
+   ],
+   "idea": "an open guestbook on the desk (signatures and pixel doodles) for the live Graffiti wall"
+  },
+  "passport": {
+   "scope": "home",
+   "object": "NAV_Passport",
+   "action": "focus+panel",
+   "panel": {
+    "title": "Studio Passport",
+    "text": "Collect a stamp for every corner of the studio you find: the project pages, the hidden things, the odd ones out. Your stamps stay in this browser."
+   },
+   "button": {
+    "label": "OPEN YOUR PASSPORT",
+    "route": "/passport"
+   }
+  },
+  "rnd_files": {
+   "scope": "home",
+   "object": "NAV_RnD (upper shelf, right)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "R&D FILES",
+    "title": "Projects in the works",
+    "text": "The pile of folders where the unfinished ideas live: The Maze, Macabre Dolls and Juicebox, and whatever turns up next. Sketches, notes, test scenes. Nothing in here is a promise yet."
+   },
+   "button": {
+    "label": "OPEN THE R&D FILES",
+    "route": "/rnd"
+   },
+   "stamp": "rnd-files"
+  }
+ },
+ "discovery": {
+  "mug": {
+   "scope": "home",
+   "object": "PROP_Mug",
+   "action": "easter-egg",
+   "idea": "steam wisp spells something dry; or the mug quietly refills",
+   "panel": {
+    "title": "Coffee break",
+    "text": "Still warm. Somebody is coming right back."
+   },
+   "stamp": "coffee"
+  },
+  "collectible_a": {
+   "scope": "home",
+   "object": "COLL_FigureA",
+   "action": "focus+panel",
+   "idea": "the hooded sniper figurine: the creator's gaming history",
+   "panel": {
+    "eyebrow": "ON THE SHELF",
+    "title": "My Gaming History",
+    "text": "The games I grew up with, the ones that stuck with me, and why I still love gaming today: point-and-click adventures, decades of shooters, and building systems that run themselves."
+   },
+   "button": {
+    "label": "READ MY GAMING HISTORY",
+    "route": "/about/gaming-history"
+   }
+  },
+  "collectible_b": {
+   "scope": "home",
+   "object": "COLL_FigureB",
+   "action": "popover",
+   "idea": "raises the mug; caption",
+   "panel": {
+    "title": "Collectible",
+    "text": "Raising a tiny mug to everyone still shipping at this hour."
+   }
+  },
+  "book_1..book_6": {
+   "scope": "home",
+   "object": "PROP_Book_0..4, PROP_Book_Leaning",
+   "action": "tilt-out + caption",
+   "idea": "fake titles; one is suspiciously well-worn",
+   "panel": {
+    "title": "Bookworm",
+    "text": "A shelf of well-thumbed reference books. One of them is suspiciously well-worn."
+   },
+   "stamp": "bookworm"
+  },
+  "drawer_1": {
+   "scope": "home",
+   "object": "DESK_Drawer_1_Group",
+   "action": "slide-out",
+   "panel": {
+    "eyebrow": "TOP DRAWER",
+    "title": "The bug emergency kit",
+    "text": "Break glass in case of bugs. Inside: one rubber duck, for explaining the problem to. Around it: backup ducks, because some bugs need a committee."
+   },
+   "stamp": "door"
+  },
+  "drawer_2": {
+   "scope": "home",
+   "object": "DESK_Drawer_2_Group",
+   "action": "slide-out",
+   "panel": {
+    "eyebrow": "MIDDLE DRAWER",
+    "title": "Finds from Bid & Buried",
+    "text": "Some of what turned up in the storage units, still in pixels: Dusty Explorer's Globe, the green banker's lamp, a red toolbox with the cash someone left on it, a trophy and a few coins."
+   },
+   "links": [
+    {
+     "label": "Bid & Buried",
+     "route": "/games/bid-and-buried"
+    }
+   ],
+   "stamp": "door"
+  },
+  "drawer_3": {
+   "scope": "home",
+   "object": "DESK_Drawer_3_Group",
+   "action": "slide-out",
+   "panel": {
+    "eyebrow": "BOTTOM DRAWER",
+    "title": "Occupied",
+    "text": "Somebody found the warm jumper. Somebody is not moving. Close it gently."
+   },
+   "stamp": "door"
+  },
+  "drawer_ducks": {
+   "scope": "home",
+   "object": "DRAWER_Ducks",
+   "action": "squeak",
+   "panel": {
+    "eyebrow": "IN CASE OF BUGS",
+    "title": "Seven ducks",
+    "text": "Each one has heard a full explanation of a bug, out loud, and fixed it by listening. None of them can code. That's the point."
+   },
+   "stamp": "bug-kit"
+  },
+  "drawer_loot": {
+   "scope": "home",
+   "object": "DRAWER_Loot",
+   "action": "blip",
+   "panel": {
+    "eyebrow": "THE HAUL",
+    "title": "Dusty Explorer's Globe",
+    "text": "Best find of day two: appraised at $142. The lamp is common, the toolbox is good, the trophy is somebody's whole childhood. Sell it, stash it or scrap it."
+   },
+   "links": [
+    {
+     "label": "Bid & Buried",
+     "route": "/games/bid-and-buried"
+    }
+   ]
+  },
+  "drawer_cat": {
+   "scope": "home",
+   "object": "DRAWER_Cat",
+   "action": "purr",
+   "panel": {
+    "eyebrow": "DO NOT DISTURB",
+    "title": "The drawer cat",
+    "text": "Asleep on the good jumper since the last deadline. Purrs if you look. Will not be moving for the next build, or the one after that."
+   },
+   "stamp": "cat-nap"
+  },
+  "egg_qa_sticker": {
+   "scope": "home",
+   "object": "EGG_UnderDesktop",
+   "action": "reveal",
+   "status": "secret project (Phase 10)",
+   "panel": {
+    "title": "Under the Radar",
+    "eyebrow": "SOMETHING IS OUT THERE.",
+    "text": "Your next favourite is one you’ve never heard of. Follow your curiosity into a world of quiet surprises and unexpected connections. Some things are worth a closer look."
+   },
+   "button": {
+    "label": "TAKE A CLOSER LOOK",
+    "route": "/games/under-the-radar"
+   },
+   "stamp": "radar"
+  },
+  "egg_maker_plate": {
+   "scope": "home",
+   "object": "EGG_UnderPlatform",
+   "action": "reveal",
+   "status": "test detail exists (under the platform)",
+   "panel": {
+    "title": "Maker's plate",
+    "text": "Handmade by Brok3n by Design. No warranty, express or implied. Please stop looking under things."
+   },
+   "stamp": "maker-plate"
+  },
+  "duck": {
+   "scope": "home",
+   "object": "PROP_Duck",
+   "action": "easter-egg",
+   "idea": "squeaks, then plays WRFM's Rubber Duck Rental ad",
+   "panel": {
+    "title": "Rubber Duck Rental",
+    "text": "It listens. You debug. That's the deal. (A word from WRFM 97.1's sponsor.)"
+   },
+   "stamp": "quack"
+  },
+  "radio": {
+   "scope": "home",
+   "object": "PROP_Radio",
+   "action": "easter-egg",
+   "idea": "two buttons: tune in to WRFM 97.1 live (in sync with the real station, keeps playing on every page) or play a funny clip",
+   "panel": {
+    "title": "WRFM 97.1",
+    "eyebrow": "ON THE DESK RADIO",
+    "text": "Tune in to the station live: the same song, at the same second, as everyone listening right now. It keeps playing while you look around the site. Or play one of the funny clips: callers, sponsors and Vera Lang herself."
+   },
+   "links": [
+    {
+     "label": "Explore WRFM",
+     "route": "/wrfm"
+    }
+   ],
+   "stamp": "tuned-in"
+  },
+  "poster_doubloon": {
+   "scope": "home",
+   "object": "REAR_Poster (back of the desk)",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "NOW SHOWING. SORT OF.",
+    "title": "The Doubloon Club",
+    "text": "Five kids, one map, no grown-ups. The studio's favourite film that doesn't exist: summer, bikes, a skull-shaped rock and a ship in the fog. Made up from scratch, characters and all, as a love letter to the adventure films we grew up on."
+   },
+   "stamp": "backstage"
+  },
+  "treasure_map": {
+   "scope": "home",
+   "object": "REAR_Map",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "KEEP OUT",
+    "title": "The club's treasure map",
+    "text": "Follow the dots from the beach, past the compass, to the X by Skull Cove. Gus drew it. Gus is not sure which way is north."
+   },
+   "stamp": "backstage"
+  },
+  "backstage": {
+   "scope": "home",
+   "object": "REAR_BackstageNote",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "STAFF ONLY",
+    "title": "You found the back",
+    "text": "Most people never turn the desk around. Behind every finished thing there's tape, a map and a poster for a film that only exists here."
+   },
+   "stamp": "backstage"
+  }
+ },
+ "hiding_places": "EGG_* markers (egg_id extras) - see diorama/EASTER_EGGS.md"
+}
