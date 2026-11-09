@@ -148,20 +148,75 @@
     "route": "/passport"
    }
   },
-  "rnd_files": {
+  "note_labyrinth-fate": {
    "scope": "home",
-   "object": "NAV_RnD (upper shelf, right)",
+   "object": "STICKY_* (a sticky note on the monitors)",
    "action": "focus+panel",
    "panel": {
-    "eyebrow": "R&D FILES",
-    "title": "Projects in the works",
-    "text": "The pile of folders where the unfinished ideas live: The Maze, Macabre Dolls and Juicebox, and whatever turns up next. Sketches, notes, test scenes. Nothing in here is a promise yet."
+    "eyebrow": "STICKY NOTE · R&D",
+    "title": "The Maze",
+    "text": "The world remembers the roll."
    },
    "button": {
-    "label": "OPEN THE R&D FILES",
-    "route": "/rnd"
+    "label": "Read the file",
+    "route": "/rnd#labyrinth-fate"
+   }
+  },
+  "note_macabre-dolls": {
+   "scope": "home",
+   "object": "STICKY_* (a sticky note on the monitors)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "STICKY NOTE · R&D",
+    "title": "Macabre Dolls",
+    "text": "Every doll has a past."
    },
-   "stamp": "rnd-files"
+   "button": {
+    "label": "Read the file",
+    "route": "/rnd#macabre-dolls"
+   }
+  },
+  "note_juicebox": {
+   "scope": "home",
+   "object": "STICKY_* (a sticky note on the monitors)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "STICKY NOTE · R&D",
+    "title": "Juicebox",
+    "text": "Small format. Strange possibilities."
+   },
+   "button": {
+    "label": "Read the file",
+    "route": "/rnd#juicebox"
+   }
+  },
+  "note_the-relative": {
+   "scope": "home",
+   "object": "STICKY_* (a sticky note on the monitors)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "STICKY NOTE · R&D",
+    "title": "The Relative",
+    "text": "An ordinary week that refuses to stay ordinary."
+   },
+   "button": {
+    "label": "Read the file",
+    "route": "/rnd#the-relative"
+   }
+  },
+  "steam_glass_fortune": {
+   "scope": "home",
+   "object": "NAV_Steam (upper shelf, right)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "COMING TO STEAM",
+    "title": "Glass & Fortune",
+    "text": "The first Brok3n by Design game headed for Steam: a tactile roguelike of five glass dice, risky combinations and a masked fortune-teller. The store page is on its way; wishlist it the moment it goes up. Until then, everything about it is here."
+   },
+   "button": {
+    "label": "SEE GLASS & FORTUNE",
+    "route": "/games/glass-and-fortune"
+   }
   }
  },
  "discovery": {
@@ -246,8 +301,8 @@
    "action": "slide-out",
    "panel": {
     "eyebrow": "BOTTOM DRAWER",
-    "title": "Occupied",
-    "text": "Somebody found the warm jumper. Somebody is not moving. Close it gently."
+    "title": "A world in a drawer",
+    "text": "Hills, a river, a castle on the hill, a village, a windmill and two clouds on sticks. Every studio keeps a world somewhere."
    },
    "stamp": "door"
   },
@@ -277,17 +332,6 @@
      "route": "/games/bid-and-buried"
     }
    ]
-  },
-  "drawer_cat": {
-   "scope": "home",
-   "object": "DRAWER_Cat",
-   "action": "purr",
-   "panel": {
-    "eyebrow": "DO NOT DISTURB",
-    "title": "The drawer cat",
-    "text": "Asleep on the good jumper since the last deadline. Purrs if you look. Will not be moving for the next build, or the one after that."
-   },
-   "stamp": "cat-nap"
   },
   "egg_qa_sticker": {
    "scope": "home",
@@ -410,6 +454,32 @@
     "text": "The studio's name in bent glass and humming gas, on the wall beside the desk. The 3 burns red: the crack is part of the design. It's an old sign, so it stutters a little when you poke it."
    },
    "stamp": "open-late"
+  },
+  "desk_cat": {
+   "scope": "home",
+   "object": "CAT_Sleeping (in the fabric bin, under the desk)",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "DO NOT DISTURB",
+    "title": "The studio cat",
+    "text": "Head of security, napping on the job. Moved out of the bottom drawer and into the bin, which was full of game cartridges until about five minutes ago. Purrs if you look at it."
+   },
+   "stamp": "cat-nap"
+  },
+  "drawer_world": {
+   "scope": "home",
+   "object": "DRAWER_World (in the bottom drawer)",
+   "action": "panel",
+   "panel": {
+    "eyebrow": "POCKET WILDS",
+    "title": "A world in a drawer",
+    "text": "Pocket Wilds, small enough to keep in a drawer: the castle on the hill, the river and its bridge, the village and the windmill, the woods, and a cave in the ridge with a die waiting outside. Explore the wilds. Face the dice."
+   },
+   "button": {
+    "label": "EXPLORE POCKET WILDS",
+    "route": "/games/pocket-wilds"
+   },
+   "stamp": "pocket-world"
   }
  },
  "hiding_places": "EGG_* markers (egg_id extras) - see diorama/EASTER_EGGS.md"
