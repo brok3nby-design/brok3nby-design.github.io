@@ -238,11 +238,11 @@
    "idea": "the hooded sniper figurine: the creator's gaming history",
    "panel": {
     "eyebrow": "ON THE SHELF",
-    "title": "My Gaming History",
+    "title": "The Games That Made Me",
     "text": "The games I grew up with, the ones that stuck with me, and why I still love gaming today: point-and-click adventures, decades of shooters, and building systems that run themselves."
    },
    "button": {
-    "label": "READ MY GAMING HISTORY",
+    "label": "READ MY STORY",
     "route": "/about/gaming-history"
    }
   },
