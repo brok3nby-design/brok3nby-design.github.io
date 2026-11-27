@@ -1190,6 +1190,36 @@
     "lead": "A point-and-click adventure about an ordinary week that refuses to stay ordinary.",
     "sections": []
    }
+  },
+  {
+   "id": "by-order-of-the-bench",
+   "title": "By Order of the Bench",
+   "category": "games",
+   "status": "Concept · early development",
+   "hook": "Even a bowl of soup can land someone in front of a judge.",
+   "description": "A pixel-art courtroom game: read the evidence, question defendants, and decide who walks and who serves a sentence.",
+   "accent": "#c46a3a",
+   "secret": false,
+   "completed": false,
+   "progress": {
+    "remaining": null,
+    "testing": "No ETA",
+    "release": "No ETA",
+    "hours": "Not yet reported"
+   },
+   "cover": "media/projects/by-order-of-the-bench/by-order-of-the-bench.webp",
+   "logo": null,
+   "gallery": [],
+   "trailer": null,
+   "live_url": null,
+   "old_url": null,
+   "page": {
+    "source": null,
+    "kicker": "R&D FILES",
+    "genres": "Pixel-art courtroom • Concept",
+    "lead": "Take the bench in Brackwater, a pixel-art courtroom game where even a bowl of soup can land someone in front of a judge. Read the evidence, question defendants, and decide who walks and who serves a sentence. By the time the evening paper comes out, you’ll know who had to live with your ruling. The clerk will be pleased that you signed in the right box.",
+    "sections": []
+   }
   }
  ]
 }
