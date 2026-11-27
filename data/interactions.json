@@ -204,6 +204,20 @@
     "route": "/rnd#the-relative"
    }
   },
+  "note_by-order-of-the-bench": {
+   "scope": "home",
+   "object": "STICKY_* (a sticky note on the monitors)",
+   "action": "focus+panel",
+   "panel": {
+    "eyebrow": "STICKY NOTE · R&D",
+    "title": "By Order of the Bench",
+    "text": "Even a bowl of soup can land someone in front of a judge."
+   },
+   "button": {
+    "label": "Read the file",
+    "route": "/rnd#by-order-of-the-bench"
+   }
+  },
   "steam_glass_fortune": {
    "scope": "home",
    "object": "NAV_Steam (upper shelf, right)",
